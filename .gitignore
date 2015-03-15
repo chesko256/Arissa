@@ -10,24 +10,24 @@
 !*/
 
 #Top-level files
-!Data/CompanionArissa.esp
-!Data/CompanionArissa_dawnguard.esp
+!CompanionArissa.esp
+!CompanionArissa_dawnguard.esp
 
 #Interface
-!Data/Interface/arissa/*
-!Data/Interface/Translations/Arissa_*.txt
+!Interface/arissa/*
+!Interface/Translations/Arissa_*.txt
 
 #Meshes
-!Data/Meshes/arissa/*
+!Meshes/arissa/*
 
 #Readmes
-!Data/readmes/Arissa*.txt
+!readmes/Arissa*.txt
 
 #Sound
-!Data/sound/voice/CompanionArissa.esp/*
+!sound/voice/CompanionArissa.esp/*
 
 #Music
-!Data/music/arissa/*
+!music/arissa/*
 
 #Scripts
 !wicommenttriggerscript.pex
@@ -40,5 +40,5 @@
 !_Arissa*.psc
 
 #Textures
-!Data/textures/actors/character/facegendata/facetint/companionarissa.esp/*
-!Data/textures/arissa/*
+!textures/actors/character/facegendata/facetint/companionarissa.esp/*
+!textures/arissa/*
