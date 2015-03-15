@@ -24,7 +24,12 @@
 !readmes/Arissa*.txt
 
 #Sound
-!sound/voice/CompanionArissa.esp/*
+!sound/voice/CompanionArissa.esp/FemaleNord/*
+!sound/voice/CompanionArissa.esp/FemaleUniqueArissa/*
+!sound/voice/CompanionArissa.esp/FemaleYoungEager/*
+!sound/voice/CompanionArissa.esp/MaleGuard/*
+!sound/voice/CompanionArissa.esp/MaleNordCommander/*
+!sound/voice/CompanionArissa.esp/MaleUniqueGunnher/*
 
 #Music
 !music/arissa/*
