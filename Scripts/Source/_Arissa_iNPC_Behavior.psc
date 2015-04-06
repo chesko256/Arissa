@@ -345,7 +345,115 @@ bool property Arissa_CommentedOn_PuzzleDoor = false auto conditional hidden
 
 ;#endregion
 
-;#region ============ CONVERSATION DATA ==================
+; ========= Place Knowledge System =========
+int property CurrentLocationCommentIndex = 0 auto conditional hidden
+
+Location property SolitudeLocation auto
+Location property MarkarthLocation auto
+Location property WhiterunLocation auto
+Location property RiftenLocation auto
+Location property RiftenThievesGuildHeadquartersLocation auto
+Location property WindhelmLocation auto
+Location property DawnstarLocation auto
+Location property RiverwoodLocation auto
+Location property FalkreathLocation auto
+Location property LabyrinthianLocation auto
+Location property WinterholdLocation auto
+Location property MorthalLocation auto
+Location property HelgenLocation auto
+Location property BlackreachLocation auto
+Location property IvarsteadLocation auto
+Location property KarthwastenLocation auto
+Location property BleakFallsBarrowLocation auto
+Location property ShorsStoneLocation auto
+Location property HighHrothgarLocation auto
+Location property WinterholdCollegeLocation auto
+Location property KynesgroveLocation auto
+Location property ThalmorEmbassyLocation auto
+Location property FrostflowLighthouseLocation auto
+Location property SolitudeBluePalaceLocation auto
+Location property YsgramorsTombLocation auto
+Location property NightcallerTempleLocation auto
+Location property DragonBridgeLocation auto
+
+function PlayLocationDialogue(Location akLocation)
+	if MeetsDialoguePrereqs()
+		if akLocation
+			CurrentLocationCommentIndex = GetLocationDialogueIndex(akLocation)
+		elseif _Arissa_CurrentHold.GetValueInt() != 0
+			CurrentLocationCommentIndex = _Arissa_CurrentHold.GetValueInt()
+		endif
+
+		if CurrentLocationCommentIndex != 0
+			
+	endif
+endFunction
+
+bool function MeetsDialoguePrereqs()
+	if _Arissa_MQ01.IsCompleted() && IsFollowing
+		return true
+	else
+		return false
+	endif
+endFunction
+
+int function GetLocationDialogueIndex(Location akLocation)
+	if akLocation == SolitudeLocation
+		return 1
+	elseif akLocation == MarkarthLocation
+		return 2
+	elseif akLocation == WhiterunLocation
+		return 3
+	elseif akLocation == RiftenLocation
+		return 4
+	elseif akLocation == RiftenThievesGuildHeadquartersLocation
+		return 5
+	elseif akLocation == WindhelmLocation
+		return 6
+	elseif akLocation == DawnstarLocation
+		return 7
+	elseif akLocation == RiverwoodLocation
+		return 8
+	elseif akLocation == FalkreathLocation
+		return 9
+	elseif akLocation == LabyrinthianLocation
+		return 10
+	elseif akLocation == WinterholdLocation
+		return 11
+	elseif akLocation == MorthalLocation
+		return 12
+	elseif akLocation == HelgenLocation
+		return 13
+	elseif akLocation == BlackreachLocation
+		return 14
+	elseif akLocation == IvarsteadLocation
+		return 15
+	elseif akLocation == KarthwastenLocation
+		return 16
+	elseif akLocation == BleakFallsBarrowLocation
+		return 17
+	elseif akLocation == ShorsStoneLocation
+		return 18
+	elseif akLocation == HighHrothgarLocation
+		return 19
+	elseif akLocation == WinterholdCollegeLocation
+		return 20
+	elseif akLocation == KynesgroveLocation
+		return 21
+	elseif akLocation == ThalmorEmbassyLocation
+		return 22
+	elseif akLocation == FrostflowLighthouseLocation
+		return 23
+	elseif akLocation == SolitudeBluePalaceLocation
+		return 24
+	elseif akLocation == YsgramorsTombLocation
+		return 25
+	elseif akLocation == NightcallerTempleLocation
+		return 26
+	elseif akLocation == DragonBridgeLocation
+		return 27
+	endif
+endFunction
 
 bool property ArissaTalkedAbout_Places_Solitude = false auto conditional hidden
 bool property ArissaTalkedAbout_Places_Markarth = false auto conditional hidden
