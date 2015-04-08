@@ -380,9 +380,12 @@ Location property NightcallerTempleLocation auto
 Location property DragonBridgeLocation auto
 
 ; - Location dialogue-specific properties
+Actor property CamillaValerius auto
+Actor property LucanValerius auto
 Quest property CW auto
 Quest property CWObj auto
 GlobalVariable property CWSons auto
+Keyword property LocTypePlayerHouse auto
 
 function TestSayLine()
 	iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
@@ -391,19 +394,13 @@ endFunction
 function PlayLocationDialogue(Location akLocation)
 	if MeetsDialoguePrereqs()
 		if akLocation
-			CurrentLocationCommentIndex = GetLocationDialogueIndex(akLocation)
+			CurrentLocationCommentIndex = GetLocationDialogueIndex(akLocation, 0)
 		elseif _Arissa_CurrentHold.GetValueInt() != 0
 			CurrentLocationCommentIndex = _Arissa_CurrentHold.GetValueInt()
 		endif
 
 		if CurrentLocationCommentIndex != 0
-<<<<<<< HEAD
 		endif
-
-=======
-			iNPC_Actor.Say(_Arissa_PlaceKnowledgeSharedInfo)
-		endif
->>>>>>> 7ad71096dfc1675907e02170818e81ab171d2f8a
 	endif
 endFunction
 
@@ -427,9 +424,9 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
 		return 500
 	elseif akLocation == WindhelmLocation
-		if CWObj.GetStageDone(255) && CW.playerAllegiance_var == CWSons.GetValue()				;Stormcloaks won
+		if CWObj.GetStageDone(255); && CW.playerAllegiance_var == CWSons.GetValue()				;Stormcloaks won
 			return 600
-		elseif CWObj.GetStageDone(255) && CW.playerAllegiance_var == CWImperial.GetValue()		;Imperials won
+		elseif CWObj.GetStageDone(255); && CW.playerAllegiance_var == CWImperial.GetValue()		;Imperials won
 			return 700
 		else 																					;Neither
 			return 800
@@ -444,7 +441,7 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 			return 1100
 		elseif CamillaValerius.IsDead() && LucanValerius.IsDead()								;Camilla and Lucan dead
 			return 1200
-		elseif 
+		endif
 	elseif akLocation == FalkreathLocation
 		return 1300
 	elseif akLocation == LabyrinthianLocation
@@ -486,7 +483,7 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 	
 	; Check exceptions / location keywords
 	elseif akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
-		return xxx
+		return 18000
 
 	;Check current Hold as last resort (least specific)
 	else
@@ -495,11 +492,11 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 		elseif aiCurrentHold == 2 										;Falkreath Hold
 			return 19200
 		elseif aiCurrentHold == 3 										;Haafingar
-			if !PlayerRef.IsInInterior() && ;CW conditions
+			if !PlayerRef.IsInInterior(); && CW conditions
 				return 19300
-			elseif !PlayerRef.IsInInterior() && ;CW conditions
+			elseif !PlayerRef.IsInInterior(); && CW conditions
 				return 19325
-			elseif !PlayerRef.IsInInterior() && ;CW conditions
+			elseif !PlayerRef.IsInInterior(); && CW conditions
 				return 19350
 			else
 				return 19375
@@ -516,6 +513,7 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 			return 19800
 		elseif aiCurrentHold == 9 										;Winterhold Hold
 			return 19900
+		endif
 	endif
 endFunction
 
