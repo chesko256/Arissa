@@ -476,6 +476,10 @@ endFunction
 ;
 ;
 ;====================================================================================================================
+;------ TEST -------
+Topic property _Arissa_DialoguePlaceKnowledgeSharedInfo auto
+;------ TEST -------
+
 Function EngageFollowBehavior(bool allowDismiss = true)
 	ArissaDebug(1, "Engaging follow behavior.")
 	IsFollowing = true
@@ -494,7 +498,7 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 	Activity.ReInit()
 	if Compatibility.EFF != none
 		Quest EFFQuest = Compatibility.EFF
-		(EFFQuest as XFLScript).XFL_AddFollower(iNPC_Actor)
+		(EFFQuest as EFFCore).XFL_AddFollower(iNPC_Actor)
 	endif
 	ArissaDebug(1, "================[iNPC]================")
 	ArissaDebug(1, "Engaging follower behavior.")
@@ -508,7 +512,15 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 	ArissaDebug(1, "CanBeDismissed: " + CanBeDismissed)
 	ArissaDebug(1, "IsIgnoringFriendlyHits: " + iNPC.GetActorRef().IsIgnoringFriendlyHits())
 	ArissaDebug(1, "================[iNPC]================")
+	ArissaDebug(1, "Waiting 3, then playing ambient line...")
+	utility.wait(3)
+	ArissaDebug(1, "Playing line...")
+	TestSayLine()
 EndFunction
+
+function TestSayLine()
+	;overridden by Behavior
+endFunction
 
 Function DisengageFollowBehavior()
 	ArissaDebug(1, "Disengaging follow behavior.")
@@ -524,7 +536,7 @@ Function DisengageFollowBehavior()
 	MonitoringQuest.Stop()
 	if Compatibility.EFF != none
 		Quest EFFQuest = Compatibility.EFF
-		(EFFQuest as XFLScript).XFL_RemoveFollower(iNPC_Actor)
+		(EFFQuest as EFFCore).XFL_RemoveFollower(iNPC_Actor)
 	endif
 	if !IsTownRoaming
 		_ArissaDismissMessage.Show()

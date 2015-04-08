@@ -4,6 +4,7 @@ Armor property _Arissa_ClothingTownBody auto
 Message property _ArissaDismissMessageWait auto
 Message property _ArissaBlockedMessage auto
 Message property _ArissaDismissMessageWedding auto
+Quest property _Arissa_MQ01 auto
 Quest property _Arissa_TownRoam_Dawnstar auto
 Quest property _Arissa_TownRoam_Falkreath auto
 Quest property _Arissa_TownRoam_Markarth auto
@@ -348,6 +349,8 @@ bool property Arissa_CommentedOn_PuzzleDoor = false auto conditional hidden
 ; ========= Place Knowledge System =========
 int property CurrentLocationCommentIndex = 0 auto conditional hidden
 
+GlobalVariable property _Arissa_CurrentHold auto
+
 Location property SolitudeLocation auto
 Location property MarkarthLocation auto
 Location property WhiterunLocation auto
@@ -376,6 +379,15 @@ Location property YsgramorsTombLocation auto
 Location property NightcallerTempleLocation auto
 Location property DragonBridgeLocation auto
 
+; - Location dialogue-specific properties
+Quest property CW auto
+Quest property CWObj auto
+GlobalVariable property CWSons auto
+
+function TestSayLine()
+	iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
+endFunction
+
 function PlayLocationDialogue(Location akLocation)
 	if MeetsDialoguePrereqs()
 		if akLocation
@@ -385,7 +397,8 @@ function PlayLocationDialogue(Location akLocation)
 		endif
 
 		if CurrentLocationCommentIndex != 0
-			
+		endif
+
 	endif
 endFunction
 
@@ -397,61 +410,107 @@ bool function MeetsDialoguePrereqs()
 	endif
 endFunction
 
-int function GetLocationDialogueIndex(Location akLocation)
+int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 	if akLocation == SolitudeLocation
-		return 1
+		return 100
 	elseif akLocation == MarkarthLocation
-		return 2
+		return 200
 	elseif akLocation == WhiterunLocation
-		return 3
-	elseif akLocation == RiftenLocation
-		return 4
+		return 300
+	elseif akLocation == RiftenLocation && akLocation != RiftenThievesGuildHeadquartersLocation
+		return 400
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
-		return 5
+		return 500
 	elseif akLocation == WindhelmLocation
-		return 6
+		if CWObj.GetStageDone(255) && CW.playerAllegiance_var == CWSons.GetValue()				;Stormcloaks won
+			return 600
+		elseif CWObj.GetStageDone(255) && CW.playerAllegiance_var == CWImperial.GetValue()		;Imperials won
+			return 700
+		else 																					;Neither
+			return 800
+		endif
 	elseif akLocation == DawnstarLocation
-		return 7
+		return 900
 	elseif akLocation == RiverwoodLocation
-		return 8
+		;@TODO: don't block on each state exclusively
+		if !CamillaValerius.IsDead() 															;Camilla alive and well
+			return 1000
+		elseif CamillaValerius.IsDead() && !LucanValerius.IsDead()								;Camilla dead, Lucan alive
+			return 1100
+		elseif CamillaValerius.IsDead() && LucanValerius.IsDead()								;Camilla and Lucan dead
+			return 1200
+		elseif 
 	elseif akLocation == FalkreathLocation
-		return 9
+		return 1300
 	elseif akLocation == LabyrinthianLocation
-		return 10
+		return 1400
 	elseif akLocation == WinterholdLocation
-		return 11
+		return 1500
 	elseif akLocation == MorthalLocation
-		return 12
+		return 1600
 	elseif akLocation == HelgenLocation
-		return 13
+		return 1700
 	elseif akLocation == BlackreachLocation
-		return 14
+		return 1800
 	elseif akLocation == IvarsteadLocation
-		return 15
+		return 1900
 	elseif akLocation == KarthwastenLocation
-		return 16
+		return 2000
 	elseif akLocation == BleakFallsBarrowLocation
-		return 17
+		return 2100
 	elseif akLocation == ShorsStoneLocation
-		return 18
+		return 2200
 	elseif akLocation == HighHrothgarLocation
-		return 19
+		return 2300
 	elseif akLocation == WinterholdCollegeLocation
-		return 20
+		return 2400
 	elseif akLocation == KynesgroveLocation
-		return 21
+		return 2500
 	elseif akLocation == ThalmorEmbassyLocation
-		return 22
+		return 2600
 	elseif akLocation == FrostflowLighthouseLocation
-		return 23
+		return 2700
 	elseif akLocation == SolitudeBluePalaceLocation
-		return 24
+		return 2800
 	elseif akLocation == YsgramorsTombLocation
-		return 25
+		return 2900
 	elseif akLocation == NightcallerTempleLocation
-		return 26
+		return 3000
 	elseif akLocation == DragonBridgeLocation
-		return 27
+		return 3100
+	
+	; Check exceptions / location keywords
+	elseif akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
+		return xxx
+
+	;Check current Hold as last resort (least specific)
+	else
+		if aiCurrentHold == 1 											;Eastmarch
+			return 19100
+		elseif aiCurrentHold == 2 										;Falkreath Hold
+			return 19200
+		elseif aiCurrentHold == 3 										;Haafingar
+			if !PlayerRef.IsInInterior() && ;CW conditions
+				return 19300
+			elseif !PlayerRef.IsInInterior() && ;CW conditions
+				return 19325
+			elseif !PlayerRef.IsInInterior() && ;CW conditions
+				return 19350
+			else
+				return 19375
+			endif
+		elseif aiCurrentHold == 4 										;Hjaalmarch
+			return 19400
+		elseif aiCurrentHold == 5 										;The Pale
+			return 19500
+		elseif aiCurrentHold == 6 										;The Reach
+			return 19600
+		elseif aiCurrentHold == 7 										;The Rift
+			return 19700
+		elseif aiCurrentHold == 8 										;Whiterun
+			return 19800
+		elseif aiCurrentHold == 9 										;Winterhold Hold
+			return 19900
 	endif
 endFunction
 

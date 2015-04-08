@@ -21,7 +21,7 @@ function CompatibilityCheck()
 	trace("                        unloaded files may follow. This is normal and they can be ignored.                        ")
 	trace("========================================[ Arissa: Warning End ]========================================")
 	
-	EFF = Game.GetFormFromFile(0x010048c9, "XFLMain.esm") as Quest
+	EFF = Game.GetFormFromFile(0x01000EFE, "EFFCore.esm") as Quest
 
 	;Dialogue animations from Dawnguard do not work; left here for future expansion.
 	;/bIsDLC1Loaded = Game.GetFormFromFile(0x02009403, "Dawnguard.esm")

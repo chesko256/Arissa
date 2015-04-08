@@ -6,7 +6,9 @@ Scriptname _Arissa_Frag_Dismiss3 Extends TopicInfo Hidden
 Function Fragment_0(ObjectReference akSpeakerRef)
 Actor akSpeaker = akSpeakerRef as Actor
 ;BEGIN CODE
-(self.GetOwningQuest() as _Arissa_iNPC_Behavior).Dismiss()
+;(self.GetOwningQuest() as _Arissa_iNPC_Behavior).Dismiss()
+(self.GetOwningQuest() as _Arissa_iNPC_Behavior).TestSayLine()
+utility.wait(3)
 ;END CODE
 EndFunction
 ;END FRAGMENT
