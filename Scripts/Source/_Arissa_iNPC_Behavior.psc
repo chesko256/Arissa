@@ -397,8 +397,13 @@ function PlayLocationDialogue(Location akLocation)
 		endif
 
 		if CurrentLocationCommentIndex != 0
+<<<<<<< HEAD
 		endif
 
+=======
+			iNPC_Actor.Say(_Arissa_PlaceKnowledgeSharedInfo)
+		endif
+>>>>>>> 7ad71096dfc1675907e02170818e81ab171d2f8a
 	endif
 endFunction
 
