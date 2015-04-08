@@ -412,109 +412,180 @@ bool function MeetsDialoguePrereqs()
 	endif
 endFunction
 
+int function AddSituationIndex(int[] aiStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSkipRemainingLines = false)
+	int index = 0
+	if abSkipRemainingLines == true
+		index += 20000000
+	else
+		index += 10000000
+	endif
+	if abSkipGeneralLines == true
+		index += 2000000
+	else
+		index += 1000000
+	endif
+
+	index += (aiLineType * 10000)
+	index += (aiTypeID * 100)
+	index += (aiSituationID)
+	
+	int i = 0
+	bool break = false
+	while i < aiStack.Length && break == false
+		if aiStack[i] == None
+			aiStack[i] = index
+			break = true
+		endif
+		i += 1
+	endWhile
+endFunction
+
+int function GetSituationIndex(int[] aiSituationIndicies)
+	int[] lines = new int[99]
+	int i = 0
+	bool skip_general = false
+	bool skip_rest = false
+	while i < aiSituationIndicies.Length
+		if skip_rest
+			; skip
+		else
+			;@TODO: Account for skipping the rest but not general
+			int the_line = aiSituationIndicies[i]
+			if the_line == 0 || the_line == None
+				; skip
+			else
+				; Strip off the headers
+				if the_line >= 20000000
+					skip_rest = true
+					the_line -= 20000000
+				else
+					the_line -= 10000000
+				endif
+				if the_line >= 2000000
+					skip_general = true
+					the_line -= 2000000
+				else
+					the_line -= 1000000
+				endif
+				
+				; Is this a general-case Situation ID?
+				if the_line % 100 == 0 && skip_general
+					;skip
+				else
+					lines[i] = the_line
+				endif
+			endif
+		endif
+		i += 1
+	endWhile
+endFunction
+
 int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
+	int[] IndexStack = new int[99]
 	if akLocation == SolitudeLocation
-		return 100
+		AddSituationIndex(IndexStack, 1, 1, 0)
 	elseif akLocation == MarkarthLocation
-		return 200
+		AddSituationIndex(IndexStack, 1, 2, 0)
 	elseif akLocation == WhiterunLocation
-		return 300
+		AddSituationIndex(IndexStack, 1, 3, 0)
 	elseif akLocation == RiftenLocation && akLocation != RiftenThievesGuildHeadquartersLocation
-		return 400
+		AddSituationIndex(IndexStack, 1, 4, 0)
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
-		return 500
+		AddSituationIndex(IndexStack, 1, 5, 0)
 	elseif akLocation == WindhelmLocation
 		if CWObj.GetStageDone(255); && CW.playerAllegiance_var == CWSons.GetValue()				;Stormcloaks won
-			return 600
+			AddSituationIndex(IndexStack, 1, 6, 1)
 		elseif CWObj.GetStageDone(255); && CW.playerAllegiance_var == CWImperial.GetValue()		;Imperials won
-			return 700
-		else 																					;Neither
-			return 800
+			AddSituationIndex(IndexStack, 1, 6, 2)
 		endif
+		AddSituationIndex(IndexStack, 1, 6, 0)
 	elseif akLocation == DawnstarLocation
-		return 900
+		AddSituationIndex(IndexStack, 1, 7, 0)
 	elseif akLocation == RiverwoodLocation
 		;@TODO: don't block on each state exclusively
 		if !CamillaValerius.IsDead() 															;Camilla alive and well
-			return 1000
+			AddSituationIndex(IndexStack, 1, 8, 1)
 		elseif CamillaValerius.IsDead() && !LucanValerius.IsDead()								;Camilla dead, Lucan alive
-			return 1100
+			AddSituationIndex(IndexStack, 1, 8, 2)
 		elseif CamillaValerius.IsDead() && LucanValerius.IsDead()								;Camilla and Lucan dead
-			return 1200
+			AddSituationIndex(IndexStack, 1, 8, 3)
 		endif
+		AddSituationIndex(IndexStack, 1, 8, 0)
 	elseif akLocation == FalkreathLocation
-		return 1300
+		AddSituationIndex(IndexStack, 1, 9, 0)
 	elseif akLocation == LabyrinthianLocation
-		return 1400
+		AddSituationIndex(IndexStack, 1, 10, 0)
 	elseif akLocation == WinterholdLocation
-		return 1500
+		AddSituationIndex(IndexStack, 1, 11, 0)
 	elseif akLocation == MorthalLocation
-		return 1600
+		AddSituationIndex(IndexStack, 1, 12, 0)
 	elseif akLocation == HelgenLocation
-		return 1700
+		AddSituationIndex(IndexStack, 1, 13, 0)
 	elseif akLocation == BlackreachLocation
-		return 1800
+		AddSituationIndex(IndexStack, 1, 14, 0)
 	elseif akLocation == IvarsteadLocation
-		return 1900
+		AddSituationIndex(IndexStack, 1, 15, 0)
 	elseif akLocation == KarthwastenLocation
-		return 2000
+		AddSituationIndex(IndexStack, 1, 16, 0)
 	elseif akLocation == BleakFallsBarrowLocation
-		return 2100
+		AddSituationIndex(IndexStack, 1, 17, 0)
 	elseif akLocation == ShorsStoneLocation
-		return 2200
+		AddSituationIndex(IndexStack, 1, 18, 0)
 	elseif akLocation == HighHrothgarLocation
-		return 2300
+		AddSituationIndex(IndexStack, 1, 19, 0)
 	elseif akLocation == WinterholdCollegeLocation
-		return 2400
+		AddSituationIndex(IndexStack, 1, 20, 0)
 	elseif akLocation == KynesgroveLocation
-		return 2500
+		AddSituationIndex(IndexStack, 1, 21, 0)
 	elseif akLocation == ThalmorEmbassyLocation
-		return 2600
+		AddSituationIndex(IndexStack, 1, 22, 0)
 	elseif akLocation == FrostflowLighthouseLocation
-		return 2700
+		AddSituationIndex(IndexStack, 1, 23, 0)
 	elseif akLocation == SolitudeBluePalaceLocation
-		return 2800
+		AddSituationIndex(IndexStack, 1, 24, 0)
 	elseif akLocation == YsgramorsTombLocation
-		return 2900
+		AddSituationIndex(IndexStack, 1, 25, 0)
 	elseif akLocation == NightcallerTempleLocation
-		return 3000
+		AddSituationIndex(IndexStack, 1, 26, 0)
 	elseif akLocation == DragonBridgeLocation
-		return 3100
+		AddSituationIndex(IndexStack, 1, 27, 0)
 	
 	; Check exceptions / location keywords
 	elseif akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
-		return 18000
+		AddSituationIndex(IndexStack, 2, 1, 0)
 
 	;Check current Hold as last resort (least specific)
 	else
 		if aiCurrentHold == 1 											;Eastmarch
-			return 19100
+			AddSituationIndex(IndexStack, 3, 1, 0)
 		elseif aiCurrentHold == 2 										;Falkreath Hold
-			return 19200
+			AddSituationIndex(IndexStack, 3, 2, 0)
 		elseif aiCurrentHold == 3 										;Haafingar
 			if !PlayerRef.IsInInterior(); && CW conditions
-				return 19300
+				AddSituationIndex(IndexStack, 3, 3, 1)
 			elseif !PlayerRef.IsInInterior(); && CW conditions
-				return 19325
+				AddSituationIndex(IndexStack, 3, 3, 2)
 			elseif !PlayerRef.IsInInterior(); && CW conditions
-				return 19350
+				AddSituationIndex(IndexStack, 3, 3, 3)
 			else
-				return 19375
+				AddSituationIndex(IndexStack, 3, 3, 0)
 			endif
 		elseif aiCurrentHold == 4 										;Hjaalmarch
-			return 19400
+			AddSituationIndex(IndexStack, 3, 4, 0)
 		elseif aiCurrentHold == 5 										;The Pale
-			return 19500
+			AddSituationIndex(IndexStack, 3, 5, 0)
 		elseif aiCurrentHold == 6 										;The Reach
-			return 19600
+			AddSituationIndex(IndexStack, 3, 6, 0)
 		elseif aiCurrentHold == 7 										;The Rift
-			return 19700
+			AddSituationIndex(IndexStack, 3, 7, 0)
 		elseif aiCurrentHold == 8 										;Whiterun
-			return 19800
+			AddSituationIndex(IndexStack, 3, 8, 0)
 		elseif aiCurrentHold == 9 										;Winterhold Hold
-			return 19900
+			AddSituationIndex(IndexStack, 3, 9, 0)
 		endif
 	endif
+
+	return GetSituationIndex(IndexStack)
 endFunction
 
 bool property ArissaTalkedAbout_Places_Solitude = false auto conditional hidden
