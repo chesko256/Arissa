@@ -43,7 +43,7 @@ endEvent
 Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 
 	SetHold()
-	AnnounceArea()
+	AnnounceArea(akNewLoc)
 
 	if akNewLoc == MilitaryCampHaafingarSonsLocation && !_Arissa_MQ02.IsRunning() && !_Arissa_MQ02.IsCompleted()
 		_Arissa_MQ02.Start()
@@ -137,9 +137,11 @@ function SetHold()
 	endif
 endFunction
 
-function AnnounceArea()
+function AnnounceArea(Location akLocation)
+	debug.trace("[Arissa] Attempting to play ambient dialogue...")
 	if _Arissa_Setting_AnnounceArea.GetValueInt() == 1
-		_Arissa_Commentary_AnnounceArea.Start()
+		debug.trace("[Arissa] Creating attempt...")
+		iNPCSystem.PlayAmbientDialogue(akLocation)
 	EndIf
 endFunction
 

@@ -347,7 +347,7 @@ bool property Arissa_CommentedOn_PuzzleDoor = false auto conditional hidden
 ;#endregion
 
 ; ========= Place Knowledge System =========
-int property CurrentLocationCommentIndex = 0 auto conditional hidden
+int property CurrentAmbientCommentIndex = 0 auto conditional hidden
 
 GlobalVariable property _Arissa_CurrentHold auto
 
@@ -378,28 +378,33 @@ Location property SolitudeBluePalaceLocation auto
 Location property YsgramorsTombLocation auto
 Location property NightcallerTempleLocation auto
 Location property DragonBridgeLocation auto
+Location property RoriksteadLocation auto
 
 ; - Location dialogue-specific properties
-Actor property CamillaValerius auto
-Actor property LucanValerius auto
+Actor property CamillaValeriusREF auto
+Actor property LucanValeriusREF auto
 Quest property CW auto
 Quest property CWObj auto
 GlobalVariable property CWSons auto
+GlobalVariable property CWImperial auto
 Keyword property LocTypePlayerHouse auto
+Keyword property LocTypeJail auto
 
 function TestSayLine()
 	iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 endFunction
 
-function PlayLocationDialogue(Location akLocation)
+function PlayAmbientDialogue(Location akLocation)
+	CurrentAmbientCommentIndex = 0
 	if MeetsDialoguePrereqs()
 		if akLocation
-			CurrentLocationCommentIndex = GetLocationDialogueIndex(akLocation, 0)
-		elseif _Arissa_CurrentHold.GetValueInt() != 0
-			CurrentLocationCommentIndex = _Arissa_CurrentHold.GetValueInt()
+			CurrentAmbientCommentIndex = GetAmbientDialogueSituationIndex(akLocation, 0)
 		endif
 
-		if CurrentLocationCommentIndex != 0
+		if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
+			iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
+		else
+			debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
 		endif
 	endif
 endFunction
@@ -412,7 +417,7 @@ bool function MeetsDialoguePrereqs()
 	endif
 endFunction
 
-int function AddSituationIndex(int[] aiStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSkipRemainingLines = false)
+function AddSituationIndex(int[] aiStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSkipRemainingLines = false)
 	int index = 0
 	if abSkipRemainingLines == true
 		index += 20000000
@@ -432,7 +437,7 @@ int function AddSituationIndex(int[] aiStack, int aiLineType, int aiTypeID, int 
 	int i = 0
 	bool break = false
 	while i < aiStack.Length && break == false
-		if aiStack[i] == None
+		if aiStack[i] == 0
 			aiStack[i] = index
 			break = true
 		endif
@@ -445,13 +450,14 @@ int function GetSituationIndex(int[] aiSituationIndicies)
 	int i = 0
 	bool skip_general = false
 	bool skip_rest = false
+	int line_count = 0
 	while i < aiSituationIndicies.Length
 		if skip_rest
 			; skip
 		else
 			;@TODO: Account for skipping the rest but not general
 			int the_line = aiSituationIndicies[i]
-			if the_line == 0 || the_line == None
+			if the_line == 0
 				; skip
 			else
 				; Strip off the headers
@@ -472,15 +478,31 @@ int function GetSituationIndex(int[] aiSituationIndicies)
 				if the_line % 100 == 0 && skip_general
 					;skip
 				else
+					debug.trace("[Arissa] Adding " + the_line + " to the dialogue stack.")
 					lines[i] = the_line
+					line_count += 1
 				endif
 			endif
 		endif
 		i += 1
 	endWhile
+
+	; Randomly select an item from the stack
+	int selected_index
+	if line_count > 0
+		selected_index = utility.RandomInt(0, (line_count - 1))
+	else
+		selected_index = -1
+	endif
+	if selected_index != -1
+		debug.trace("[Arissa] Selected index " + lines[selected_index])
+		return lines[selected_index]
+	else
+		return -1
+	endif
 endFunction
 
-int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
+int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrentHold)
 	int[] IndexStack = new int[99]
 	if akLocation == SolitudeLocation
 		AddSituationIndex(IndexStack, 1, 1, 0)
@@ -493,9 +515,9 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
 		AddSituationIndex(IndexStack, 1, 5, 0)
 	elseif akLocation == WindhelmLocation
-		if CWObj.GetStageDone(255); && CW.playerAllegiance_var == CWSons.GetValue()				;Stormcloaks won
+		if CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()				;Stormcloaks won
 			AddSituationIndex(IndexStack, 1, 6, 1)
-		elseif CWObj.GetStageDone(255); && CW.playerAllegiance_var == CWImperial.GetValue()		;Imperials won
+		elseif CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWImperial.GetValue()		;Imperials won
 			AddSituationIndex(IndexStack, 1, 6, 2)
 		endif
 		AddSituationIndex(IndexStack, 1, 6, 0)
@@ -503,11 +525,11 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 		AddSituationIndex(IndexStack, 1, 7, 0)
 	elseif akLocation == RiverwoodLocation
 		;@TODO: don't block on each state exclusively
-		if !CamillaValerius.IsDead() 															;Camilla alive and well
+		if !CamillaValeriusREF.IsDead() 															;Camilla alive and well
 			AddSituationIndex(IndexStack, 1, 8, 1)
-		elseif CamillaValerius.IsDead() && !LucanValerius.IsDead()								;Camilla dead, Lucan alive
+		elseif CamillaValeriusREF.IsDead() && !LucanValeriusREF.IsDead()							;Camilla dead, Lucan alive
 			AddSituationIndex(IndexStack, 1, 8, 2)
-		elseif CamillaValerius.IsDead() && LucanValerius.IsDead()								;Camilla and Lucan dead
+		elseif CamillaValeriusREF.IsDead() && LucanValeriusREF.IsDead()								;Camilla and Lucan dead
 			AddSituationIndex(IndexStack, 1, 8, 3)
 		endif
 		AddSituationIndex(IndexStack, 1, 8, 0)
@@ -549,10 +571,14 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 		AddSituationIndex(IndexStack, 1, 26, 0)
 	elseif akLocation == DragonBridgeLocation
 		AddSituationIndex(IndexStack, 1, 27, 0)
+	elseif akLocation == RoriksteadLocation
+		AddSituationIndex(IndexStack, 1, 28, 0)
 	
 	; Check exceptions / location keywords
 	elseif akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
 		AddSituationIndex(IndexStack, 2, 1, 0)
+	elseif akLocation.HasKeyword(LocTypeJail)
+		AddSituationIndex(IndexStack, 2, 2, 0)
 
 	;Check current Hold as last resort (least specific)
 	else
@@ -561,15 +587,12 @@ int function GetLocationDialogueIndex(Location akLocation, int aiCurrentHold)
 		elseif aiCurrentHold == 2 										;Falkreath Hold
 			AddSituationIndex(IndexStack, 3, 2, 0)
 		elseif aiCurrentHold == 3 										;Haafingar
-			if !PlayerRef.IsInInterior(); && CW conditions
+			if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
 				AddSituationIndex(IndexStack, 3, 3, 1)
-			elseif !PlayerRef.IsInInterior(); && CW conditions
+			elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
 				AddSituationIndex(IndexStack, 3, 3, 2)
-			elseif !PlayerRef.IsInInterior(); && CW conditions
-				AddSituationIndex(IndexStack, 3, 3, 3)
-			else
-				AddSituationIndex(IndexStack, 3, 3, 0)
 			endif
+			AddSituationIndex(IndexStack, 3, 3, 0)
 		elseif aiCurrentHold == 4 										;Hjaalmarch
 			AddSituationIndex(IndexStack, 3, 4, 0)
 		elseif aiCurrentHold == 5 										;The Pale
