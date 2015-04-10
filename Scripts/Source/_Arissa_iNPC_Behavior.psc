@@ -381,15 +381,34 @@ Location property DragonBridgeLocation auto
 Location property RoriksteadLocation auto
 Location property SolitudeCastleDourLocation auto
 Location property WindhelmPalaceOfTheKingsLocation auto
+Location property SolitudeRadiantRaimentsLocation auto
+Location property RiftenRaggedFlagonLocation auto
+Location property RiftenRatwayLocation auto
 
 ; - Location dialogue-specific properties
 Actor property CamillaValeriusREF auto
 Actor property LucanValeriusREF auto
 Actor property UlfricREF auto
 Actor property FridaREF auto
+Actor property MavenRef auto
+Actor property FalionRef auto
+Actor property KlepprRef auto
+Actor property FrabbiRef auto
+Actor property ValgaViniciaRef auto
+Actor property OdarREF auto
+Actor property SybilleStentorREF auto
+Actor property DA05SindingHumanREF auto
+Actor property ToniliaRef auto
 
 Quest property CW auto
 Quest property CWObj auto
+Quest property TG01 auto
+Quest property MG01Quest auto
+Quest property MS14Quest auto
+Quest property MS01 auto
+Quest property MS05 auto
+Quest property DA16 auto
+Quest property DA05 auto
 GlobalVariable property CWSons auto
 GlobalVariable property CWImperial auto
 Keyword property LocTypePlayerHouse auto
@@ -512,12 +531,34 @@ endFunction
 int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrentHold)
 	int[] IndexStack = new int[99]
 	if akLocation == SolitudeLocation
+		if !MS05.IsCompleted()																							; Tending the Flames not completed
+			AddSituationIndex(IndexStack, 1, 1, 1)
+		endif
 		AddSituationIndex(IndexStack, 1, 1, 0)
 	elseif akLocation == MarkarthLocation
+		if !KlepprRef.IsDead() && !FrabbiRef.IsDead()																	; Husband and wife alive
+			AddSituationIndex(IndexStack, 1, 2, 1)	
+		endif
+		if !MS01.IsCompleted() 																							; The Forsworn Conspiracy not complete
+			AddSituationIndex(IndexStack, 1, 2, 2)	
+		endif
 		AddSituationIndex(IndexStack, 1, 2, 0)
 	elseif akLocation == WhiterunLocation
 		AddSituationIndex(IndexStack, 1, 3, 0)
 	elseif akLocation == RiftenLocation && akLocation != RiftenThievesGuildHeadquartersLocation
+		if !MavenRef.IsDead()																							; Maven alive and well
+			AddSituationIndex(IndexStack, 1, 4, 1)
+		endif
+		if !MavenRef.IsDead() && (!CWObj.GetStageDone(255) || \
+								  (CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()))	; Maven alive, Civil War is not done OR Stormcloaks won
+			AddSituationIndex(IndexStack, 1, 4, 2)
+		endif
+		if TG01.GetStage() < 20
+			AddSituationIndex(IndexStack, 1, 4, 3)																		; Haven't located Ragged Flagon yet
+		endif
+		; @TODO: if Laila Law-Giver is current jarl
+			AddSituationIndex(IndexStack, 1, 4, 4)	
+		; endif
 		AddSituationIndex(IndexStack, 1, 4, 0)
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
 		AddSituationIndex(IndexStack, 1, 5, 0)
@@ -532,15 +573,14 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		if !FridaREF.IsDead()
 			AddSituationIndex(IndexStack, 1, 7, 1)
 		endif
-		; @TODO: if the Dawnstar tower quest is not done
+		if !DA16.IsCompleted() 																		; Waking Nightmare not finished
 			AddSituationIndex(IndexStack, 1, 7, 2)
-		;endif
+		endif
 		if !CWObj.GetStageDone(255) 																; Civil War is not done
 			AddSituationIndex(IndexStack, 1, 7, 3)
 		endif
 		AddSituationIndex(IndexStack, 1, 7, 0)
 	elseif akLocation == RiverwoodLocation
-		;@TODO: don't block on each state exclusively
 		if !CamillaValeriusREF.IsDead() 															;Camilla alive and well
 			AddSituationIndex(IndexStack, 1, 8, 1)
 		elseif CamillaValeriusREF.IsDead() && !LucanValeriusREF.IsDead()							;Camilla dead, Lucan alive
@@ -553,18 +593,33 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		; @TODO: if Power struggle between Dengeir and Siddgeir active
 			AddSituationIndex(IndexStack, 1, 9, 1)
 		; endif
-		; @TODO: if child murder quest not complete
+		if !DA05.IsCompleted() && !DA05SindingHumanREF.IsDead()									; Ill Met by Moonlight not complete, Sinding alive
 			AddSituationIndex(IndexStack, 1, 9, 2)
-		; endif
+		endif
 		; @TODO: if Siddgeir current jarl
 			AddSituationIndex(IndexStack, 1, 9, 3)
 		; endif
+		if !ValgaViniciaRef.IsDead()															; Innkeeper alive and well
+			AddSituationIndex(IndexStack, 1, 9, 4)
+		endif
 		AddSituationIndex(IndexStack, 1, 9, 0)
 	elseif akLocation == LabyrinthianLocation
 		AddSituationIndex(IndexStack, 1, 10, 0)
 	elseif akLocation == WinterholdLocation
+		if !MG01Quest.IsCompleted()
+			AddSituationIndex(IndexStack, 1, 11, 1)												;Have not yet joined Mage's College
+		endif
 		AddSituationIndex(IndexStack, 1, 11, 0)
 	elseif akLocation == MorthalLocation
+		if !MS14Quest.IsCompleted()																;Laid to Rest not complete
+			AddSituationIndex(IndexStack, 1, 12, 1)
+		endif
+		if !FalionRef.IsDead()																	;Falion is alive and well
+			AddSituationIndex(IndexStack, 1, 12, 2)
+		endif
+		; @TODO: if Idgrod is current jarl
+			AddSituationIndex(IndexStack, 1, 12, 3)
+		; endif
 		AddSituationIndex(IndexStack, 1, 12, 0)
 	elseif akLocation == HelgenLocation
 		AddSituationIndex(IndexStack, 1, 13, 0)
@@ -581,6 +636,9 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 	elseif akLocation == HighHrothgarLocation
 		AddSituationIndex(IndexStack, 1, 19, 0)
 	elseif akLocation == WinterholdCollegeLocation
+		if !MG01Quest.IsCompleted()
+			AddSituationIndex(IndexStack, 1, 20, 1)												;Have not yet joined Mage's College
+		endif
 		AddSituationIndex(IndexStack, 1, 20, 0)
 	elseif akLocation == KynesgroveLocation
 		AddSituationIndex(IndexStack, 1, 21, 0)
@@ -589,6 +647,12 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 	elseif akLocation == FrostflowLighthouseLocation
 		AddSituationIndex(IndexStack, 1, 23, 0)
 	elseif akLocation == SolitudeBluePalaceLocation
+		if !OdarREF.IsDead()																	;Odar the chef is alive and well
+			AddSituationIndex(IndexStack, 1, 24, 1)	
+		endif
+		if !SybilleStentorREF.IsDead()
+			AddSituationIndex(IndexStack, 1, 24, 2)
+		endif
 		AddSituationIndex(IndexStack, 1, 24, 0)
 	elseif akLocation == YsgramorsTombLocation
 		AddSituationIndex(IndexStack, 1, 25, 0)
@@ -607,11 +671,21 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		if !CWObj.GetStageDone(255) 																; Civil War is not done
 			AddSituationIndex(IndexStack, 1, 30, 1)
 		endif
-		if !Ulfric.IsDead()
-			AddSituationIndex(IndexStack, 1, 30, 2)
+		if !UlfricREF.IsDead()
+			AddSituationIndex(IndexStack, 1, 30, 2) 												;Ulfric alive and well
 		endif
 		AddSituationIndex(IndexStack, 1, 30, 0)
+	elseif akLocation == SolitudeRadiantRaimentsLocation
+		AddSituationIndex(IndexStack, 1, 31, 0)
+	elseif akLocation == RiftenRaggedFlagonLocation
+		if !ToniliaRef.IsDead()
+			AddSituationIndex(IndexStack, 1, 32, 1)													; Tonilia alive and well
+		endif
+		AddSituationIndex(IndexStack, 1, 32, 0)
+	elseif akLocation == RiftenRatwayLocation
+		AddSituationIndex(IndexStack, 1, 33, 0)
 	endif
+
 	
 	; @TODO: If the current IndexStack is empty, do these
 	; Check exceptions / location keywords
@@ -655,195 +729,6 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 
 	return GetSituationIndex(IndexStack)
 endFunction
-
-bool property ArissaTalkedAbout_Places_Solitude = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Markarth = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Whiterun = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Riften = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Windhelm = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Windhelm_StormcloaksWon = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Windhelm_ImperialsWon = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Hjaalmarch = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_WhiterunHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_ReachHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_RiftHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_WinterholdHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_FalkreathHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_PaleHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_EastmarchHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_HaafingarHold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_HaafingarHold_StormcloaksWon = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Dawnstar = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Riverwood = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Riverwood_SisterDead = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Riverwood_BrotherSisterDead = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Falkreath = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Labyrinthian = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Winterhold = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Morthal = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Helgen = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Blackreach = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Ivarstead = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Karthwasten = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_BleakFallsBarrow = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Rorikstead = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_NightcallerTemple = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_DragonBridge = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_ShorsStone = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_HighHrothgar = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_WinterholdCollege = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_YsgramorsTomb = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Kynesgrove = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_Lighthouse = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_ThalmorEmbassy = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_RiftenThievesGuildHQ = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_SolitudeBluePalace = false auto conditional hidden
-bool property ArissaTalkedAbout_Places_PlayerHouse = false auto conditional hidden
-
-;#endregion
-
-;#region ============ AREA CLEAR DATA ==================
-;/
-;CAVES
-float property BleakcoastCave_ClearTime auto hidden
-float property BloatedMansGrotto_ClearTime auto hidden
-float property BonechillPassage_ClearTime auto hidden
-float property BoulderfallCave_ClearTime auto hidden
-float property BrittleshinPass_ClearTime auto hidden
-float property BrokenFangCave_ClearTime auto hidden
-float property BrokenHelmHollow_ClearTime auto hidden
-float property BroodCavern_ClearTime auto hidden
-float property BrucasLeapRedoubt_ClearTime auto hidden
-float property ChillwindDepths_ClearTime auto hidden
-float property ClearspringCave_ClearTime auto hidden
-float property ColdRockPass_ClearTime auto hidden
-float property CragslaneCavern_ClearTime auto hidden
-float property CragwallowSlope_ClearTime auto hidden
-float property CronvangrCave_ClearTime auto hidden
-float property CrystaldriftCave_ClearTime auto hidden
-float property Darkshade_ClearTime auto hidden
-float property DarkwaterPass_ClearTime auto hidden
-float property DimhollowCryptDG_ClearTime auto hidden
-float property DuskglowCrevice_ClearTime auto hidden
-float property FallowstoneCave_ClearTime auto hidden
-float property ForsakenCave_ClearTime auto hidden
-float property Gloomreach_ClearTime auto hidden
-float property GraywinterWatch_ClearTime auto hidden
-float property GreywaterGrotto_ClearTime auto hidden
-float property HaemarsShame_ClearTime auto hidden
-float property HalldirsCairn_ClearTime auto hidden
-float property HobsFallCave_ClearTime auto hidden
-float property HoneystrandCave_ClearTime auto hidden
-float property LiarsRetreat_ClearTime auto hidden
-float property LostEchoCave_ClearTime auto hidden
-float property LostKnifeHideout_ClearTime auto hidden
-float property MarasEyeDen_ClearTime auto hidden
-float property MossMotherCavern_ClearTime auto hidden
-float property Orotheim_ClearTime auto hidden
-float property PinemoonCave_ClearTime auto hidden
-float property PinepeakCavern_ClearTime auto hidden
-float property RavenscarHollow_ClearTime auto hidden
-float property RebelsCairn_ClearTime auto hidden
-float property RedEagleAscent_ClearTime auto hidden
-float property RedoransRetreat_ClearTime auto hidden
-float property RimerockBurrow_ClearTime auto hidden
-float property ShadowgreenCavern_ClearTime auto hidden
-float property ShimmermistCave_ClearTime auto hidden
-float property SightlessPit_ClearTime auto hidden
-float property SnaplegCave_ClearTime auto hidden
-float property SteepfallBurrow_ClearTime auto hidden
-float property StillbornCave_ClearTime auto hidden
-float property StonyCreekCave_ClearTime auto hidden
-float property SunderstoneGorge_ClearTime auto hidden
-float property TolvaldsCave_ClearTime auto hidden
-float property UtteringHillsCave_ClearTime auto hidden
-float property WhiteRiverWatch_ClearTime auto hidden
-float property WolfskullCave_ClearTime auto hidden
-
-;NORDIC RUINS
-float property Ansilvund_ClearTime auto hidden
-float property BleakFallsBarrow_ClearTime auto hidden
-float property DeadMensRespite_ClearTime auto hidden
-float property DeepwoodRedoubt_ClearTime auto hidden
-float property Folgunthur_ClearTime auto hidden
-float property Forelhost_ClearTime auto hidden
-float property HagRockRedoubt_ClearTime auto hidden
-float property HagsEnd_ClearTime auto hidden
-float property HighGateRuins_ClearTime auto hidden
-float property LostValleyRedoubt_ClearTime auto hidden
-float property ShriekwindBastion_ClearTime auto hidden
-float property ShroudHearthBarrow_ClearTime auto hidden
-float property SilentMoonsCamp_ClearTime auto hidden
-float property SilverdriftLair_ClearTime auto hidden
-float property Volskygge_ClearTime auto hidden
-float property Volunruud_ClearTime auto hidden
-
-;RUINS
-float property FourSkullLookout_ClearTime auto hidden
-float property HamvirsRest_ClearTime auto hidden
-float property JourneymansNook_ClearTime auto hidden
-float property MolderingRuinsDG_ClearTime auto hidden
-float property NorthSkyboundWatch_ClearTime auto hidden
-float property RoadsideRuins_ClearTime auto hidden
-float property SkytempleRuins_ClearTime auto hidden
-float property WindwardRuins_ClearTime auto hidden
-float property YorgrimOverlook_ClearTime auto hidden
-
-;IMPERIAL TOWERS
-float property AbandonedPrison_ClearTime auto hidden
-float property FalkreathWatchtower_ClearTime auto hidden
-float property PinefrostTower_ClearTime auto hidden
-float property RefugeesRest_ClearTime auto hidden
-float property RiftWatchtower_ClearTime auto hidden
-float property SnowpointBeacon_ClearTime auto hidden
-
-;NORDIC TOWERS
-float property BannermistTower_ClearTime auto hidden
-float property BleakwindBluff_ClearTime auto hidden
-float property CradleStoneTower_ClearTime auto hidden
-float property DeadCroneRock_ClearTime auto hidden
-float property PeaksShadeTower_ClearTime auto hidden
-float property SouthSkyboundWatch_ClearTime auto hidden
-float property ValtheimTowers_ClearTime auto hidden
-
-;MILITARY FORTS
-float property BloodletThrone_ClearTime auto hidden
-float property BrokenTowerRedoubt_ClearTime auto hidden
-float property DriftshadeRefuge_ClearTime auto hidden
-float property FaldarsTooth_ClearTime auto hidden
-float property FellglowKeep_ClearTime auto hidden
-float property FortFellhammer_ClearTime auto hidden
-float property GallowsRock_ClearTime auto hidden
-float property IlinaltasDeep_ClearTime auto hidden
-float property Morvunskar_ClearTime auto hidden
-float property TrevasWatch_ClearTime auto hidden
-
-;MINES
-float property BilegulchMine_ClearTime auto hidden
-float property EmbershardMine_ClearTime auto hidden
-float property HaltedStreamMine_ClearTime auto hidden
-
-;DWEMER RUINS
-float property Alftand_ClearTime auto hidden
-float property Bthalft_ClearTime auto hidden
-float property Kagrenzel_ClearTime auto hidden
-float property Mzinchaleft_ClearTime auto hidden
-float property NchuandZel_ClearTime auto hidden
-float property Raldbthar_ClearTime auto hidden
-
-;DRAGON LAIRS
-float property AncientsAscent_ClearTime auto hidden
-float property AutumnwatchTower_ClearTime auto hidden
-float property BonestrewnCrest_ClearTime auto hidden
-float property DragontoothCrater_ClearTime auto hidden
-float property EldersbloodPeak_ClearTime auto hidden
-float property LostTongueOverlook_ClearTime auto hidden
-float property MountAnthor_ClearTime auto hidden
-float property NorthwindSummit_ClearTime auto hidden
-float property Shearpoint_ClearTime auto hidden
-float property SkybornAltar_ClearTime auto hidden
-/;
-;#endregion
 
 function ArissaDebug(int iClassification, string sDebugMessage)
 	;1 = Regard updates, status changes
