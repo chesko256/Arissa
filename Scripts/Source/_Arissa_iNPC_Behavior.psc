@@ -379,16 +379,23 @@ Location property YsgramorsTombLocation auto
 Location property NightcallerTempleLocation auto
 Location property DragonBridgeLocation auto
 Location property RoriksteadLocation auto
+Location property SolitudeCastleDourLocation auto
+Location property WindhelmPalaceOfTheKingsLocation auto
 
 ; - Location dialogue-specific properties
 Actor property CamillaValeriusREF auto
 Actor property LucanValeriusREF auto
+Actor property UlfricREF auto
+Actor property FridaREF auto
+
 Quest property CW auto
 Quest property CWObj auto
 GlobalVariable property CWSons auto
 GlobalVariable property CWImperial auto
 Keyword property LocTypePlayerHouse auto
 Keyword property LocTypeJail auto
+faction property CWImperialFaction auto
+faction property CWSonsFaction auto
 
 function TestSayLine()
 	iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
@@ -410,7 +417,7 @@ function PlayAmbientDialogue(Location akLocation)
 endFunction
 
 bool function MeetsDialoguePrereqs()
-	if _Arissa_MQ01.IsCompleted() && IsFollowing
+	if _Arissa_MQ01.IsCompleted() && IsFollowing && iNPC_Actor.GetDistance(PlayerRef) < 2048.0
 		return true
 	else
 		return false
@@ -522,6 +529,15 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		endif
 		AddSituationIndex(IndexStack, 1, 6, 0)
 	elseif akLocation == DawnstarLocation
+		if !FridaREF.IsDead()
+			AddSituationIndex(IndexStack, 1, 7, 1)
+		endif
+		; @TODO: if the Dawnstar tower quest is not done
+			AddSituationIndex(IndexStack, 1, 7, 2)
+		;endif
+		if !CWObj.GetStageDone(255) 																; Civil War is not done
+			AddSituationIndex(IndexStack, 1, 7, 3)
+		endif
 		AddSituationIndex(IndexStack, 1, 7, 0)
 	elseif akLocation == RiverwoodLocation
 		;@TODO: don't block on each state exclusively
@@ -534,6 +550,15 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		endif
 		AddSituationIndex(IndexStack, 1, 8, 0)
 	elseif akLocation == FalkreathLocation
+		; @TODO: if Power struggle between Dengeir and Siddgeir active
+			AddSituationIndex(IndexStack, 1, 9, 1)
+		; endif
+		; @TODO: if child murder quest not complete
+			AddSituationIndex(IndexStack, 1, 9, 2)
+		; endif
+		; @TODO: if Siddgeir current jarl
+			AddSituationIndex(IndexStack, 1, 9, 3)
+		; endif
 		AddSituationIndex(IndexStack, 1, 9, 0)
 	elseif akLocation == LabyrinthianLocation
 		AddSituationIndex(IndexStack, 1, 10, 0)
@@ -573,40 +598,60 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		AddSituationIndex(IndexStack, 1, 27, 0)
 	elseif akLocation == RoriksteadLocation
 		AddSituationIndex(IndexStack, 1, 28, 0)
+	elseif akLocation == SolitudeCastleDourLocation
+		if !PlayerRef.IsInFaction(CWImperialFaction) && !PlayerRef.IsInFaction(CWSonsFaction)		; Player hasn't joined a CW faction
+			AddSituationIndex(IndexStack, 1, 29, 1)	
+		endif
+		AddSituationIndex(IndexStack, 1, 29, 0)
+	elseif akLocation == WindhelmPalaceOfTheKingsLocation
+		if !CWObj.GetStageDone(255) 																; Civil War is not done
+			AddSituationIndex(IndexStack, 1, 30, 1)
+		endif
+		if !Ulfric.IsDead()
+			AddSituationIndex(IndexStack, 1, 30, 2)
+		endif
+		AddSituationIndex(IndexStack, 1, 30, 0)
+	endif
 	
+	; @TODO: If the current IndexStack is empty, do these
 	; Check exceptions / location keywords
-	elseif akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
+	if akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
 		AddSituationIndex(IndexStack, 2, 1, 0)
 	elseif akLocation.HasKeyword(LocTypeJail)
 		AddSituationIndex(IndexStack, 2, 2, 0)
+	endif
 
 	;Check current Hold as last resort (least specific)
-	else
-		if aiCurrentHold == 1 											;Eastmarch
-			AddSituationIndex(IndexStack, 3, 1, 0)
-		elseif aiCurrentHold == 2 										;Falkreath Hold
-			AddSituationIndex(IndexStack, 3, 2, 0)
-		elseif aiCurrentHold == 3 										;Haafingar
-			if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
-				AddSituationIndex(IndexStack, 3, 3, 1)
-			elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
-				AddSituationIndex(IndexStack, 3, 3, 2)
-			endif
-			AddSituationIndex(IndexStack, 3, 3, 0)
-		elseif aiCurrentHold == 4 										;Hjaalmarch
-			AddSituationIndex(IndexStack, 3, 4, 0)
-		elseif aiCurrentHold == 5 										;The Pale
-			AddSituationIndex(IndexStack, 3, 5, 0)
-		elseif aiCurrentHold == 6 										;The Reach
-			AddSituationIndex(IndexStack, 3, 6, 0)
-		elseif aiCurrentHold == 7 										;The Rift
-			AddSituationIndex(IndexStack, 3, 7, 0)
-		elseif aiCurrentHold == 8 										;Whiterun
-			AddSituationIndex(IndexStack, 3, 8, 0)
-		elseif aiCurrentHold == 9 										;Winterhold Hold
-			AddSituationIndex(IndexStack, 3, 9, 0)
+	
+	; @TODO: If the current IndexStack is empty, do these
+	if aiCurrentHold == 1 											;Eastmarch
+		AddSituationIndex(IndexStack, 3, 1, 0)
+	elseif aiCurrentHold == 2 										;Falkreath Hold
+		AddSituationIndex(IndexStack, 3, 2, 0)
+	elseif aiCurrentHold == 3 										;Haafingar
+		if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
+			AddSituationIndex(IndexStack, 3, 3, 1)
+		elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
+			AddSituationIndex(IndexStack, 3, 3, 2)
 		endif
+		AddSituationIndex(IndexStack, 3, 3, 0)
+	elseif aiCurrentHold == 4 										;Hjaalmarch
+		AddSituationIndex(IndexStack, 3, 4, 0)
+	elseif aiCurrentHold == 5 										;The Pale
+		AddSituationIndex(IndexStack, 3, 5, 0)
+	elseif aiCurrentHold == 6 										;The Reach
+		AddSituationIndex(IndexStack, 3, 6, 0)
+	elseif aiCurrentHold == 7 										;The Rift
+		; @TODO: if Nightingales undiscovered
+			AddSituationIndex(IndexStack, 3, 7, 1)	
+		; endif
+		AddSituationIndex(IndexStack, 3, 7, 0)
+	elseif aiCurrentHold == 8 										;Whiterun
+		AddSituationIndex(IndexStack, 3, 8, 0)
+	elseif aiCurrentHold == 9 										;Winterhold Hold
+		AddSituationIndex(IndexStack, 3, 9, 0)
 	endif
+
 
 	return GetSituationIndex(IndexStack)
 endFunction
