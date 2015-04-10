@@ -399,6 +399,12 @@ Actor property OdarREF auto
 Actor property SybilleStentorREF auto
 Actor property DA05SindingHumanREF auto
 Actor property ToniliaRef auto
+Actor property SiddgeirRef auto
+Actor property IdgrodRavencroneREF auto
+Actor property LailaRef auto
+ReferenceAlias property FalkreathJarl auto
+ReferenceAlias property MorthalJarl auto
+ReferenceAlias property RiftenJarl auto
 
 Quest property CW auto
 Quest property CWObj auto
@@ -556,9 +562,9 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		if TG01.GetStage() < 20
 			AddSituationIndex(IndexStack, 1, 4, 3)																		; Haven't located Ragged Flagon yet
 		endif
-		; @TODO: if Laila Law-Giver is current jarl
+		if RiftenJarl.GetActorRef() == LailaRef
 			AddSituationIndex(IndexStack, 1, 4, 4)	
-		; endif
+		endif
 		AddSituationIndex(IndexStack, 1, 4, 0)
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
 		AddSituationIndex(IndexStack, 1, 5, 0)
@@ -590,17 +596,14 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		endif
 		AddSituationIndex(IndexStack, 1, 8, 0)
 	elseif akLocation == FalkreathLocation
-		; @TODO: if Power struggle between Dengeir and Siddgeir active
+		if FalkreathJarl.GetActorRef() == SiddgeirRef											; Siddgeir is Jarl
 			AddSituationIndex(IndexStack, 1, 9, 1)
-		; endif
+		endif
 		if !DA05.IsCompleted() && !DA05SindingHumanREF.IsDead()									; Ill Met by Moonlight not complete, Sinding alive
 			AddSituationIndex(IndexStack, 1, 9, 2)
 		endif
-		; @TODO: if Siddgeir current jarl
-			AddSituationIndex(IndexStack, 1, 9, 3)
-		; endif
 		if !ValgaViniciaRef.IsDead()															; Innkeeper alive and well
-			AddSituationIndex(IndexStack, 1, 9, 4)
+			AddSituationIndex(IndexStack, 1, 9, 3)
 		endif
 		AddSituationIndex(IndexStack, 1, 9, 0)
 	elseif akLocation == LabyrinthianLocation
@@ -617,9 +620,9 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		if !FalionRef.IsDead()																	;Falion is alive and well
 			AddSituationIndex(IndexStack, 1, 12, 2)
 		endif
-		; @TODO: if Idgrod is current jarl
+		if MorthalJarl.GetActorRef() == IdgrodRavencroneREF
 			AddSituationIndex(IndexStack, 1, 12, 3)
-		; endif
+		endif
 		AddSituationIndex(IndexStack, 1, 12, 0)
 	elseif akLocation == HelgenLocation
 		AddSituationIndex(IndexStack, 1, 13, 0)
@@ -687,45 +690,45 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 	endif
 
 	
-	; @TODO: If the current IndexStack is empty, do these
-	; Check exceptions / location keywords
-	if akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
-		AddSituationIndex(IndexStack, 2, 1, 0)
-	elseif akLocation.HasKeyword(LocTypeJail)
-		AddSituationIndex(IndexStack, 2, 2, 0)
+	if IndexStack[0] == 0
+		; Check exceptions / location keywords
+		if akLocation.HasKeyword(LocTypePlayerHouse)					;Player Home
+			AddSituationIndex(IndexStack, 2, 1, 0)
+		elseif akLocation.HasKeyword(LocTypeJail)
+			AddSituationIndex(IndexStack, 2, 2, 0)
+		endif
 	endif
 
 	;Check current Hold as last resort (least specific)
-	
-	; @TODO: If the current IndexStack is empty, do these
-	if aiCurrentHold == 1 											;Eastmarch
-		AddSituationIndex(IndexStack, 3, 1, 0)
-	elseif aiCurrentHold == 2 										;Falkreath Hold
-		AddSituationIndex(IndexStack, 3, 2, 0)
-	elseif aiCurrentHold == 3 										;Haafingar
-		if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
-			AddSituationIndex(IndexStack, 3, 3, 1)
-		elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
-			AddSituationIndex(IndexStack, 3, 3, 2)
+	if IndexStack[0] == 0
+		if aiCurrentHold == 1 											;Eastmarch
+			AddSituationIndex(IndexStack, 3, 1, 0)
+		elseif aiCurrentHold == 2 										;Falkreath Hold
+			AddSituationIndex(IndexStack, 3, 2, 0)
+		elseif aiCurrentHold == 3 										;Haafingar
+			if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
+				AddSituationIndex(IndexStack, 3, 3, 1)
+			elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
+				AddSituationIndex(IndexStack, 3, 3, 2)
+			endif
+			AddSituationIndex(IndexStack, 3, 3, 0)
+		elseif aiCurrentHold == 4 										;Hjaalmarch
+			AddSituationIndex(IndexStack, 3, 4, 0)
+		elseif aiCurrentHold == 5 										;The Pale
+			AddSituationIndex(IndexStack, 3, 5, 0)
+		elseif aiCurrentHold == 6 										;The Reach
+			AddSituationIndex(IndexStack, 3, 6, 0)
+		elseif aiCurrentHold == 7 										;The Rift
+			; @TODO: if Nightingales undiscovered
+				AddSituationIndex(IndexStack, 3, 7, 1)	
+			; endif
+			AddSituationIndex(IndexStack, 3, 7, 0)
+		elseif aiCurrentHold == 8 										;Whiterun
+			AddSituationIndex(IndexStack, 3, 8, 0)
+		elseif aiCurrentHold == 9 										;Winterhold Hold
+			AddSituationIndex(IndexStack, 3, 9, 0)
 		endif
-		AddSituationIndex(IndexStack, 3, 3, 0)
-	elseif aiCurrentHold == 4 										;Hjaalmarch
-		AddSituationIndex(IndexStack, 3, 4, 0)
-	elseif aiCurrentHold == 5 										;The Pale
-		AddSituationIndex(IndexStack, 3, 5, 0)
-	elseif aiCurrentHold == 6 										;The Reach
-		AddSituationIndex(IndexStack, 3, 6, 0)
-	elseif aiCurrentHold == 7 										;The Rift
-		; @TODO: if Nightingales undiscovered
-			AddSituationIndex(IndexStack, 3, 7, 1)	
-		; endif
-		AddSituationIndex(IndexStack, 3, 7, 0)
-	elseif aiCurrentHold == 8 										;Whiterun
-		AddSituationIndex(IndexStack, 3, 8, 0)
-	elseif aiCurrentHold == 9 										;Winterhold Hold
-		AddSituationIndex(IndexStack, 3, 9, 0)
 	endif
-
 
 	return GetSituationIndex(IndexStack)
 endFunction
