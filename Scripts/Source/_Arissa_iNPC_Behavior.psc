@@ -402,6 +402,8 @@ Actor property ToniliaRef auto
 Actor property SiddgeirRef auto
 Actor property IdgrodRavencroneREF auto
 Actor property LailaRef auto
+Actor property ElisifTheFairREF auto
+Actor property DagurRef auto
 ReferenceAlias property FalkreathJarl auto
 ReferenceAlias property MorthalJarl auto
 ReferenceAlias property RiftenJarl auto
@@ -421,10 +423,6 @@ Keyword property LocTypePlayerHouse auto
 Keyword property LocTypeJail auto
 faction property CWImperialFaction auto
 faction property CWSonsFaction auto
-
-function TestSayLine()
-	iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
-endFunction
 
 function PlayAmbientDialogue(Location akLocation)
 	CurrentAmbientCommentIndex = 0
@@ -534,11 +532,18 @@ int function GetSituationIndex(int[] aiSituationIndicies)
 	endif
 endFunction
 
+; @TODO: Provide pseudo say-once functionality
 int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrentHold)
 	int[] IndexStack = new int[99]
 	if akLocation == SolitudeLocation
 		if !MS05.IsCompleted()																							; Tending the Flames not completed
 			AddSituationIndex(IndexStack, 1, 1, 1)
+		endif
+		if PlayerRef.GetActorValue("Speechcraft") < 50.0																; Player has low speechcraft
+			AddSituationIndex(IndexStack, 1, 1, 2)
+		endif
+		if SolitudeJarl.GetActorRef() == ElisifTheFairREF 																; Elisif is jarl
+			AddSituationIndex(IndexStack, 1, 1, 3)
 		endif
 		AddSituationIndex(IndexStack, 1, 1, 0)
 	elseif akLocation == MarkarthLocation
@@ -550,6 +555,9 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		endif
 		AddSituationIndex(IndexStack, 1, 2, 0)
 	elseif akLocation == WhiterunLocation
+		if !AdrianneAvenicciREF.IsDead()																				; Adrianne alive and well
+			AddSituationIndex(IndexStack, 1, 3, 1)	
+		endif
 		AddSituationIndex(IndexStack, 1, 3, 0)
 	elseif akLocation == RiftenLocation && akLocation != RiftenThievesGuildHeadquartersLocation
 		if !MavenRef.IsDead()																							; Maven alive and well
@@ -569,10 +577,12 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 	elseif akLocation == RiftenThievesGuildHeadquartersLocation
 		AddSituationIndex(IndexStack, 1, 5, 0)
 	elseif akLocation == WindhelmLocation
-		if CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()				;Stormcloaks won
+		if CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()				; Stormcloaks won
 			AddSituationIndex(IndexStack, 1, 6, 1)
-		elseif CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWImperial.GetValue()		;Imperials won
+		elseif CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWImperial.GetValue()		; Imperials won
 			AddSituationIndex(IndexStack, 1, 6, 2)
+		elseif !CWObj.GetStageDone(255)																		; Neither
+			AddSituationIndex(IndexStack, 1, 6, 3)
 		endif
 		AddSituationIndex(IndexStack, 1, 6, 0)
 	elseif akLocation == DawnstarLocation
@@ -611,6 +621,9 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 	elseif akLocation == WinterholdLocation
 		if !MG01Quest.IsCompleted()
 			AddSituationIndex(IndexStack, 1, 11, 1)												;Have not yet joined Mage's College
+		endif
+		if !DagurRef.IsDead()
+			AddSituationIndex(IndexStack, 1, 11, 2)												; Dagur alive and well
 		endif
 		AddSituationIndex(IndexStack, 1, 11, 0)
 	elseif akLocation == MorthalLocation
