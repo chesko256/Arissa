@@ -4,6 +4,7 @@ Faction property _ArissaFollowerFaction auto
 GlobalVariable property _Arissa_DebugVar auto
 GlobalVariable property _Arissa_CurrentHold auto
 GlobalVariable property _Arissa_Setting_AnnounceArea auto
+GlobalVariable property _Arissa_Setting_AlwaysAnnounceNewArea auto
 Quest property _Arissa_Commentary_AnnounceArea auto
 Armor property _Arissa_ClothingTownBody auto
 _Arissa_iNPC_Behavior property iNPCSystem auto
@@ -13,6 +14,9 @@ Message property _Arissa_CantEquip auto
 Package property _Arissa_AvoidPlayer auto
 
 import _ArissaDebugScript
+
+Location old_location
+bool was_interior
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
@@ -43,7 +47,17 @@ endEvent
 Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 
 	SetHold()
-	AnnounceArea(akNewLoc)
+
+	if was_interior && !(self.GetActorRef().IsInInterior())
+		; skip comments when exiting buildings
+		ArissaDebug(4, "Arissa moved from interior to exterior, skip comment.")
+	else
+		if (akNewLoc) && (akNewLoc != akOldLoc) && (_Arissa_Setting_AlwaysAnnounceNewArea.GetValueInt() == 2)
+			AnnounceArea(akNewLoc, true)
+		else
+			AnnounceArea(akNewLoc)
+		endif
+	endif
 
 	if akNewLoc == MilitaryCampHaafingarSonsLocation && !_Arissa_MQ02.IsRunning() && !_Arissa_MQ02.IsCompleted()
 		_Arissa_MQ02.Start()
@@ -51,13 +65,19 @@ Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 
 	;GetName requires SKSE
 	if akOldLoc && akNewLoc
-		;ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to " + akNewLoc.GetName())
+		ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to " + akNewLoc.GetName())
 	elseif akOldLoc && !akNewLoc
-		;ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to NONE.")
+		ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to NONE.")
 	elseif !akOldLoc && akNewLoc
-		;ArissaDebug(4, "Arissa moved from NONE to " + akNewLoc.GetName())
+		ArissaDebug(4, "Arissa moved from NONE to " + akNewLoc.GetName())
 	else
-		;ArissaDebug(4, "Arissa moved from NONE to NONE.")
+		ArissaDebug(4, "Arissa moved from NONE to NONE.")
+	endif
+
+	if self.GetActorRef().IsInInterior()
+		was_interior = true
+	else
+		was_interior = false
 	endif
 
 endEvent
@@ -137,11 +157,11 @@ function SetHold()
 	endif
 endFunction
 
-function AnnounceArea(Location akLocation)
+function AnnounceArea(Location akLocation, bool abForceComment = false)
 	debug.trace("[Arissa] Attempting to play ambient dialogue...")
 	if _Arissa_Setting_AnnounceArea.GetValueInt() == 1
 		debug.trace("[Arissa] Creating attempt...")
-		iNPCSystem.PlayAmbientDialogue(akLocation)
+		iNPCSystem.PlayAmbientDialogue(akLocation, abForceComment)
 	EndIf
 endFunction
 
