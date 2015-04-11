@@ -493,26 +493,34 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	endif
 
 	int index = 0
+	int header = 0
 	if abSayOnce == true
-		index += 200000000
+		header += 200000000
 	else
-		index += 100000000
+		header += 100000000
 	endif
 	if abSkipRemainingLines == true
-		index += 20000000
+		header += 20000000
 	else
-		index += 10000000
+		header += 10000000
 	endif
 	if abSkipGeneralLines == true
-		index += 2000000
+		header += 2000000
 	else
-		index += 1000000
+		header += 1000000
 	endif
 
 	index += (aiLineType * 10000)
 	index += (aiTypeID * 100)
 	index += (aiSituationID)
+
+	if IsInExclusionList(index)
+		debug.trace("[Arissa] Cannot add excluded index " + index + " to stack, returning.")
+		return
+	endif
 	
+	index += header
+
 	int i = 0
 	bool break = false
 	while i < aiIndexStack.Length && break == false
@@ -559,7 +567,6 @@ int function GetSituationIndex(int[] aiIndexStack)
 			; skip
 		else
 			;@TODO: Account for skipping the rest but not general
-			debug.trace("[Arissa] i " + i)
 			int the_line = aiIndexStack[i]
 			if the_line == 0
 				; skip
@@ -590,8 +597,6 @@ int function GetSituationIndex(int[] aiIndexStack)
 				; Is this a general-case Situation ID?
 				if temp_line % 100 == 0 && skip_general
 					; skip
-				elseif IsInExclusionList(temp_line)
-					debug.trace("[Arissa] Line is in the exclusion list, skipping.")
 				else
 					debug.trace("[Arissa] Adding " + the_line + " to the dialogue stack.")
 					lines[i] = the_line
