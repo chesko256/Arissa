@@ -427,6 +427,8 @@ Keyword property LocTypeJail auto
 faction property CWImperialFaction auto
 faction property CWSonsFaction auto
 
+int[] index_exclusion_list
+
 function PlayPlaceKnowledgeDialogue(Location akLocation)
 	debug.trace("[Arissa] Playing dialogue based on user prompt.")
 	if akLocation
@@ -480,12 +482,22 @@ bool function MeetsDialoguePrereqs()
 	if _Arissa_MQ01.IsCompleted() && IsFollowing && iNPC_Actor.GetDistance(PlayerRef) < 2048.0
 		return true
 	else
+		debug.trace("[Arissa] Didn't meet dialogue prereqs, aborting.")
 		return false
 	endif
 endFunction
 
-function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSkipRemainingLines = false)
+function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSkipRemainingLines = false, bool abSayOnce = false)
+	if !index_exclusion_list
+		index_exclusion_list = new int[128]
+	endif
+
 	int index = 0
+	if abSayOnce == true
+		index += 200000000
+	else
+		index += 100000000
+	endif
 	if abSkipRemainingLines == true
 		index += 20000000
 	else
@@ -512,6 +524,30 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	endWhile
 endFunction
 
+bool function IsInExclusionList(int aiIndex)
+	int i = 0
+	while i < index_exclusion_list.Length
+		if index_exclusion_list[i] == aiIndex
+			return true
+		endif
+		i += 1
+	endWhile
+	return false
+endFunction
+
+function AddToExclusionList(int aiIndex)
+	debug.trace("[Arissa] Adding index " + aiIndex + " to exclusion list.")
+	int i = 0
+	bool break = false
+	while i < index_exclusion_list.Length && !break
+		if index_exclusion_list[i] == 0
+			index_exclusion_list[i] = aiIndex
+			break = true
+		endif
+		i += 1
+	endWhile
+endFunction
+
 int function GetSituationIndex(int[] aiIndexStack)
 	int[] lines = new int[99]
 	int i = 0
@@ -527,23 +563,34 @@ int function GetSituationIndex(int[] aiIndexStack)
 			if the_line == 0
 				; skip
 			else
-				; Strip off the headers
-				if the_line >= 20000000
+				int temp_line = the_line
+				; Temporarily strip say_once header
+				debug.trace("[Arissa] temp_line " + temp_line)
+				if temp_line >= 200000000
+					temp_line -= 200000000
+				else
+					temp_line -= 100000000
+				endif
+				debug.trace("[Arissa] temp_line " + temp_line)
+				if temp_line >= 20000000
 					skip_rest = true
-					the_line -= 20000000
+					temp_line -= 20000000
 				else
-					the_line -= 10000000
+					temp_line -= 10000000
 				endif
-				if the_line >= 2000000
+				debug.trace("[Arissa] temp_line " + temp_line)
+				if temp_line >= 2000000
 					skip_general = true
-					the_line -= 2000000
+					temp_line -= 2000000
 				else
-					the_line -= 1000000
+					temp_line -= 1000000
 				endif
-				
+				debug.trace("[Arissa] temp_line " + temp_line)
 				; Is this a general-case Situation ID?
-				if the_line % 100 == 0 && skip_general
-					;skip
+				if temp_line % 100 == 0 && skip_general
+					; skip
+				elseif IsInExclusionList(temp_line)
+					debug.trace("[Arissa] Line is in the exclusion list, aborting.")
 				else
 					debug.trace("[Arissa] Adding " + the_line + " to the dialogue stack.")
 					lines[i] = the_line
@@ -561,12 +608,33 @@ int function GetSituationIndex(int[] aiIndexStack)
 	else
 		selected_index = -1
 	endif
-	if selected_index != -1
-		debug.trace("[Arissa] Selected index " + lines[selected_index])
-		return lines[selected_index]
+
+	int chosen_line = lines[selected_index]
+
+	; Strip the headers
+	bool add_to_exclusion = false
+	if chosen_line >= 200000000
+		chosen_line -= 200000000
+		add_to_exclusion = true
 	else
-		return -1
+		chosen_line -= 100000000
 	endif
+	if chosen_line >= 20000000
+		chosen_line -= 20000000
+	else
+		chosen_line -= 10000000
+	endif
+	if chosen_line >= 2000000
+		chosen_line -= 2000000
+	else
+		chosen_line -= 1000000
+	endif
+	
+	if add_to_exclusion && !IsInExclusionList(chosen_line)
+		AddToExclusionList(chosen_line)
+	endif
+	debug.trace("[Arissa] Selected index " + chosen_line)
+	return chosen_line
 endFunction
 
 function GetKeywordDialogueSituationIndex(int[] aiIndexStack, Location akLocation)
@@ -648,7 +716,7 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 			AddSituationIndex(aiIndexStack, 1, 4, 2)
 		endif
 		if TG01.GetStage() < 20
-			AddSituationIndex(aiIndexStack, 1, 4, 3)																		; Haven't located Ragged Flagon yet
+			AddSituationIndex(aiIndexStack, 1, 4, 3)																	; Haven't located Ragged Flagon yet
 		endif
 		if RiftenJarl.GetActorRef() == LailaRef
 			AddSituationIndex(aiIndexStack, 1, 4, 4)	
@@ -677,12 +745,12 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 		endif
 		AddSituationIndex(aiIndexStack, 1, 7, 0)
 	elseif akLocation == RiverwoodLocation
-		if !CamillaValeriusREF.IsDead() 															;Camilla alive and well
-			AddSituationIndex(aiIndexStack, 1, 8, 1)
-		elseif CamillaValeriusREF.IsDead() && !LucanValeriusREF.IsDead()							;Camilla dead, Lucan alive
-			AddSituationIndex(aiIndexStack, 1, 8, 2)
-		elseif CamillaValeriusREF.IsDead() && LucanValeriusREF.IsDead()								;Camilla and Lucan dead
-			AddSituationIndex(aiIndexStack, 1, 8, 3)
+		if !CamillaValeriusREF.IsDead() 															; Camilla alive and well
+			AddSituationIndex(aiIndexStack, 1, 8, 1, abSayOnce = true)
+		elseif CamillaValeriusREF.IsDead() && !LucanValeriusREF.IsDead()							; Camilla dead, Lucan alive
+			AddSituationIndex(aiIndexStack, 1, 8, 2, abSayOnce = true)
+		elseif CamillaValeriusREF.IsDead() && LucanValeriusREF.IsDead()								; Camilla and Lucan dead
+			AddSituationIndex(aiIndexStack, 1, 8, 3, abSayOnce = true)
 		endif
 		; AddSituationIndex(aiIndexStack, 1, 8, 0) ; No general riverwood dialogue yet
 	elseif akLocation == FalkreathLocation
@@ -700,17 +768,17 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 		AddSituationIndex(aiIndexStack, 1, 10, 0)
 	elseif akLocation == WinterholdLocation
 		if !MG01Quest.IsCompleted()
-			AddSituationIndex(aiIndexStack, 1, 11, 1)												;Have not yet joined Mage's College
+			AddSituationIndex(aiIndexStack, 1, 11, 1)												; Have not yet joined Mage's College
 		endif
 		if !DagurRef.IsDead()
 			AddSituationIndex(aiIndexStack, 1, 11, 2)												; Dagur alive and well
 		endif
 		AddSituationIndex(aiIndexStack, 1, 11, 0)
 	elseif akLocation == MorthalLocation
-		if !MS14Quest.IsCompleted()																;Laid to Rest not complete
+		if !MS14Quest.IsCompleted()																; Laid to Rest not complete
 			AddSituationIndex(aiIndexStack, 1, 12, 1)
 		endif
-		if !FalionRef.IsDead()																	;Falion is alive and well
+		if !FalionRef.IsDead()																	; Falion is alive and well
 			AddSituationIndex(aiIndexStack, 1, 12, 2)
 		endif
 		if MorthalJarl.GetActorRef() == IdgrodRavencroneREF
@@ -733,7 +801,7 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 		AddSituationIndex(aiIndexStack, 1, 19, 0)
 	elseif akLocation == WinterholdCollegeLocation
 		if !MG01Quest.IsCompleted()
-			AddSituationIndex(aiIndexStack, 1, 20, 1)												;Have not yet joined Mage's College
+			AddSituationIndex(aiIndexStack, 1, 20, 1)												; Have not yet joined Mage's College
 		endif
 		AddSituationIndex(aiIndexStack, 1, 20, 0)
 	elseif akLocation == KynesgroveLocation
@@ -743,7 +811,7 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 	elseif akLocation == FrostflowLighthouseLocation
 		AddSituationIndex(aiIndexStack, 1, 23, 0)
 	elseif akLocation == SolitudeBluePalaceLocation
-		if !OdarREF.IsDead()																	;Odar the chef is alive and well
+		if !OdarREF.IsDead()																	; Odar the chef is alive and well
 			AddSituationIndex(aiIndexStack, 1, 24, 1)	
 		endif
 		if !SybilleStentorREF.IsDead()
@@ -768,7 +836,7 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 			AddSituationIndex(aiIndexStack, 1, 30, 1)
 		endif
 		if !UlfricREF.IsDead()
-			AddSituationIndex(aiIndexStack, 1, 30, 2) 												;Ulfric alive and well
+			AddSituationIndex(aiIndexStack, 1, 30, 2) 												; Ulfric alive and well
 		endif
 		AddSituationIndex(aiIndexStack, 1, 30, 0)
 	elseif akLocation == SolitudeRadiantRaimentsLocation
