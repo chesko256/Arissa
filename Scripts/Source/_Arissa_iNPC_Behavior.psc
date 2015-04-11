@@ -404,9 +404,11 @@ Actor property IdgrodRavencroneREF auto
 Actor property LailaRef auto
 Actor property ElisifTheFairREF auto
 Actor property DagurRef auto
+Actor property AdrianneAvenicciREF auto
 ReferenceAlias property FalkreathJarl auto
 ReferenceAlias property MorthalJarl auto
 ReferenceAlias property RiftenJarl auto
+ReferenceAlias property SolitudeJarl auto
 
 Quest property CW auto
 Quest property CWObj auto
