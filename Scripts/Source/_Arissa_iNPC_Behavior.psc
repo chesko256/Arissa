@@ -559,12 +559,13 @@ int function GetSituationIndex(int[] aiIndexStack)
 			; skip
 		else
 			;@TODO: Account for skipping the rest but not general
+			debug.trace("[Arissa] i " + i)
 			int the_line = aiIndexStack[i]
 			if the_line == 0
 				; skip
 			else
 				int temp_line = the_line
-				; Temporarily strip say_once header
+				; Temporarily strip headers
 				debug.trace("[Arissa] temp_line " + temp_line)
 				if temp_line >= 200000000
 					temp_line -= 200000000
@@ -590,7 +591,7 @@ int function GetSituationIndex(int[] aiIndexStack)
 				if temp_line % 100 == 0 && skip_general
 					; skip
 				elseif IsInExclusionList(temp_line)
-					debug.trace("[Arissa] Line is in the exclusion list, aborting.")
+					debug.trace("[Arissa] Line is in the exclusion list, skipping.")
 				else
 					debug.trace("[Arissa] Adding " + the_line + " to the dialogue stack.")
 					lines[i] = the_line
@@ -606,7 +607,7 @@ int function GetSituationIndex(int[] aiIndexStack)
 	if line_count > 0
 		selected_index = utility.RandomInt(0, (line_count - 1))
 	else
-		selected_index = -1
+		return -1
 	endif
 
 	int chosen_line = lines[selected_index]
