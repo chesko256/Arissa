@@ -1,5 +1,6 @@
 scriptname _Arissa_iNPC_Behavior extends _Arissa_iNPC_Main conditional
 
+GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 Armor property _Arissa_ClothingTownBody auto
 Message property _ArissaDismissMessageWait auto
 Message property _ArissaBlockedMessage auto
@@ -427,6 +428,15 @@ faction property CWImperialFaction auto
 faction property CWSonsFaction auto
 
 function PlayAmbientDialogue(Location akLocation)
+	; Roll for chance to play dialogue.
+	float roll = Utility.RandomFloat(0.01, 1.0)
+	debug.trace("[Arissa] Ambient dialogue: Rolle d " + roll + ", needed " + _Arissa_Setting_ChatterFrequency.GetValue() + " or less.")
+	if roll <= _Arissa_Setting_ChatterFrequency.GetValue()
+		debug.trace("[Arissa] Searching for Situation Index.")
+	else
+		return
+	endif
+
 	CurrentAmbientCommentIndex = 0
 	if MeetsDialoguePrereqs()
 		if akLocation
@@ -606,7 +616,7 @@ int function GetAmbientDialogueSituationIndex(Location akLocation, int aiCurrent
 		elseif CamillaValeriusREF.IsDead() && LucanValeriusREF.IsDead()								;Camilla and Lucan dead
 			AddSituationIndex(IndexStack, 1, 8, 3)
 		endif
-		AddSituationIndex(IndexStack, 1, 8, 0)
+		; AddSituationIndex(IndexStack, 1, 8, 0) ; No general riverwood dialogue yet
 	elseif akLocation == FalkreathLocation
 		if FalkreathJarl.GetActorRef() == SiddgeirRef											; Siddgeir is Jarl
 			AddSituationIndex(IndexStack, 1, 9, 1)
