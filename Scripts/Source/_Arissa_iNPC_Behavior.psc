@@ -573,27 +573,23 @@ int function GetSituationIndex(int[] aiIndexStack)
 			else
 				int temp_line = the_line
 				; Temporarily strip headers
-				debug.trace("[Arissa] temp_line " + temp_line)
 				if temp_line >= 200000000
 					temp_line -= 200000000
 				else
 					temp_line -= 100000000
 				endif
-				debug.trace("[Arissa] temp_line " + temp_line)
 				if temp_line >= 20000000
 					skip_rest = true
 					temp_line -= 20000000
 				else
 					temp_line -= 10000000
 				endif
-				debug.trace("[Arissa] temp_line " + temp_line)
 				if temp_line >= 2000000
 					skip_general = true
 					temp_line -= 2000000
 				else
 					temp_line -= 1000000
 				endif
-				debug.trace("[Arissa] temp_line " + temp_line)
 				; Is this a general-case Situation ID?
 				if temp_line % 100 == 0 && skip_general
 					; skip
