@@ -47,3 +47,7 @@
 #Textures
 !textures/actors/character/facegendata/facetint/companionarissa.esp/*
 !textures/arissa/*
+
+#Interface
+!Interface/arissa/*
+!Interface/Translations/CompanionArissa*.txt

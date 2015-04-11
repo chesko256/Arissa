@@ -7,7 +7,7 @@ GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 int Behavior_SettingChatterFrequency_OID
 
 Event OnConfigInit()
-	Pages = new string[3]
+	Pages = new string[1]
 	Pages[0] = "$ArissaBehaviorPage"
 endEvent
 
