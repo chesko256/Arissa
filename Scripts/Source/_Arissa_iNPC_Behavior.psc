@@ -347,11 +347,13 @@ bool property Arissa_CommentedOn_PuzzleDoor = false auto conditional hidden
 
 ;#endregion
 
-; ========= Place Knowledge System =========
+; ========= Ambient Dialogue System =========
+float property NO_REPEAT_TIMEOUT = 60.0 autoReadOnly
 int property CurrentAmbientCommentIndex = 0 auto conditional hidden
 
 GlobalVariable property _Arissa_CurrentHold auto
 
+; - Ambient dialogue-specific locations
 Location property SolitudeLocation auto
 Location property MarkarthLocation auto
 Location property WhiterunLocation auto
@@ -386,7 +388,7 @@ Location property SolitudeRadiantRaimentsLocation auto
 Location property RiftenRaggedFlagonLocation auto
 Location property RiftenRatwayLocation auto
 
-; - Location dialogue-specific properties
+; - Ambient dialogue-specific actors
 Actor property CamillaValeriusREF auto
 Actor property LucanValeriusREF auto
 Actor property UlfricREF auto
@@ -411,6 +413,7 @@ ReferenceAlias property MorthalJarl auto
 ReferenceAlias property RiftenJarl auto
 ReferenceAlias property SolitudeJarl auto
 
+; - Ambient dialogue-specific properties
 Quest property CW auto
 Quest property CWObj auto
 Quest property TG01 auto
@@ -427,16 +430,26 @@ Keyword property LocTypeJail auto
 faction property CWImperialFaction auto
 faction property CWSonsFaction auto
 
+int[] no_repeat_list
 int[] index_exclusion_list
+bool stack_has_index
+int stashed_norepeat_index
+
+Event OnUpdate()
+	debug.trace("[Arissa] Clearing no-repeat list.")
+	no_repeat_list = new int[64]
+endEvent
 
 function PlayPlaceKnowledgeDialogue(Location akLocation)
 	debug.trace("[Arissa] Playing dialogue based on user prompt.")
+	stashed_norepeat_index = 0
+	CurrentAmbientCommentIndex = 0
 	if akLocation
 		int[] IndexStack = new int[99]
 		GetLocationDialogueSituationIndex(IndexStack, akLocation)
 		GetKeywordDialogueSituationIndex(IndexStack, akLocation)
 		GetHoldDialogueSituationIndex(IndexStack, _Arissa_CurrentHold.GetValueInt())
-		CurrentAmbientCommentIndex = GetSituationIndex(IndexStack)
+		CurrentAmbientCommentIndex = GetSituationIndex(IndexStack, abDontRandomize = True)
 	endif
 
 	if CurrentAmbientCommentIndex != 0
@@ -456,10 +469,12 @@ function PlayAmbientDialogue(Location akLocation, bool abForceComment)
 		if roll <= _Arissa_Setting_ChatterFrequency.GetValue()
 			debug.trace("[Arissa] Searching for Situation Index.")
 		else
+			debug.trace("[Arissa] Staying quiet for now.")
 			return
 		endif
 	endif
 
+	stashed_norepeat_index = 0
 	CurrentAmbientCommentIndex = 0
 	if MeetsDialoguePrereqs()
 		if akLocation
@@ -487,7 +502,10 @@ bool function MeetsDialoguePrereqs()
 	endif
 endFunction
 
-function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSkipRemainingLines = false, bool abSayOnce = false)
+function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int aiSituationID, bool abSkipGeneralLines = false, bool abSayOnce = false)
+	if !no_repeat_list
+		no_repeat_list = new int[64]
+	endif
 	if !index_exclusion_list
 		index_exclusion_list = new int[128]
 	endif
@@ -499,7 +517,7 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	else
 		header += 100000000
 	endif
-	if abSkipRemainingLines == true
+	if aiSituationID != 0
 		header += 20000000
 	else
 		header += 10000000
@@ -514,6 +532,17 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	index += (aiTypeID * 100)
 	index += (aiSituationID)
 
+	if IsInNoRepeatList(index)
+		debug.trace("[Arissa] Cannot add index " + index + " to stack, set to no-repeat and not enough time has passed.")
+		if !stack_has_index && stashed_norepeat_index == 0
+			; Stash this situation for later; it might be the only one we can say anything about.
+			stashed_norepeat_index = index
+			return
+		else
+			return
+		endif
+	endif
+
 	if IsInExclusionList(index)
 		debug.trace("[Arissa] Cannot add excluded index " + index + " to stack, returning.")
 		return
@@ -526,6 +555,7 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	while i < aiIndexStack.Length && break == false
 		if aiIndexStack[i] == 0
 			aiIndexStack[i] = index
+			stack_has_index = true
 			break = true
 		endif
 		i += 1
@@ -536,6 +566,17 @@ bool function IsInExclusionList(int aiIndex)
 	int i = 0
 	while i < index_exclusion_list.Length
 		if index_exclusion_list[i] == aiIndex
+			return true
+		endif
+		i += 1
+	endWhile
+	return false
+endFunction
+
+bool function IsInNoRepeatList(int aiIndex)
+	int i = 0
+	while i < no_repeat_list.Length
+		if no_repeat_list[i] == aiIndex
 			return true
 		endif
 		i += 1
@@ -556,7 +597,21 @@ function AddToExclusionList(int aiIndex)
 	endWhile
 endFunction
 
-int function GetSituationIndex(int[] aiIndexStack)
+function AddToNoRepeatList(int aiIndex)
+	debug.trace("[Arissa] Adding index " + aiIndex + " to no-repeat list.")
+	int i = 0
+	bool break = false
+	while i < no_repeat_list.Length && !break
+		if no_repeat_list[i] == 0
+			no_repeat_list[i] = aiIndex
+			break = true
+			RegisterForSingleUpdate(NO_REPEAT_TIMEOUT)
+		endif
+		i += 1
+	endWhile
+endFunction
+
+int function GetSituationIndex(int[] aiIndexStack, bool abDontRandomize = false)
 	int[] lines = new int[99]
 	int i = 0
 	bool skip_general = false
@@ -579,7 +634,6 @@ int function GetSituationIndex(int[] aiIndexStack)
 					temp_line -= 100000000
 				endif
 				if temp_line >= 20000000
-					skip_rest = true
 					temp_line -= 20000000
 				else
 					temp_line -= 10000000
@@ -603,18 +657,28 @@ int function GetSituationIndex(int[] aiIndexStack)
 		i += 1
 	endWhile
 
-	; Randomly select an item from the stack
+	; Select an item from the stack
+	int chosen_line
 	int selected_index
 	if line_count > 0
-		selected_index = utility.RandomInt(0, (line_count - 1))
+		if abDontRandomize
+			debug.trace("[Arissa] User prompt; take item from top of stack.")
+			chosen_line = lines[0]
+		else
+			debug.trace("[Arissa] Ambient; select random index from stack.")
+			selected_index = utility.RandomInt(0, (line_count - 1))
+			chosen_line = lines[selected_index]
+		endif
+	elseif stashed_norepeat_index > 0
+		debug.trace("[Arissa] Using the stashed no-repeat situation index " + stashed_norepeat_index + ", since no other situations are available.")
+		chosen_line = stashed_norepeat_index
 	else
 		return -1
 	endif
 
-	int chosen_line = lines[selected_index]
-
 	; Strip the headers
 	bool add_to_exclusion = false
+	bool add_to_norepeat = false
 	if chosen_line >= 200000000
 		chosen_line -= 200000000
 		add_to_exclusion = true
@@ -623,6 +687,7 @@ int function GetSituationIndex(int[] aiIndexStack)
 	endif
 	if chosen_line >= 20000000
 		chosen_line -= 20000000
+		add_to_norepeat = true
 	else
 		chosen_line -= 10000000
 	endif
@@ -632,6 +697,9 @@ int function GetSituationIndex(int[] aiIndexStack)
 		chosen_line -= 1000000
 	endif
 	
+	if add_to_norepeat && !IsInNoRepeatList(chosen_line)
+		AddToNoRepeatList(chosen_line)
+	endif
 	if add_to_exclusion && !IsInExclusionList(chosen_line)
 		AddToExclusionList(chosen_line)
 	endif
