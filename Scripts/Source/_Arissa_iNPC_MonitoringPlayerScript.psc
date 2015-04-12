@@ -403,7 +403,10 @@ endFunction
 function CheckSocialCondition()
 	;Determine if it is socially acceptable to relax here.
 	Location myLoc = iNPC.GetActorRef().GetCurrentLocation()
-	if myLoc && (myLoc.HasKeyword(LocTypeHouse) || myLoc.HasKeyword(LocTypePlayerHouse) || myLoc.HasKeyword(LocTypeInn) || myLoc.HasKeyword(LocTypeStore) || myLoc.HasKeyword(LocTypeTown) || myLoc.HasKeyword(LocTypeCastle) || myLoc.HasKeyword(LocTypeCity))
+	if myLoc && (myLoc.HasKeyword(LocTypeHouse) || myLoc.HasKeyword(LocTypePlayerHouse) || 		\
+		           myLoc.HasKeyword(LocTypeInn) || myLoc.HasKeyword(LocTypeStore) || 			\
+		           myLoc.HasKeyword(LocTypeTown) || myLoc.HasKeyword(LocTypeCastle) || 			\
+		           myLoc.HasKeyword(LocTypeCity))
 		SociallyAcceptableConditions = true
 	else
 		SociallyAcceptableConditions = false

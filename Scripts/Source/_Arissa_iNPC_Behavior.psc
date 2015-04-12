@@ -1,6 +1,6 @@
 scriptname _Arissa_iNPC_Behavior extends _Arissa_iNPC_Main conditional
 
-GlobalVariable property _Arissa_Setting_ChatterFrequency auto
+GlobalVariable property GameHour auto
 Armor property _Arissa_ClothingTownBody auto
 Message property _ArissaDismissMessageWait auto
 Message property _ArissaBlockedMessage auto
@@ -348,6 +348,9 @@ bool property Arissa_CommentedOn_PuzzleDoor = false auto conditional hidden
 ;#endregion
 
 ; ========= Ambient Dialogue System =========
+Topic property _Arissa_DialoguePlaceKnowledgeSharedInfo auto
+Topic property _Arissa_AmbientDialogueShared auto
+
 float property NO_REPEAT_TIMEOUT = 60.0 autoReadOnly
 int property CurrentAmbientCommentIndex = 0 auto conditional hidden
 
@@ -440,6 +443,10 @@ Event OnUpdate()
 	no_repeat_list = new int[64]
 endEvent
 
+Event OnUpdateGameTime()
+	PlayChatterDialogue()
+endEvent
+
 function PlayPlaceKnowledgeDialogue(Location akLocation)
 	debug.trace("[Arissa] Playing dialogue based on user prompt.")
 	stashed_norepeat_index = 0
@@ -492,6 +499,18 @@ function PlayAmbientDialogue(Location akLocation, bool abForceComment)
 		endif
 	endif
 endFunction
+
+function PlayChatterDialogue()
+	int[] IndexStack = new int[99]
+	GetChatterDialogueSituationIndex(IndexStack)
+	CurrentAmbientCommentIndex = GetSituationIndex(IndexStack)
+	if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
+		iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
+	else
+		debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
+	endif
+endFunction
+
 
 bool function MeetsDialoguePrereqs()
 	if _Arissa_MQ01.IsCompleted() && IsFollowing && iNPC_Actor.GetDistance(PlayerRef) < 2048.0
@@ -751,7 +770,6 @@ function GetHoldDialogueSituationIndex(int[] aiIndexStack, int aiCurrentHold)
 	endif
 endFunction
 
-; @TODO: Provide pseudo say-once functionality
 function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocation)
 	if akLocation == SolitudeLocation
 		if !MS05.IsCompleted()																							; Tending the Flames not completed
@@ -918,6 +936,12 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 		AddSituationIndex(aiIndexStack, 1, 32, 0)
 	elseif akLocation == RiftenRatwayLocation
 		AddSituationIndex(aiIndexStack, 1, 33, 0)
+	endif
+endFunction
+
+function GetChatterDialogueSituationIndex(int[] aiIndexStack)
+	if (GameHour.GetValueInt() > 19 || GameHour.GetValueInt() <= 7) && !PlayerRef.IsInCombat()
+		AddSituationIndex(aiIndexStack, 4, 1, 0)
 	endif
 endFunction
 

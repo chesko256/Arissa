@@ -11,6 +11,7 @@ _Arissa_Compatibility property Compatibility auto
 Actor property iNPC_Actor auto						;MUST be set in the Creation Kit
 ReferenceAlias property iNPC auto
 Faction property akFollowerFaction auto
+GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 
 ;==============iNPC Behavior Flags==============
 bool Property PlayerSettled auto conditional hidden
@@ -476,9 +477,6 @@ endFunction
 ;
 ;
 ;====================================================================================================================
-;------ TEST -------
-Topic property _Arissa_DialoguePlaceKnowledgeSharedInfo auto
-;------ TEST -------
 
 Function EngageFollowBehavior(bool allowDismiss = true)
 	ArissaDebug(1, "Engaging follow behavior.")
@@ -500,6 +498,7 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 		Quest EFFQuest = Compatibility.EFF
 		(EFFQuest as EFFCore).XFL_AddFollower(iNPC_Actor)
 	endif
+	RegisterForSingleUpdateGameTime(_Arissa_Setting_ChatterFrequency.GetValue())
 	ArissaDebug(1, "================[iNPC]================")
 	ArissaDebug(1, "Engaging follower behavior.")
 	ArissaDebug(1, "Alias: " + iNPC)
@@ -513,14 +512,7 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 	ArissaDebug(1, "IsIgnoringFriendlyHits: " + iNPC.GetActorRef().IsIgnoringFriendlyHits())
 	ArissaDebug(1, "================[iNPC]================")
 	ArissaDebug(1, "Waiting 3, then playing ambient line...")
-	utility.wait(3)
-	ArissaDebug(1, "Playing line...")
-	TestSayLine()
 EndFunction
-
-function TestSayLine()
-	;overridden by Behavior
-endFunction
 
 Function DisengageFollowBehavior()
 	ArissaDebug(1, "Disengaging follow behavior.")
