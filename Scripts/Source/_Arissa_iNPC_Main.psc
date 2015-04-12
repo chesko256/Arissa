@@ -10,8 +10,11 @@ _Arissa_Compatibility property Compatibility auto
 ;==============iNPC Actor Properties==============
 Actor property iNPC_Actor auto						;MUST be set in the Creation Kit
 ReferenceAlias property iNPC auto
-Faction property akFollowerFaction auto
+;@TODO: Set Current/PotentialFollowerFaction for compatibility
+Faction property _ArissaFollowerFaction auto
+GlobalVariable property _Arissa_Setting_AllowChatter auto
 GlobalVariable property _Arissa_Setting_ChatterFrequency auto
+GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
 
 ;==============iNPC Behavior Flags==============
 bool Property PlayerSettled auto conditional hidden
@@ -487,23 +490,24 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 	CanBeDismissed = allowDismiss
 	UpdateAllStats()
 	iNPC.ForceRefIfEmpty(iNPC_Actor)
-	iNPC.GetActorReference().SetFactionRank(akFollowerFaction, 0)
+	iNPC.GetActorReference().SetFactionRank(_ArissaFollowerFaction, 0)
 	iNPC.GetActorReference().SetPlayerTeammate(true, CanDoFavors)
 	iNPC.GetActorReference().EvaluatePackage()
 	iNPC.TryToAddToFaction(WIFollowerCommentFaction)
 	iNPC.GetActorReference().IgnoreFriendlyHits()
 	MonitoringQuest.Start()
 	Activity.ReInit()
-	if Compatibility.EFF != none
+	;/if Compatibility.EFF != none
 		Quest EFFQuest = Compatibility.EFF
 		(EFFQuest as EFFCore).XFL_AddFollower(iNPC_Actor)
 	endif
-	RegisterForSingleUpdateGameTime(_Arissa_Setting_ChatterFrequency.GetValue())
+	/;
+	SetAllowChatter()
 	ArissaDebug(1, "================[iNPC]================")
 	ArissaDebug(1, "Engaging follower behavior.")
 	ArissaDebug(1, "Alias: " + iNPC)
 	ArissaDebug(1, "Alias Ref: " + iNPC.GetActorReference())
-	ArissaDebug(1, "Faction Rank: " + iNPC.GetActorReference().GetFactionRank(akFollowerFaction))
+	ArissaDebug(1, "Faction Rank: " + iNPC.GetActorReference().GetFactionRank(_ArissaFollowerFaction))
 	ArissaDebug(1, "IsFollowing: " + IsFollowing)
 	ArissaDebug(1, "IsWaiting: " + IsWaiting)
 	ArissaDebug(1, "IsTownRoaming: " + IsTownRoaming)
@@ -511,7 +515,6 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 	ArissaDebug(1, "CanBeDismissed: " + CanBeDismissed)
 	ArissaDebug(1, "IsIgnoringFriendlyHits: " + iNPC.GetActorRef().IsIgnoringFriendlyHits())
 	ArissaDebug(1, "================[iNPC]================")
-	ArissaDebug(1, "Waiting 3, then playing ambient line...")
 EndFunction
 
 Function DisengageFollowBehavior()
@@ -520,16 +523,17 @@ Function DisengageFollowBehavior()
 	IsWaiting = false
 	IsDismissed = true
 	CanBeDismissed = true
-	iNPC.GetActorReference().SetFactionRank(akFollowerFaction, -1)
+	iNPC.GetActorReference().SetFactionRank(_ArissaFollowerFaction, -1)
 	iNPC.GetActorReference().SetPlayerTeammate(false)
 	iNPC.GetActorReference().EvaluatePackage()
 	iNPC.TryToRemoveFromFaction(WIFollowerCommentFaction)
 	iNPC.GetActorReference().IgnoreFriendlyHits(false)
 	MonitoringQuest.Stop()
-	if Compatibility.EFF != none
+	;/if Compatibility.EFF != none
 		Quest EFFQuest = Compatibility.EFF
 		(EFFQuest as EFFCore).XFL_RemoveFollower(iNPC_Actor)
 	endif
+	/;
 	if !IsTownRoaming
 		_ArissaDismissMessage.Show()
 	endif
@@ -627,6 +631,10 @@ endFunction
 function GivePoisons()
 	PlayerRef.AddItem(LItemPoisonAll, 1)
 	GavePoisonsToday = true
+endFunction
+
+function SetAllowChatter()
+	;overridden by Behavior
 endFunction
 
 ;====================================================================================================================

@@ -3,8 +3,7 @@ ScriptName _Arissa_FollowerAliasScript extends ReferenceAlias
 Faction property _ArissaFollowerFaction auto
 GlobalVariable property _Arissa_DebugVar auto
 GlobalVariable property _Arissa_CurrentHold auto
-GlobalVariable property _Arissa_Setting_AnnounceArea auto
-GlobalVariable property _Arissa_Setting_AlwaysAnnounceNewArea auto
+GlobalVariable property _Arissa_Setting_AllowAnnounceNewArea auto
 Quest property _Arissa_Commentary_AnnounceArea auto
 Armor property _Arissa_ClothingTownBody auto
 _Arissa_iNPC_Behavior property iNPCSystem auto
@@ -52,9 +51,7 @@ Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 		; skip comments when exiting buildings
 		ArissaDebug(4, "Arissa moved from interior to exterior, skip comment.")
 	else
-		if (akNewLoc) && (akNewLoc != akOldLoc) && (_Arissa_Setting_AlwaysAnnounceNewArea.GetValueInt() == 2)
-			AnnounceArea(akNewLoc, true)
-		else
+		if (akNewLoc) && (akNewLoc != akOldLoc) && (_Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 2)
 			AnnounceArea(akNewLoc)
 		endif
 	endif
@@ -157,11 +154,10 @@ function SetHold()
 	endif
 endFunction
 
-function AnnounceArea(Location akLocation, bool abForceComment = false)
-	debug.trace("[Arissa] Attempting to play ambient dialogue...")
-	if _Arissa_Setting_AnnounceArea.GetValueInt() == 1
-		debug.trace("[Arissa] Creating attempt...")
-		iNPCSystem.PlayAmbientDialogue(akLocation, abForceComment)
+function AnnounceArea(Location akLocation)
+	if _Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 2
+		debug.trace("[Arissa] Attempting to play ambient dialogue...")
+		iNPCSystem.PlayAmbientDialogue(akLocation)
 	EndIf
 endFunction
 

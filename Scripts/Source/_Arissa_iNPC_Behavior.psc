@@ -445,7 +445,18 @@ endEvent
 
 Event OnUpdateGameTime()
 	PlayChatterDialogue()
+	if _Arissa_Setting_AllowChatter.GetValueInt() == 2
+		RegisterForSingleUpdateGameTime(_Arissa_Setting_ChatterFrequency.GetValueInt())
+	endif
 endEvent
+
+function SetAllowChatter()
+	if _Arissa_Setting_AllowChatter.GetValueInt() == 2
+		RegisterForSingleUpdateGameTime(_Arissa_Setting_ChatterFrequency.GetValueInt())
+	else
+		UnregisterForUpdateGameTime()
+	endif
+endFunction
 
 function PlayPlaceKnowledgeDialogue(Location akLocation)
 	debug.trace("[Arissa] Playing dialogue based on user prompt.")
@@ -466,19 +477,15 @@ function PlayPlaceKnowledgeDialogue(Location akLocation)
 	endif
 endFunction
 
-function PlayAmbientDialogue(Location akLocation, bool abForceComment)
-	if abForceComment
-		debug.trace("[Arissa] New location; forcing comment.")
+function PlayAmbientDialogue(Location akLocation)
+	; Roll for chance to play dialogue.
+	float roll = Utility.RandomFloat(0.01, 1.0)
+	debug.trace("[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_NewAreaFrequency.GetValue() + " or less.")
+	if roll <= _Arissa_Setting_NewAreaFrequency.GetValue()
+		debug.trace("[Arissa] Searching for Situation Index.")
 	else
-		; Roll for chance to play dialogue.
-		float roll = Utility.RandomFloat(0.01, 1.0)
-		debug.trace("[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_ChatterFrequency.GetValue() + " or less.")
-		if roll <= _Arissa_Setting_ChatterFrequency.GetValue()
-			debug.trace("[Arissa] Searching for Situation Index.")
-		else
-			debug.trace("[Arissa] Staying quiet for now.")
-			return
-		endif
+		debug.trace("[Arissa] Staying quiet for now.")
+		return
 	endif
 
 	stashed_norepeat_index = 0
@@ -501,13 +508,25 @@ function PlayAmbientDialogue(Location akLocation, bool abForceComment)
 endFunction
 
 function PlayChatterDialogue()
-	int[] IndexStack = new int[99]
-	GetChatterDialogueSituationIndex(IndexStack)
-	CurrentAmbientCommentIndex = GetSituationIndex(IndexStack)
-	if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
-		iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
-	else
-		debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
+	stashed_norepeat_index = 0
+	CurrentAmbientCommentIndex = 0
+	if MeetsDialoguePrereqs()
+		int[] IndexStack = new int[99]
+		Location loc = iNPC_Actor.GetCurrentLocation()
+		GetChatterDialogueSituationIndex(IndexStack)
+		GetKeywordDialogueSituationIndex(IndexStack, loc)
+		GetLocationDialogueSituationIndex(IndexStack, loc)
+		GetHoldDialogueSituationIndex(IndexStack, _Arissa_CurrentHold.GetValueInt())
+		CurrentAmbientCommentIndex = GetSituationIndex(IndexStack)
+		if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
+			if CurrentAmbientCommentIndex >= 40000
+				iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
+			else
+				iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
+			endif
+		else
+			debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
+		endif
 	endif
 endFunction
 
@@ -727,50 +746,55 @@ int function GetSituationIndex(int[] aiIndexStack, bool abDontRandomize = false)
 endFunction
 
 function GetKeywordDialogueSituationIndex(int[] aiIndexStack, Location akLocation)
-	if aiIndexStack[0] == 0
-		; Check exceptions / location keywords
-		if akLocation.HasKeyword(LocTypePlayerHouse)
-			AddSituationIndex(aiIndexStack, 2, 1, 0)
-		elseif akLocation.HasKeyword(LocTypeJail)
-			AddSituationIndex(aiIndexStack, 2, 2, 0)
-		endif
+	if !(aiIndexStack[0] == 0)
+		return
+	endif
+	; Check exceptions / location keywords
+	if akLocation.HasKeyword(LocTypePlayerHouse)
+		AddSituationIndex(aiIndexStack, 2, 1, 0)
+	elseif akLocation.HasKeyword(LocTypeJail)
+		AddSituationIndex(aiIndexStack, 2, 2, 0)
 	endif
 endFunction
 
 function GetHoldDialogueSituationIndex(int[] aiIndexStack, int aiCurrentHold)
 	;Check current Hold as last resort (least specific)
-	if aiIndexStack[0] == 0
-		if aiCurrentHold == 1 											;Eastmarch
-			AddSituationIndex(aiIndexStack, 3, 1, 0)
-		elseif aiCurrentHold == 2 										;Falkreath Hold
-			AddSituationIndex(aiIndexStack, 3, 2, 0)
-		elseif aiCurrentHold == 3 										;Haafingar
-			if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
-				AddSituationIndex(aiIndexStack, 3, 3, 1)
-			elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
-				AddSituationIndex(aiIndexStack, 3, 3, 2)
-			endif
-			AddSituationIndex(aiIndexStack, 3, 3, 0)
-		elseif aiCurrentHold == 4 										;Hjaalmarch
-			AddSituationIndex(aiIndexStack, 3, 4, 0)
-		elseif aiCurrentHold == 5 										;The Pale
-			AddSituationIndex(aiIndexStack, 3, 5, 0)
-		elseif aiCurrentHold == 6 										;The Reach
-			AddSituationIndex(aiIndexStack, 3, 6, 0)
-		elseif aiCurrentHold == 7 										;The Rift
-			; @TODO: if Nightingales undiscovered
-				AddSituationIndex(aiIndexStack, 3, 7, 1)	
-			; endif
-			AddSituationIndex(aiIndexStack, 3, 7, 0)
-		elseif aiCurrentHold == 8 										;Whiterun
-			AddSituationIndex(aiIndexStack, 3, 8, 0)
-		elseif aiCurrentHold == 9 										;Winterhold Hold
-			AddSituationIndex(aiIndexStack, 3, 9, 0)
+	if !(aiIndexStack[0] == 0)
+		return
+	endif
+	if aiCurrentHold == 1 											;Eastmarch
+		AddSituationIndex(aiIndexStack, 3, 1, 0)
+	elseif aiCurrentHold == 2 										;Falkreath Hold
+		AddSituationIndex(aiIndexStack, 3, 2, 0)
+	elseif aiCurrentHold == 3 										;Haafingar
+		if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
+			AddSituationIndex(aiIndexStack, 3, 3, 1)
+		elseif !PlayerRef.IsInInterior() && CWObj.GetStageDone(255) && (CW as CWScript).playerAllegiance == CWSons.GetValue()    ; Stormcloaks won
+			AddSituationIndex(aiIndexStack, 3, 3, 2)
 		endif
+		AddSituationIndex(aiIndexStack, 3, 3, 0)
+	elseif aiCurrentHold == 4 										;Hjaalmarch
+		AddSituationIndex(aiIndexStack, 3, 4, 0)
+	elseif aiCurrentHold == 5 										;The Pale
+		AddSituationIndex(aiIndexStack, 3, 5, 0)
+	elseif aiCurrentHold == 6 										;The Reach
+		AddSituationIndex(aiIndexStack, 3, 6, 0)
+	elseif aiCurrentHold == 7 										;The Rift
+		; @TODO: if Nightingales undiscovered
+			AddSituationIndex(aiIndexStack, 3, 7, 1)	
+		; endif
+		AddSituationIndex(aiIndexStack, 3, 7, 0)
+	elseif aiCurrentHold == 8 										;Whiterun
+		AddSituationIndex(aiIndexStack, 3, 8, 0)
+	elseif aiCurrentHold == 9 										;Winterhold Hold
+		AddSituationIndex(aiIndexStack, 3, 9, 0)
 	endif
 endFunction
 
 function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocation)
+	if !(aiIndexStack[0] == 0)
+		return
+	endif
 	if akLocation == SolitudeLocation
 		if !MS05.IsCompleted()																							; Tending the Flames not completed
 			AddSituationIndex(aiIndexStack, 1, 1, 1)
