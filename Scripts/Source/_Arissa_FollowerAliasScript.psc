@@ -37,7 +37,6 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 				Game.GetPlayer().AddItem(akBaseItem, aiItemCount, abSilent = true)
 				self.GetActorRef().RemoveItem(akBaseItem, aiItemCount)
 			EndIf
-
 		EndIf
 	endif
 endEvent

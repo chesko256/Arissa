@@ -10,7 +10,6 @@ GlobalVariable property GameHour auto
 GlobalVariable property _Arissa_Regard auto
 ActorBase property iNPC_Horse auto
 ObjectReference property MyHorse auto hidden
-bool property SociallyAcceptableConditions = true auto hidden
 Package property _ArissaFollowFar_RideHorse auto
 keyword property LocTypeDungeon auto
 Message property _ArissaTownRoamMessage auto
@@ -92,9 +91,11 @@ Event OnUpdate()
 	UpgradeTasks()
 	UpdateWaitState()
 	UpdateFollowDistance()
-	CheckSocialCondition()
 	
-	TryToSandboxAroundPlayer()
+	
+	if CheckSocialCondition()
+		TryToSandboxAroundPlayer()
+	endif
 	TryToGiveTheftResults()
 	TryToSaySomethingAboutSurroundings()
 
@@ -119,7 +120,6 @@ Event OnUpdateGameTime()
 	RegressMood()
 	ResetTempDialogueFlags()
 	TryToStartQuestsLongTerm()
-	TryToSayAmbientDialogue()
 
 	RegisterForSingleUpdateGameTime(12)
 endEvent
@@ -400,16 +400,16 @@ function UpdateFollowDistance()
 	endif/;
 endFunction
 
-function CheckSocialCondition()
+bool function CheckSocialCondition()
 	;Determine if it is socially acceptable to relax here.
 	Location myLoc = iNPC.GetActorRef().GetCurrentLocation()
 	if myLoc && (myLoc.HasKeyword(LocTypeHouse) || myLoc.HasKeyword(LocTypePlayerHouse) || 		\
 		           myLoc.HasKeyword(LocTypeInn) || myLoc.HasKeyword(LocTypeStore) || 			\
 		           myLoc.HasKeyword(LocTypeTown) || myLoc.HasKeyword(LocTypeCastle) || 			\
 		           myLoc.HasKeyword(LocTypeCity))
-		SociallyAcceptableConditions = true
+		return true
 	else
-		SociallyAcceptableConditions = false
+		return false
 	endif	
 endFunction
 
@@ -643,13 +643,6 @@ function TryToRideHorse()
 				endif
 			endif
 		endif
-	endif
-endFunction
-
-function TryToSayAmbientDialogue()
-	int i = Utility.RandomInt(0, 99)
-	if i >= 50 && (GameHour.GetValueInt() > 19 || GameHour.GetValueInt() <= 7) && !PlayerRef.IsInCombat()
-		_Arissa_AmbientDialogue.Start()
 	endif
 endFunction
 
