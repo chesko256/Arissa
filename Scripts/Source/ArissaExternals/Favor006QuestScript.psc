@@ -1,0 +1,1 @@
+scriptName Favor006QuestScript extends FavorQuestScript

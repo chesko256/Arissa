@@ -1,0 +1,1 @@
+Scriptname CWMainGateExteriorScript extends ReferenceAlias  

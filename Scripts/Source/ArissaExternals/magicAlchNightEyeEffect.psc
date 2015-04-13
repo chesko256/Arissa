@@ -1,0 +1,1 @@
+Scriptname magicAlchNightEyeEffect extends activemagiceffect  

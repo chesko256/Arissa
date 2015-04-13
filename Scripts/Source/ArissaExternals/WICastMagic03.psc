@@ -1,0 +1,1 @@
+Scriptname WICastMagic03 extends WorldInteractionsScript  Conditional

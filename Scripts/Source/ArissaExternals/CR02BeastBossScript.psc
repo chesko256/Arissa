@@ -1,0 +1,10 @@
+Scriptname CR02BeastBossScript extends ReferenceAlias  
+
+
+Event OnDeath(Actor akKiller)
+	if ((GetOwningQuest() as CompanionsRadiantQuest).IsAccepted)
+		GetOwningQuest().SetStage(20)
+	else
+		(GetOwningQuest() as CompanionsRadiantQuest).PrematureShutdown()
+	endif
+EndEvent

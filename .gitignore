@@ -11,6 +11,7 @@
 
 #Top-level files
 !CompanionArissa.esp
+!CompanionArissa.esm
 !CompanionArissa_dawnguard.esp
 
 #Interface
@@ -36,16 +37,15 @@
 
 #Scripts
 !wicommenttriggerscript.pex
-!wicommenttriggerscript.psc
 !qf__arissa*.pex
-!qf__arissa*.psc
 !sf__arissa*.pex
-!sf__arissa*.psc
 !_Arissa*.pex
-!_Arissa*.psc
+!scripts/source/Arissa/*
+!scripts/source/ArissaExternals/*
 
 #Textures
 !textures/actors/character/facegendata/facetint/companionarissa.esp/*
+!textures/actors/character/facegendata/facetint/companionarissa.esm/*
 !textures/arissa/*
 
 #Interface
