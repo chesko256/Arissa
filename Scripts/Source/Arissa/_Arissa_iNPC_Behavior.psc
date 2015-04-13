@@ -537,6 +537,7 @@ function PlayChatterDialogue()
 				return
 			endif
 			if CurrentAmbientCommentIndex >= 40000
+				debug.trace("[Arissa] Trying to say general ambient line.")
 				iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
 			else
 				iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
