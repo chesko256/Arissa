@@ -15,7 +15,6 @@ Package property _Arissa_AvoidPlayer auto
 import _ArissaDebugScript
 
 Location old_location
-bool was_interior
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
@@ -47,13 +46,8 @@ Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 
 	SetHold()
 
-	if was_interior && !(self.GetActorRef().IsInInterior())
-		; skip comments when exiting buildings
-		ArissaDebug(4, "Arissa moved from interior to exterior, skip comment.")
-	else
-		if (akNewLoc) && (akNewLoc != akOldLoc) && (_Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 2)
-			AnnounceArea(akNewLoc)
-		endif
+	if (akNewLoc) && (akNewLoc != akOldLoc) && (_Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 2)
+		AnnounceArea(akNewLoc)
 	endif
 
 	if akNewLoc == MilitaryCampHaafingarSonsLocation && !_Arissa_MQ02.IsRunning() && !_Arissa_MQ02.IsCompleted()
@@ -70,13 +64,6 @@ Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 	else
 		ArissaDebug(4, "Arissa moved from NONE to NONE.")
 	endif
-
-	if self.GetActorRef().IsInInterior()
-		was_interior = true
-	else
-		was_interior = false
-	endif
-
 endEvent
 
 Event OnUpdateGameTime()

@@ -437,6 +437,7 @@ int[] no_repeat_list
 int[] index_exclusion_list
 bool stack_has_index
 int stashed_norepeat_index
+int last_selected_index
 
 Event OnUpdate()
 	debug.trace("[Arissa] Clearing no-repeat list.")
@@ -500,7 +501,12 @@ function PlayAmbientDialogue(Location akLocation)
 		endif
 
 		if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
+			if CurrentAmbientCommentIndex == last_selected_index
+				debug.trace("[Arissa] Suppressing identical index " + CurrentAmbientCommentIndex)
+				return
+			endif
 			iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
+			last_selected_index = CurrentAmbientCommentIndex
 		else
 			debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
 		endif
@@ -519,11 +525,16 @@ function PlayChatterDialogue()
 		GetHoldDialogueSituationIndex(IndexStack, _Arissa_CurrentHold.GetValueInt())
 		CurrentAmbientCommentIndex = GetSituationIndex(IndexStack)
 		if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
+			if CurrentAmbientCommentIndex == last_selected_index
+				debug.trace("[Arissa] Suppressing identical index " + CurrentAmbientCommentIndex)
+				return
+			endif
 			if CurrentAmbientCommentIndex >= 40000
 				iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
 			else
 				iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 			endif
+			last_selected_index = CurrentAmbientCommentIndex
 		else
 			debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
 		endif
