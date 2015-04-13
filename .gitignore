@@ -19,7 +19,10 @@
 !Interface/Translations/Arissa_*.txt
 
 #Meshes
+!Meshes/Actors/Character/FaceGenData/FaceGeom/CompanionArissa.esp/*
+!Meshes/Actors/Character/FaceGenData/FaceGeom/CompanionArissa.esm/*
 !Meshes/arissa/*
+
 
 #Readmes
 !readmes/Arissa*.txt
@@ -31,6 +34,13 @@
 !sound/voice/CompanionArissa.esp/MaleGuard/*
 !sound/voice/CompanionArissa.esp/MaleNordCommander/*
 !sound/voice/CompanionArissa.esp/MaleUniqueGunnher/*
+
+!sound/voice/CompanionArissa.esm/FemaleNord/*
+!sound/voice/CompanionArissa.esm/FemaleUniqueArissa/*
+!sound/voice/CompanionArissa.esm/FemaleYoungEager/*
+!sound/voice/CompanionArissa.esm/MaleGuard/*
+!sound/voice/CompanionArissa.esm/MaleNordCommander/*
+!sound/voice/CompanionArissa.esm/MaleUniqueGunnher/*
 
 #Music
 !music/arissa/*
