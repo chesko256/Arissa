@@ -6,11 +6,11 @@ Scriptname _Arissa_Frag_AnnAreaOn1 Extends TopicInfo Hidden
 Function Fragment_0(ObjectReference akSpeakerRef)
 Actor akSpeaker = akSpeakerRef as Actor
 ;BEGIN CODE
-_Arissa_Setting_AnnounceArea.SetValueInt(1)
+(_Arissa_SuppressDialogueTimer as _Arissa_SuppressDialogueTimerScript).UnsuppressDialogue()
 ;END CODE
 EndFunction
 ;END FRAGMENT
 
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 
-GlobalVariable Property _Arissa_Setting_AnnounceArea  Auto  
+Quest property _Arissa_SuppressDialogueTimer auto

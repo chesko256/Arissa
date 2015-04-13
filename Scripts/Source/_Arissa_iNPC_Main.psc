@@ -15,6 +15,7 @@ Faction property _ArissaFollowerFaction auto
 GlobalVariable property _Arissa_Setting_AllowChatter auto
 GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
+GlobalVariable property _Arissa_Setting_SuppressDialogue auto
 
 ;==============iNPC Behavior Flags==============
 bool Property PlayerSettled auto conditional hidden

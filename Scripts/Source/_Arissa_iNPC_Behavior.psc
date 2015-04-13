@@ -445,7 +445,9 @@ Event OnUpdate()
 endEvent
 
 Event OnUpdateGameTime()
-	PlayChatterDialogue()
+	if _Arissa_Setting_SuppressDialogue.GetValueInt() != 2
+		PlayChatterDialogue()
+	endif
 	if _Arissa_Setting_AllowChatter.GetValueInt() == 2
 		RegisterForSingleUpdateGameTime(_Arissa_Setting_ChatterFrequency.GetValueInt())
 	endif
@@ -479,6 +481,9 @@ function PlayPlaceKnowledgeDialogue(Location akLocation)
 endFunction
 
 function PlayAmbientDialogue(Location akLocation)
+	if _Arissa_Setting_SuppressDialogue.GetValueInt() == 2
+		return
+	endif
 	; Roll for chance to play dialogue.
 	float roll = Utility.RandomFloat(0.01, 1.0)
 	debug.trace("[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_NewAreaFrequency.GetValue() + " or less.")
