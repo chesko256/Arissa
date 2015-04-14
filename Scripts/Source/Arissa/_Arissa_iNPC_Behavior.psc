@@ -430,6 +430,7 @@ GlobalVariable property CWSons auto
 GlobalVariable property CWImperial auto
 Keyword property LocTypePlayerHouse auto
 Keyword property LocTypeJail auto
+Keyword property LocTypeInn auto
 faction property CWImperialFaction auto
 faction property CWSonsFaction auto
 
@@ -537,7 +538,6 @@ function PlayChatterDialogue()
 				return
 			endif
 			if CurrentAmbientCommentIndex >= 40000
-				debug.trace("[Arissa] Trying to say general ambient line.")
 				iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
 			else
 				iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
@@ -773,6 +773,8 @@ function GetKeywordDialogueSituationIndex(int[] aiIndexStack, Location akLocatio
 		AddSituationIndex(aiIndexStack, 2, 1, 0)
 	elseif akLocation.HasKeyword(LocTypeJail)
 		AddSituationIndex(aiIndexStack, 2, 2, 0)
+	elseif akLocation.HasKeyword(LocTypeInn)
+		AddSituationIndex(aiIndexStack, 2, 3, 0)
 	endif
 endFunction
 
