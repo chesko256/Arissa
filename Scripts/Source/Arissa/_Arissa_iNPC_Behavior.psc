@@ -485,19 +485,18 @@ function PlayAmbientDialogue(Location akLocation)
 	if _Arissa_Setting_SuppressDialogue.GetValueInt() == 2 || _Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 1
 		return
 	endif
-	; Roll for chance to play dialogue.
-	float roll = Utility.RandomFloat(0.01, 1.0)
-	debug.trace("[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_NewAreaFrequency.GetValue() + " or less.")
-	if roll <= _Arissa_Setting_NewAreaFrequency.GetValue()
-		debug.trace("[Arissa] Searching for Situation Index.")
-	else
-		debug.trace("[Arissa] Staying quiet for now.")
-		return
-	endif
-
 	stashed_norepeat_index = 0
 	CurrentAmbientCommentIndex = 0
 	if MeetsDialoguePrereqs()
+		; Roll for chance to play dialogue.
+		float roll = Utility.RandomFloat(0.01, 1.0)
+		debug.trace("[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_NewAreaFrequency.GetValue() + " or less.")
+		if roll <= _Arissa_Setting_NewAreaFrequency.GetValue()
+			debug.trace("[Arissa] Searching for Situation Index.")
+		else
+			debug.trace("[Arissa] Staying quiet for now.")
+			return
+		endif
 		debug.trace("[Arissa] Playing dialogue based on entering new area.")
 		if akLocation
 			int[] IndexStack = new int[99]
