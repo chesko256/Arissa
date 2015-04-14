@@ -482,7 +482,7 @@ function PlayPlaceKnowledgeDialogue(Location akLocation)
 endFunction
 
 function PlayAmbientDialogue(Location akLocation)
-	if _Arissa_Setting_SuppressDialogue.GetValueInt() == 2
+	if _Arissa_Setting_SuppressDialogue.GetValueInt() == 2 || _Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 1
 		return
 	endif
 	; Roll for chance to play dialogue.

@@ -14,6 +14,7 @@ ReferenceAlias property iNPC auto
 Faction property _ArissaFollowerFaction auto
 GlobalVariable property _Arissa_Setting_AllowChatter auto
 GlobalVariable property _Arissa_Setting_ChatterFrequency auto
+GlobalVariable property _Arissa_Setting_AllowAnnounceNewArea auto
 GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
 GlobalVariable property _Arissa_Setting_SuppressDialogue auto
 GlobalVariable property _Arissa_Setting_RegardSystem auto
