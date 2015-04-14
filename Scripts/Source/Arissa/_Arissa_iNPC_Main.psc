@@ -291,10 +291,10 @@ EndFunction
 GlobalVariable property _Arissa_Regard auto
 float assessmentMin = -10.0
 float assessmentMax = 10.0
-float tinyAssessment = 0.01
-float minorAssessment = 0.2
-float moderateAssessment = 0.4
-float majorAssessment = 0.75
+float tinyAssessment = 0.005
+float minorAssessment = 0.1
+float moderateAssessment = 0.2
+float majorAssessment = 0.50
 float extremeAssessment = 2.0
 
 float property AssessmentThresholdCompanion = 8.0 auto conditional hidden
