@@ -1,7 +1,6 @@
 scriptname _Arissa_iNPC_Behavior extends _Arissa_iNPC_Main conditional
 
 GlobalVariable property GameHour auto
-Armor property _Arissa_ClothingTownBody auto
 Message property _ArissaDismissMessageWait auto
 Message property _ArissaBlockedMessage auto
 Message property _ArissaDismissMessageWedding auto

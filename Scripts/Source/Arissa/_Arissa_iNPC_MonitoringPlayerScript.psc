@@ -302,8 +302,10 @@ function UpdateStats()
 	if k > iNPCSystem.PlayerStat_LocksPicked
 		iNPCSystem.PlayerStat_LocksPicked = k
 		iNPCSystem.IncreaseRegardTiny()
-		_Arissa_ReactionIndex.SetValueInt(3)
-		_Arissa_Commentary_Reactions.Start()
+		if utility.randomfloat() < 0.25
+			_Arissa_ReactionIndex.SetValueInt(3)
+			_Arissa_Commentary_Reactions.Start()
+		endif
 	endif
 
 	;Horses Stolen

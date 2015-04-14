@@ -4,8 +4,6 @@ Faction property _ArissaFollowerFaction auto
 GlobalVariable property _Arissa_DebugVar auto
 GlobalVariable property _Arissa_CurrentHold auto
 GlobalVariable property _Arissa_Setting_AllowAnnounceNewArea auto
-Quest property _Arissa_Commentary_AnnounceArea auto
-Armor property _Arissa_ClothingTownBody auto
 _Arissa_iNPC_Behavior property iNPCSystem auto
 Quest property _Arissa_MQ02 auto
 Location property MilitaryCampHaafingarSonsLocation auto
