@@ -44,7 +44,11 @@ _Arissa_Compatibility property Compatibility auto
 ReferenceAlias property Alias_Compatibility auto
 Keyword property ActorTypeNPC auto
 Idle property pa_1HMKillMoveBackStab auto
-Spell property _Arissa_BlinkAttackGFXSpell auto
+Idle property KillMoveSneakH2HSleeper auto
+Spell property Invisibility auto
+Keyword property MagicInvisibility auto
+
+int blink_attack_ready_counter = 0
 
 int Property UpdateInterval auto				;Default: 1
 float Property SettleRadius auto				;Default: 150.0
@@ -127,13 +131,19 @@ Event OnUpdateGameTime()
 endEvent
 
 function CheckCombat()
+	if blink_attack_ready_counter > 0
+		blink_attack_ready_counter -= 1
+		debug.trace("[Arissa] blink attack ready in " + blink_attack_ready_counter)
+		return
+	endif
+		
 	Actor arissa = iNPCSystem.iNPC.GetActorRef()
-	_Arissa_BlinkAttackGFXSpell.Cast(arissa, arissa)
 	if arissa.IsInCombat()
 		Actor ctarg = arissa.GetCombatTarget()
 		if ctarg
-			;if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.2 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && (arissa.GetEquippedItemType(1) == 1 || arissa.GetEquippedItemType(1) == 2)  && utility.RandomFloat() <= 0.25
-			if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.9 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && (arissa.GetEquippedItemType(1) == 1 || arissa.GetEquippedItemType(1) == 2)  && utility.RandomFloat() <= 0.25
+			if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.25 && \
+				PlayerRef.GetActorValuePercentage("Health") <= 0.80 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && \
+				arissa.GetEquippedItemType(1) <= 2 && utility.RandomFloat() <= 0.30
 				debug.trace("[Arissa] Performing blink attack!")
 				DoBlinkAttack(arissa, ctarg)
 			endif
@@ -142,10 +152,23 @@ function CheckCombat()
 endFunction
 
 function DoBlinkAttack(Actor akActor, Actor akTarget)
-	_Arissa_BlinkAttackGFXSpell.Cast(akActor, akActor)
-	Utility.wait(1.5)
+	;_Arissa_BlinkAttackGFXSpell.Cast(akActor, akActor)
+	Invisibility.Cast(akActor, akActor)
+	int i = 0
+	while !akActor.HasMagicEffectWithKeyword(MagicInvisibility) && i < 50
+		utility.wait(0.1)
+		i += 1
+	endWhile
+	Utility.wait(3)
 	akActor.MoveTo(akTarget, -120 * Math.Sin(akTarget.GetAngleZ()), -120 * Math.Cos(akTarget.GetAngleZ()), 0, abMatchRotation = true)
-	akActor.PlayIdleWithTarget(pa_1HMKillMoveBackStab, akTarget)
+	if (akActor.GetEquippedItemType(1) == 1 || akActor.GetEquippedItemType(1) == 2)
+		akActor.PlayIdleWithTarget(pa_1HMKillMoveBackStab, akTarget)
+	elseif akActor.GetEquippedItemType(1) == 0
+		akActor.PlayIdleWithTarget(KillMoveSneakH2HSleeper, akTarget)
+	endif
+	utility.wait(2)
+	akActor.DispelSpell(Invisibility)
+	blink_attack_ready_counter = 30
 endFunction
 
 function UpgradeTasks()
