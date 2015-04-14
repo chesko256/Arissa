@@ -773,7 +773,7 @@ function GetKeywordDialogueSituationIndex(int[] aiIndexStack, Location akLocatio
 		AddSituationIndex(aiIndexStack, 2, 1, 0)
 	elseif akLocation.HasKeyword(LocTypeJail) && abFromPrompt
 		AddSituationIndex(aiIndexStack, 2, 2, 0)
-	elseif akLocation.HasKeyword(LocTypeInn)
+	elseif akLocation.HasKeyword(LocTypeInn) && !abFromPrompt
 		AddSituationIndex(aiIndexStack, 2, 3, 0)
 	endif
 endFunction
