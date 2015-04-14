@@ -469,7 +469,7 @@ function PlayPlaceKnowledgeDialogue(Location akLocation)
 	if akLocation
 		int[] IndexStack = new int[99]
 		GetLocationDialogueSituationIndex(IndexStack, akLocation)
-		GetKeywordDialogueSituationIndex(IndexStack, akLocation)
+		GetKeywordDialogueSituationIndex(IndexStack, akLocation, true)
 		GetHoldDialogueSituationIndex(IndexStack, _Arissa_CurrentHold.GetValueInt())
 		CurrentAmbientCommentIndex = GetSituationIndex(IndexStack, abDontRandomize = True)
 	endif
@@ -764,14 +764,14 @@ int function GetSituationIndex(int[] aiIndexStack, bool abDontRandomize = false)
 	return chosen_line
 endFunction
 
-function GetKeywordDialogueSituationIndex(int[] aiIndexStack, Location akLocation)
+function GetKeywordDialogueSituationIndex(int[] aiIndexStack, Location akLocation, bool abFromPrompt = false)
 	if !(aiIndexStack[0] == 0)
 		return
 	endif
 	; Check exceptions / location keywords
 	if akLocation.HasKeyword(LocTypePlayerHouse)
 		AddSituationIndex(aiIndexStack, 2, 1, 0)
-	elseif akLocation.HasKeyword(LocTypeJail)
+	elseif akLocation.HasKeyword(LocTypeJail) && abFromPrompt
 		AddSituationIndex(aiIndexStack, 2, 2, 0)
 	elseif akLocation.HasKeyword(LocTypeInn)
 		AddSituationIndex(aiIndexStack, 2, 3, 0)
