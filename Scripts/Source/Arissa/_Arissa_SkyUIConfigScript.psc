@@ -10,6 +10,7 @@ GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
 GlobalVariable property _Arissa_Regard auto
 GlobalVariable property _Arissa_Setting_RegardSystem auto
 
+Actor property iNPC_Actor auto
 Actor property PlayerRef auto
 Quest property _Arissa_DialogueMain auto
 Spell property _Arissa_SummonSpell auto
@@ -22,8 +23,9 @@ int Behavior_AboutRegard_OID
 int Behavior_SettingRegardSystem_OID
 
 Event OnConfigInit()
-	Pages = new string[1]
+	Pages = new string[2]
 	Pages[0] = "$ArissaBehaviorPage"
+	Pages[1] = "$ArissaStatsPage"
 endEvent
 
 function PageReset_Behavior()
@@ -78,6 +80,43 @@ function PageReset_Behavior()
 	endif
 endFunction
 
+function PageReset_Stats()
+	SetCursorFillMode(TOP_TO_BOTTOM)
+	AddHeaderOption("$ArissaAttributesHeader")
+	AddTextOption("$ArissaHealth", (iNPC_Actor.GetActorValue("Health") as int))
+	AddTextOption("$ArissaStamina", (iNPC_Actor.GetActorValue("Stamina") as int))
+	AddHeaderOption("$ArissaSkillsHeader")
+	AddTextOption("$ArissaOneHanded", iNPC_Actor.GetActorValue("OneHanded") as int)
+	AddTextOption("$ArissaTwoHanded", iNPC_Actor.GetActorValue("TwoHanded") as int)
+	AddTextOption("$ArissaMarksman", iNPC_Actor.GetActorValue("Marksman") as int)
+	AddTextOption("$ArissaBlock", iNPC_Actor.GetActorValue("Block") as int)
+	AddTextOption("$ArissaHeavyArmor", iNPC_Actor.GetActorValue("HeavyArmor") as int)
+	AddTextOption("$ArissaLightArmor", iNPC_Actor.GetActorValue("LightArmor") as int)
+	AddTextOption("$ArissaPickpocket", iNPC_Actor.GetActorValue("Pickpocket") as int)
+	AddTextOption("$ArissaLockpicking", iNPC_Actor.GetActorValue("Lockpicking") as int)
+	
+	SetCursorPosition(1) ; Move cursor to top right position
+
+	AddEmptyOption()
+	AddTextOption("$ArissaMagicka", (iNPC_Actor.GetActorValue("Magicka") as int))
+	Location loc = iNPC_Actor.GetCurrentLocation()
+	string locname
+	if loc
+		locname = loc.GetName()
+	else
+		locname = "Unknown"
+	endif
+	AddTextOption("$ArissaCurrentLocation", locname)
+	AddEmptyOption()
+	AddTextOption("$ArissaSneak", iNPC_Actor.GetActorValue("Sneak") as int)
+	AddTextOption("$ArissaSpeechcraft", iNPC_Actor.GetActorValue("Speechcraft") as int)
+	AddTextOption("$ArissaAlteration", iNPC_Actor.GetActorValue("Alteration") as int)
+	AddTextOption("$ArissaConjuration", iNPC_Actor.GetActorValue("Conjuration") as int)
+	AddTextOption("$ArissaDestruction", iNPC_Actor.GetActorValue("Destruction") as int)
+	AddTextOption("$ArissaIllusion", iNPC_Actor.GetActorValue("Illusion") as int)
+	AddTextOption("$ArissaRestoration", iNPC_Actor.GetActorValue("Restoration") as int)
+endFunction
+
 event OnPageReset(string page)
 	;/if page == ""
 		LoadCustomContent("arissa/logo.dds")
@@ -88,6 +127,8 @@ event OnPageReset(string page)
 	
 	if page == "$ArissaBehaviorPage"
 		PageReset_Behavior()
+	elseif page == "$ArissaStatsPage"
+		PageReset_Stats()
 	endif
 endEvent
 
