@@ -16,6 +16,7 @@ GlobalVariable property _Arissa_Setting_AllowChatter auto
 GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
 GlobalVariable property _Arissa_Setting_SuppressDialogue auto
+GlobalVariable property _Arissa_Setting_RegardSystem auto
 
 ;==============iNPC Behavior Flags==============
 bool Property PlayerSettled auto conditional hidden
@@ -335,6 +336,10 @@ EndProperty
 	;SlamToDisRegard - Discover being a cannibal
 
 Function ModAssessment(float amount)
+	if _Arissa_Setting_RegardSystem.GetValueInt() != 2
+		return
+	endif
+
 	float fOldValue = PlayerAssessmentRegard
 	PlayerAssessmentRegard += amount
 

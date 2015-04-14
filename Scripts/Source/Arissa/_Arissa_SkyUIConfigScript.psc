@@ -7,13 +7,18 @@ GlobalVariable property _Arissa_Setting_AllowChatter auto
 GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 GlobalVariable property _Arissa_Setting_AllowAnnounceNewArea auto
 GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
+GlobalVariable property _Arissa_Regard auto
+GlobalVariable property _Arissa_Setting_RegardSystem auto
 
+Actor property PlayerRef auto
 Quest property _Arissa_DialogueMain auto
+Spell property _Arissa_SummonSpell auto
 
 int Behavior_SettingAllowChatter_OID
 int Behavior_SettingChatterFrequency_OID
 int Behavior_SettingAllowAnnounceNewArea_OID
 int Behavior_SettingAnnounceAreaFrequency_OID
+int Behavior_AboutRegard_OID
 int Behavior_SettingRegardSystem_OID
 
 Event OnConfigInit()
@@ -52,7 +57,25 @@ function PageReset_Behavior()
 	SetCursorPosition(1) ; Move cursor to top right position
 
 	AddHeaderOption("$ArissaDialogueRegardHeader")
-	Behavior_SettingRegardSystem_OID = AddToggleOption("$ArissaRegardSystem", true)
+	Behavior_AboutRegard_OID = AddTextOption("$ArissaAboutRegard", "")
+	if _Arissa_Setting_RegardSystem.GetValueInt() == 2
+		Behavior_SettingRegardSystem_OID = AddToggleOption("$ArissaRegardSystem", true)
+	else
+		Behavior_SettingRegardSystem_OID = AddToggleOption("$ArissaRegardSystem", false)
+	endif
+	if _Arissa_Regard.GetValue() > 8.0
+		AddTextOption("$ArissaCurrentRegard", "$ArissaRegard5", OPTION_FLAG_DISABLED)
+	elseif _Arissa_Regard.GetValue() > 5.0
+		AddTextOption("$ArissaCurrentRegard", "$ArissaRegard4", OPTION_FLAG_DISABLED)
+	elseif _Arissa_Regard.GetValue() > 0.0
+		AddTextOption("$ArissaCurrentRegard", "$ArissaRegard3", OPTION_FLAG_DISABLED)
+	elseif _Arissa_Regard.GetValue() > -5.0
+		AddTextOption("$ArissaCurrentRegard", "$ArissaRegard2", OPTION_FLAG_DISABLED)
+	elseif _Arissa_Regard.GetValue() > -8.0
+		AddTextOption("$ArissaCurrentRegard", "$ArissaRegard1", OPTION_FLAG_DISABLED)
+	elseif _Arissa_Regard.GetValue() <= -8.0
+		AddTextOption("$ArissaCurrentRegard", "$ArissaRegard0", OPTION_FLAG_DISABLED)
+	endif
 endFunction
 
 event OnPageReset(string page)
@@ -121,6 +144,33 @@ Event OnOptionSelect(int option)
 			SetToggleOptionValue(Behavior_SettingAllowAnnounceNewArea_OID, true)
 			ForcePageReset()
 		endif
+	elseif option == Behavior_SettingRegardSystem_OID
+		if _Arissa_Setting_RegardSystem.GetValueInt() == 2
+			bool b = ShowMessage("$ArissaMessageRegardSystemOn")
+			if b
+				_Arissa_Setting_RegardSystem.SetValue(1)
+				SetToggleOptionValue(Behavior_SettingRegardSystem_OID, false)
+				_Arissa_Regard.SetValue(10.0)
+				if !PlayerRef.HasSpell(_Arissa_SummonSpell)
+					PlayerRef.AddSpell(_Arissa_SummonSpell)
+				endif
+			endif
+			ForcePageReset()
+		else
+			bool b = ShowMessage("$ArissaMessageRegardSystemOff")
+			if b
+				_Arissa_Setting_RegardSystem.SetValue(2)
+				SetToggleOptionValue(Behavior_SettingRegardSystem_OID, true)
+				_Arissa_Regard.SetValue(-6.0)
+				if PlayerRef.HasSpell(_Arissa_SummonSpell)
+					PlayerRef.RemoveSpell(_Arissa_SummonSpell)
+				endif
+			endif
+			ForcePageReset()
+		endif 
+	elseif option == Behavior_AboutRegard_OID
+		ShowMessage("$ArissaMessageAboutRegard", false)
+		ShowMessage("$ArissaMessageAboutRegard2", false)
 	endif
 EndEvent
 
