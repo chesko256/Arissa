@@ -14,7 +14,6 @@ Package property _ArissaFollowFar_RideHorse auto
 keyword property LocTypeDungeon auto
 Message property _ArissaTownRoamMessage auto
 Message property _ArissaTownRoamEndMessage auto
-Quest property _Arissa_Commentary_AnnounceArea auto
 Quest property _Arissa_MQ02 auto
 GlobalVariable property _Arissa_CurrentTownRoamArea auto
 GlobalVariable property _Arissa_ReactionIndex auto
@@ -43,6 +42,9 @@ Location property _Arissa_SkygroveDeepfallLocation auto
 ObjectReference property MQ02DoorRef auto
 _Arissa_Compatibility property Compatibility auto
 ReferenceAlias property Alias_Compatibility auto
+Keyword property ActorTypeNPC auto
+Idle property pa_1HMKillMoveBackStab auto
+Spell property _Arissa_BlinkAttackGFXSpell auto
 
 int Property UpdateInterval auto				;Default: 1
 float Property SettleRadius auto				;Default: 150.0
@@ -91,7 +93,7 @@ Event OnUpdate()
 	UpgradeTasks()
 	UpdateWaitState()
 	UpdateFollowDistance()
-	
+	CheckCombat()	
 	
 	if CheckSocialCondition()
 		TryToSandboxAroundPlayer()
@@ -123,6 +125,28 @@ Event OnUpdateGameTime()
 
 	RegisterForSingleUpdateGameTime(12)
 endEvent
+
+function CheckCombat()
+	Actor arissa = iNPCSystem.iNPC.GetActorRef()
+	_Arissa_BlinkAttackGFXSpell.Cast(arissa, arissa)
+	if arissa.IsInCombat()
+		Actor ctarg = arissa.GetCombatTarget()
+		if ctarg
+			;if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.2 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && (arissa.GetEquippedItemType(1) == 1 || arissa.GetEquippedItemType(1) == 2)  && utility.RandomFloat() <= 0.25
+			if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.9 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && (arissa.GetEquippedItemType(1) == 1 || arissa.GetEquippedItemType(1) == 2)  && utility.RandomFloat() <= 0.25
+				debug.trace("[Arissa] Performing blink attack!")
+				DoBlinkAttack(arissa, ctarg)
+			endif
+		endif
+	endif
+endFunction
+
+function DoBlinkAttack(Actor akActor, Actor akTarget)
+	_Arissa_BlinkAttackGFXSpell.Cast(akActor, akActor)
+	Utility.wait(1.5)
+	akActor.MoveTo(akTarget, -120 * Math.Sin(akTarget.GetAngleZ()), -120 * Math.Cos(akTarget.GetAngleZ()), 0, abMatchRotation = true)
+	akActor.PlayIdleWithTarget(pa_1HMKillMoveBackStab, akTarget)
+endFunction
 
 function UpgradeTasks()
 	if !Update1_2
