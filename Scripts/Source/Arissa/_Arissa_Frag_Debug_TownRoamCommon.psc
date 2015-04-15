@@ -5,7 +5,7 @@ Scriptname _Arissa_Frag_Debug_TownRoamCommon Extends Scene Hidden
 ;BEGIN FRAGMENT Fragment_1
 Function Fragment_1()
 ;BEGIN CODE
-debug.trace("[Arissa] Town roam common ended")
+;debug.trace("[Arissa] Town roam common ended")
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -13,7 +13,7 @@ EndFunction
 ;BEGIN FRAGMENT Fragment_0
 Function Fragment_0()
 ;BEGIN CODE
-debug.trace("[Arissa] Town roam common started")
+;debug.trace("[Arissa] Town roam common started")
 ;END CODE
 EndFunction
 ;END FRAGMENT

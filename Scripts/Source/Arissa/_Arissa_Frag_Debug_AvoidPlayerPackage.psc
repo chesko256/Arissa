@@ -5,7 +5,7 @@ Scriptname _Arissa_Frag_Debug_AvoidPlayerPackage Extends Package Hidden
 ;BEGIN FRAGMENT Fragment_0
 Function Fragment_0(Actor akActor)
 ;BEGIN CODE
-debug.trace("[Arissa] Started avoid package.")
+;debug.trace("[Arissa] Started avoid package.")
 ;Fast Exit
 ;utility.wait(3)
 ;iNPCSystem.iNPC.GetActorRef().EvaluatePackage()

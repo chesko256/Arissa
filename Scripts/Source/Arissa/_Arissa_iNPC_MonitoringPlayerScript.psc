@@ -133,7 +133,7 @@ endEvent
 function CheckCombat()
 	if blink_attack_ready_counter > 0
 		blink_attack_ready_counter -= 1
-		debug.trace("[Arissa] blink attack ready in " + blink_attack_ready_counter)
+		;debug.trace("[Arissa] blink attack ready in " + blink_attack_ready_counter)
 		return
 	endif
 		
@@ -144,7 +144,7 @@ function CheckCombat()
 			if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.25 && \
 				PlayerRef.GetActorValuePercentage("Health") <= 0.80 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && \
 				arissa.GetEquippedItemType(1) <= 2 && utility.RandomFloat() <= 0.30
-				debug.trace("[Arissa] Performing blink attack!")
+				;debug.trace("[Arissa] Performing blink attack!")
 				DoBlinkAttack(arissa, ctarg)
 			endif
 		endif

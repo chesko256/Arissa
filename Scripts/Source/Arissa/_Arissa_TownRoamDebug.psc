@@ -7,15 +7,15 @@ LocationAlias property Tavern auto
 
 Event OnInit()
 	if Arissa.GetActorReference()
-		debug.trace("[Arissa] Arissa: " + Arissa.GetActorReference())
+		;debug.trace("[Arissa] Arissa: " + Arissa.GetActorReference())
 	endif
 	if Shop1
-		debug.trace("[Arissa] Shop1: " + Shop1.GetLocation())
+		;debug.trace("[Arissa] Shop1: " + Shop1.GetLocation())
 	endif
 	if Shop2
-		debug.trace("[Arissa] Shop2: " + Shop2.GetLocation())
+		;debug.trace("[Arissa] Shop2: " + Shop2.GetLocation())
 	endif
 	if Tavern
-		debug.trace("[Arissa] Tavern: " + Tavern.GetLocation())
+		;debug.trace("[Arissa] Tavern: " + Tavern.GetLocation())
 	endif
 endEvent

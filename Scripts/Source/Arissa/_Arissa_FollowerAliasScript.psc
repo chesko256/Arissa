@@ -140,7 +140,7 @@ endFunction
 
 function AnnounceArea(Location akLocation)
 	if _Arissa_Setting_AllowAnnounceNewArea.GetValueInt() == 2
-		debug.trace("[Arissa] Attempting to play ambient dialogue...")
+		;debug.trace("[Arissa] Attempting to play ambient dialogue...")
 		iNPCSystem.PlayAmbientDialogue(akLocation)
 	EndIf
 endFunction

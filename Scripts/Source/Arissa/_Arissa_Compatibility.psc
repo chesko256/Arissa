@@ -20,12 +20,15 @@ endEvent
 
 function CompatibilityCheck()
 	
-	trace("========================================[Arissa: Warning Start]========================================")
-	trace("            Arissa is now performing compatibility checks. Papyrus warnings about missing or           ")
-	trace("                        unloaded files may follow. This is normal and they can be ignored.                        ")
-	trace("========================================[ Arissa: Warning End ]========================================")
+	trace("[Arissa]======================================================================================================")
+	trace("[Arissa]     Arissa is now performing compatibility checks. Papyrus warnings about missing or                 ")
+	trace("[Arissa]             unloaded files may follow. This is NORMAL and can be ignored.   		                 ")
+	trace("[Arissa]======================================================================================================")
 	
-	EFF = Game.GetFormFromFile(0x01000EFE, "EFFCore.esm") as Quest
+	bool EFFLoaded = IsPluginLoaded(0x01000EFE, "EFFCore.esm")
+	if EFFLoaded
+		EFF = Game.GetFormFromFile(0x01000EFE, "EFFCore.esm") as Quest
+	endif
 
 	bool skse_loaded = SKSE.GetVersion()
 	if skse_loaded
@@ -63,9 +66,9 @@ function CompatibilityCheck()
 
 	AddStartupSpells()
 
-	trace("========================================[Arissa: Warning Start]========================================")
-	trace("                                          Compatibility check complete.                                           ")
-	trace("========================================[ Arissa: Warning End ]========================================")
+	trace("[Arissa]======================================================================================================")
+	trace("[Arissa]                            Arissa compatibility check complete.   		                             ")
+	trace("[Arissa]======================================================================================================")
 	
 endFunction
 
