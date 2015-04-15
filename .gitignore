@@ -12,6 +12,7 @@
 #Top-level files
 !CompanionArissa.esp
 !CompanionArissa.esm
+!CompanionArissa_AppearancePack1.esp
 !CompanionArissa_dawnguard.esp
 
 #Interface
@@ -22,6 +23,7 @@
 !Meshes/Actors/Character/FaceGenData/FaceGeom/CompanionArissa.esp/*
 !Meshes/Actors/Character/FaceGenData/FaceGeom/CompanionArissa.esm/*
 !Meshes/arissa/*
+!Meshes/arissa/Pack1/*
 
 
 #Readmes
@@ -57,6 +59,7 @@
 !textures/actors/character/facegendata/facetint/companionarissa.esp/*
 !textures/actors/character/facegendata/facetint/companionarissa.esm/*
 !textures/arissa/*
+!textures/arissa/Pack1/*
 
 #Interface
 !Interface/arissa/*
