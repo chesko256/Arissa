@@ -22,6 +22,9 @@
 !Interface/arissa/*
 !Interface/Translations/Arissa_*.txt
 
+#SEQ
+!SEQ/*
+
 #Meshes
 !Meshes/Actors/Character/FaceGenData/FaceGeom/CompanionArissa.esp/*
 !Meshes/Actors/Character/FaceGenData/FaceGeom/CompanionArissa.esm/*
