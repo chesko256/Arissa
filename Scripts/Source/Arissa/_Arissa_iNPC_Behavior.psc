@@ -389,6 +389,12 @@ Location property WindhelmPalaceOfTheKingsLocation auto
 Location property SolitudeRadiantRaimentsLocation auto
 Location property RiftenRaggedFlagonLocation auto
 Location property RiftenRatwayLocation auto
+Location property RiftenMistveilKeepLocation auto
+Location property EldergleamSanctuaryLocation auto
+Location property GlenmorilCovenLocation auto
+Location property MarkarthUnderstoneKeepLocation auto
+Location property WhiterunHonningbrewMeaderyLocation auto
+Location property ThroatoftheWorldLocation auto
 
 ; - Ambient dialogue-specific actors
 Actor property CamillaValeriusREF auto
@@ -410,6 +416,8 @@ Actor property LailaRef auto
 Actor property ElisifTheFairREF auto
 Actor property DagurRef auto
 Actor property AdrianneAvenicciREF auto
+Actor property WylandriahRef auto
+Actor property OndolemarREF auto
 ReferenceAlias property FalkreathJarl auto
 ReferenceAlias property MorthalJarl auto
 ReferenceAlias property RiftenJarl auto
@@ -419,6 +427,7 @@ ReferenceAlias property SolitudeJarl auto
 Quest property CW auto
 Quest property CWObj auto
 Quest property TG01 auto
+Quest property TG08A auto
 Quest property MG01Quest auto
 Quest property MS14Quest auto
 Quest property MS01 auto
@@ -793,15 +802,21 @@ function GetHoldDialogueSituationIndex(int[] aiIndexStack, int aiCurrentHold)
 		endif
 		AddSituationIndex(aiIndexStack, 3, 3, 0)
 	elseif aiCurrentHold == 4 										;Hjaalmarch
+		if (GameHour.GetValueInt() > 19 || GameHour.GetValueInt() <= 7)
+			AddSituationIndex(aiIndexStack, 3, 4, 1)	
+		endif
 		AddSituationIndex(aiIndexStack, 3, 4, 0)
 	elseif aiCurrentHold == 5 										;The Pale
 		AddSituationIndex(aiIndexStack, 3, 5, 0)
 	elseif aiCurrentHold == 6 										;The Reach
 		AddSituationIndex(aiIndexStack, 3, 6, 0)
 	elseif aiCurrentHold == 7 										;The Rift
-		; @TODO: if Nightingales undiscovered
+		if !TG08A.IsCompleted()
 			AddSituationIndex(aiIndexStack, 3, 7, 1)	
-		; endif
+		endif
+		if !PlayerRef.IsInInterior() && (!CWObj.GetStageDone(255) || (CW as CWScript).playerAllegiance == CWImperial.GetValue()) ; Imperials undefeated
+			AddSituationIndex(aiIndexStack, 3, 7, 2)	
+		endif
 		AddSituationIndex(aiIndexStack, 3, 7, 0)
 	elseif aiCurrentHold == 8 										;Whiterun
 		AddSituationIndex(aiIndexStack, 3, 8, 0)
@@ -979,6 +994,27 @@ function GetLocationDialogueSituationIndex(int[] aiIndexStack, Location akLocati
 		AddSituationIndex(aiIndexStack, 1, 32, 0)
 	elseif akLocation == RiftenRatwayLocation
 		AddSituationIndex(aiIndexStack, 1, 33, 0)
+	elseif akLocation == RiftenMistveilKeepLocation
+		if !LailaRef.IsDead()
+			AddSituationIndex(aiIndexStack, 1, 34, 1)
+		endif
+		if !WylandriahRef.IsDead()
+			AddSituationIndex(aiIndexStack, 1, 34, 2)
+		endif
+		AddSituationIndex(aiIndexStack, 1, 34, 0)
+	elseif akLocation == EldergleamSanctuaryLocation
+		AddSituationIndex(aiIndexStack, 1, 35, 0)
+	elseif akLocation == GlenmorilCovenLocation
+		AddSituationIndex(aiIndexStack, 1, 36, 0)
+	elseif akLocation == MarkarthUnderstoneKeepLocation
+		if !OndolemarREF.IsDead()
+			AddSituationIndex(aiIndexStack, 1, 37, 1)	
+		endif
+		AddSituationIndex(aiIndexStack, 1, 37, 0)
+	elseif akLocation == ThroatoftheWorldLocation
+		AddSituationIndex(aiIndexStack, 1, 38, 0)
+	elseif akLocation == WhiterunHonningbrewMeaderyLocation
+		AddSituationIndex(aiIndexStack, 1, 39, 0)
 	endif
 endFunction
 
