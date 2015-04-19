@@ -449,7 +449,7 @@ int stashed_norepeat_index
 int last_selected_index
 
 Event OnUpdate()
-	;debug.trace("[Arissa] Clearing no-repeat list.")
+	ArissaDebug(5, "[Arissa] Clearing no-repeat list.")
 	no_repeat_list = new int[64]
 endEvent
 
@@ -471,7 +471,7 @@ function SetAllowChatter()
 endFunction
 
 function PlayPlaceKnowledgeDialogue(Location akLocation)
-	;debug.trace("[Arissa] Playing dialogue based on user prompt.")
+	ArissaDebug(5, "[Arissa] Playing dialogue based on user prompt.")
 	stashed_norepeat_index = 0
 	CurrentAmbientCommentIndex = 0
 	if akLocation
@@ -485,7 +485,7 @@ function PlayPlaceKnowledgeDialogue(Location akLocation)
 	if CurrentAmbientCommentIndex != 0
 		iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 	else
-		;debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
+		ArissaDebug(5, "[Arissa] Couldn't find suitable dialogue for this situation.")
 	endif
 endFunction
 
@@ -498,14 +498,14 @@ function PlayAmbientDialogue(Location akLocation)
 	if MeetsDialoguePrereqs()
 		; Roll for chance to play dialogue.
 		float roll = Utility.RandomFloat(0.01, 1.0)
-		;debug.trace("[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_NewAreaFrequency.GetValue() + " or less.")
+		ArissaDebug(5, "[Arissa] Ambient dialogue: Rolled " + roll + ", needed " + _Arissa_Setting_NewAreaFrequency.GetValue() + " or less.")
 		if roll <= _Arissa_Setting_NewAreaFrequency.GetValue()
-			;debug.trace("[Arissa] Searching for Situation Index.")
+			ArissaDebug(5, "[Arissa] Searching for Situation Index.")
 		else
-			;debug.trace("[Arissa] Staying quiet for now.")
+			ArissaDebug(5, "[Arissa] Staying quiet for now.")
 			return
 		endif
-		;debug.trace("[Arissa] Playing dialogue based on entering new area.")
+		ArissaDebug(5, "[Arissa] Playing dialogue based on entering new area.")
 		if akLocation
 			int[] IndexStack = new int[99]
 			GetLocationDialogueSituationIndex(IndexStack, akLocation)
@@ -516,13 +516,13 @@ function PlayAmbientDialogue(Location akLocation)
 
 		if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
 			if CurrentAmbientCommentIndex == last_selected_index
-				;debug.trace("[Arissa] Suppressing identical index " + CurrentAmbientCommentIndex)
+				ArissaDebug(5, "[Arissa] Suppressing identical index " + CurrentAmbientCommentIndex)
 				return
 			endif
 			iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 			last_selected_index = CurrentAmbientCommentIndex
 		else
-			;debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
+			ArissaDebug(5, "[Arissa] Couldn't find suitable dialogue for this situation.")
 		endif
 	endif
 endFunction
@@ -531,7 +531,7 @@ function PlayChatterDialogue()
 	stashed_norepeat_index = 0
 	CurrentAmbientCommentIndex = 0
 	if MeetsDialoguePrereqs()
-		;debug.trace("[Arissa] Playing dialogue based on time passing.")
+		ArissaDebug(5, "[Arissa] Playing dialogue based on time passing.")
 		int[] IndexStack = new int[99]
 		Location loc = iNPC_Actor.GetCurrentLocation()
 		GetChatterDialogueSituationIndex(IndexStack)
@@ -541,7 +541,7 @@ function PlayChatterDialogue()
 		CurrentAmbientCommentIndex = GetSituationIndex(IndexStack)
 		if CurrentAmbientCommentIndex != 0 && CurrentAmbientCommentIndex != -1
 			if CurrentAmbientCommentIndex == last_selected_index
-				;debug.trace("[Arissa] Suppressing identical index " + CurrentAmbientCommentIndex)
+				ArissaDebug(5, "[Arissa] Suppressing identical index " + CurrentAmbientCommentIndex)
 				return
 			endif
 			if CurrentAmbientCommentIndex >= 40000
@@ -551,7 +551,7 @@ function PlayChatterDialogue()
 			endif
 			last_selected_index = CurrentAmbientCommentIndex
 		else
-			;debug.trace("[Arissa] Couldn't find suitable dialogue for this situation.")
+			ArissaDebug(5, "[Arissa] Couldn't find suitable dialogue for this situation.")
 		endif
 	endif
 endFunction
@@ -561,7 +561,7 @@ bool function MeetsDialoguePrereqs()
 	if _Arissa_MQ01.IsCompleted() && IsFollowing && iNPC_Actor.GetDistance(PlayerRef) < 2048.0
 		return true
 	else
-		;debug.trace("[Arissa] Didn't meet dialogue prereqs, aborting.")
+		ArissaDebug(5, "[Arissa] Didn't meet dialogue prereqs, aborting.")
 		return false
 	endif
 endFunction
@@ -597,7 +597,7 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	index += (aiSituationID)
 
 	if IsInNoRepeatList(index)
-		;debug.trace("[Arissa] Cannot add index " + index + " to stack, set to no-repeat and not enough time has passed.")
+		ArissaDebug(5, "[Arissa] Cannot add index " + index + " to stack, set to no-repeat and not enough time has passed.")
 		if !stack_has_index && stashed_norepeat_index == 0
 			; Stash this situation for later; it might be the only one we can say anything about.
 			stashed_norepeat_index = index
@@ -608,7 +608,7 @@ function AddSituationIndex(int[] aiIndexStack, int aiLineType, int aiTypeID, int
 	endif
 
 	if IsInExclusionList(index)
-		;debug.trace("[Arissa] Cannot add excluded index " + index + " to stack, returning.")
+		ArissaDebug(5, "[Arissa] Cannot add excluded index " + index + " to stack, returning.")
 		return
 	endif
 	
@@ -649,7 +649,7 @@ bool function IsInNoRepeatList(int aiIndex)
 endFunction
 
 function AddToExclusionList(int aiIndex)
-	;debug.trace("[Arissa] Adding index " + aiIndex + " to exclusion list.")
+	ArissaDebug(5, "[Arissa] Adding index " + aiIndex + " to exclusion list.")
 	int i = 0
 	bool break = false
 	while i < index_exclusion_list.Length && !break
@@ -662,7 +662,7 @@ function AddToExclusionList(int aiIndex)
 endFunction
 
 function AddToNoRepeatList(int aiIndex)
-	;debug.trace("[Arissa] Adding index " + aiIndex + " to no-repeat list.")
+	ArissaDebug(5, "[Arissa] Adding index " + aiIndex + " to no-repeat list.")
 	int i = 0
 	bool break = false
 	while i < no_repeat_list.Length && !break
@@ -712,7 +712,7 @@ int function GetSituationIndex(int[] aiIndexStack, bool abDontRandomize = false)
 				if temp_line % 100 == 0 && skip_general
 					; skip
 				else
-					;debug.trace("[Arissa] Adding " + the_line + " to the dialogue stack.")
+					ArissaDebug(5, "[Arissa] Adding " + the_line + " to the dialogue stack.")
 					lines[i] = the_line
 					line_count += 1
 				endif
@@ -726,15 +726,15 @@ int function GetSituationIndex(int[] aiIndexStack, bool abDontRandomize = false)
 	int selected_index
 	if line_count > 0
 		if abDontRandomize
-			;debug.trace("[Arissa] User prompt; take item from top of stack.")
+			ArissaDebug(5, "[Arissa] User prompt; take item from top of stack.")
 			chosen_line = lines[0]
 		else
-			;debug.trace("[Arissa] Ambient; select random index from stack.")
+			ArissaDebug(5, "[Arissa] Ambient; select random index from stack.")
 			selected_index = utility.RandomInt(0, (line_count - 1))
 			chosen_line = lines[selected_index]
 		endif
 	elseif stashed_norepeat_index > 0
-		;debug.trace("[Arissa] Using the stashed no-repeat situation index " + stashed_norepeat_index + ", since no other situations are available.")
+		ArissaDebug(5, "[Arissa] Using the stashed no-repeat situation index " + stashed_norepeat_index + ", since no other situations are available.")
 		chosen_line = stashed_norepeat_index
 	else
 		return -1
@@ -767,7 +767,7 @@ int function GetSituationIndex(int[] aiIndexStack, bool abDontRandomize = false)
 	if add_to_exclusion && !IsInExclusionList(chosen_line)
 		AddToExclusionList(chosen_line)
 	endif
-	;debug.trace("[Arissa] Selected index " + chosen_line)
+	ArissaDebug(5, "[Arissa] Selected index " + chosen_line)
 	return chosen_line
 endFunction
 
@@ -1029,6 +1029,7 @@ function ArissaDebug(int iClassification, string sDebugMessage)
 	;2 = Quest state data
 	;3 = Scene data
 	;4 = Other
+	;5 = Dialogue debug
 	if _Arissa_DebugVar.GetValueInt() == iClassification
 		debug.trace("[Arissa] " + sDebugMessage)
 	endif
