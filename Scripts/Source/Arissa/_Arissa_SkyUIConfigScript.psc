@@ -118,12 +118,11 @@ function PageReset_Stats()
 endFunction
 
 event OnPageReset(string page)
-	;/if page == ""
+	if page == ""
 		LoadCustomContent("arissa/logo.dds")
 	else
 		UnloadCustomContent()
 	endif
-	/;
 	
 	if page == "$ArissaBehaviorPage"
 		PageReset_Behavior()
