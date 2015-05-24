@@ -486,6 +486,8 @@ function PlayPlaceKnowledgeDialogue(Location akLocation)
 		iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 	else
 		ArissaDebug(5, "[Arissa] Couldn't find suitable dialogue for this situation.")
+		CurrentAmbientCommentIndex = -1
+		iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 	endif
 endFunction
 
