@@ -52,15 +52,15 @@ Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 	endif
 
 	;GetName requires SKSE
-	if akOldLoc && akNewLoc
-		ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to " + akNewLoc.GetName())
-	elseif akOldLoc && !akNewLoc
-		ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to NONE.")
-	elseif !akOldLoc && akNewLoc
-		ArissaDebug(4, "Arissa moved from NONE to " + akNewLoc.GetName())
-	else
-		ArissaDebug(4, "Arissa moved from NONE to NONE.")
-	endif
+	;if akOldLoc && akNewLoc
+	;	ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to " + akNewLoc.GetName())
+	;elseif akOldLoc && !akNewLoc
+	;	ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to NONE.")
+	;elseif !akOldLoc && akNewLoc
+	;	ArissaDebug(4, "Arissa moved from NONE to " + akNewLoc.GetName())
+	;else
+	;	ArissaDebug(4, "Arissa moved from NONE to NONE.")
+	;endif
 endEvent
 
 Event OnUpdateGameTime()
