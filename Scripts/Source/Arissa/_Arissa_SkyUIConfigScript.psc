@@ -99,14 +99,21 @@ function PageReset_Stats()
 
 	AddEmptyOption()
 	AddTextOption("$ArissaMagicka", (iNPC_Actor.GetActorValue("Magicka") as int))
-	Location loc = iNPC_Actor.GetCurrentLocation()
-	string locname
-	if loc
-		locname = loc.GetName()
-	else
-		locname = "Unknown"
+	Cell mycell = iNPC_Actor.GetParentCell()
+	
+	string lname
+	if mycell
+		lname = mycell.GetName()
 	endif
-	AddTextOption("$ArissaCurrentLocation", locname)
+	if lname == ""
+		Location loc = iNPC_Actor.GetCurrentLocation()
+		if loc
+			lname = loc.GetName()
+		else
+			lname = "Unknown"
+		endif
+	endif
+	AddTextOption("$ArissaCurrentLocation", lname)
 	AddEmptyOption()
 	AddTextOption("$ArissaSneak", iNPC_Actor.GetActorValue("Sneak") as int)
 	AddTextOption("$ArissaSpeechcraft", iNPC_Actor.GetActorValue("Speechcraft") as int)
