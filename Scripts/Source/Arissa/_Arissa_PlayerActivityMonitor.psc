@@ -2,6 +2,7 @@ Scriptname _Arissa_PlayerActivityMonitor extends ReferenceAlias
 {Monitors the player's actions and quest states. Runs persistently.}
 
 _Arissa_iNPC_Behavior Property iNPCSystem auto
+_Arissa_Compatibility property Compatibility auto
 GlobalVariable property _Arissa_CurrentTownRoamArea auto
 GlobalVariable property _Arissa_HelpShown_TownRoam auto
 GlobalVariable property RecoverArissa auto
@@ -187,16 +188,15 @@ endFunction
 
 function GetInTownRoamArea()
 	if PlayerRef.IsInInterior()
-		;Check Location instead
-		if PlayerRef.IsInLocation(WindhelmLocation)
+		if PlayerRef.IsInLocation(WindhelmLocation) && (!Compatibility.isOpenCitiesLoaded)
 			_Arissa_CurrentTownRoamArea.SetValueInt(0)
-		elseif PlayerRef.IsInLocation(RiftenLocation)
+		elseif PlayerRef.IsInLocation(RiftenLocation) && (!Compatibility.isOpenCitiesLoaded)
 			_Arissa_CurrentTownRoamArea.SetValueInt(1)
-		elseif PlayerRef.IsInLocation(MarkarthLocation)
+		elseif PlayerRef.IsInLocation(MarkarthLocation) && (!Compatibility.isOpenCitiesLoaded)
 			_Arissa_CurrentTownRoamArea.SetValueInt(2)
-		elseif PlayerRef.IsInLocation(WhiterunLocation)
+		elseif PlayerRef.IsInLocation(WhiterunLocation) && (!Compatibility.isOpenCitiesLoaded)
 			_Arissa_CurrentTownRoamArea.SetValueInt(3)
-		elseif PlayerRef.IsInLocation(SolitudeLocation)
+		elseif PlayerRef.IsInLocation(SolitudeLocation) && (!Compatibility.isOpenCitiesLoaded)
 			_Arissa_CurrentTownRoamArea.SetValueInt(4)
 		elseif PlayerRef.IsInLocation(DawnstarLocation)
 			_Arissa_CurrentTownRoamArea.SetValueInt(5)
@@ -204,6 +204,8 @@ function GetInTownRoamArea()
 			_Arissa_CurrentTownRoamArea.SetValueInt(6)
 		elseif PlayerRef.IsInLocation(MorthalLocation)
 			_Arissa_CurrentTownRoamArea.SetValueInt(7)
+		else
+			_Arissa_CurrentTownRoamArea.SetValueInt(-1)
 		endif
 	else
 		if PlayerRef.GetWorldspace() == WindhelmWorld
@@ -223,7 +225,7 @@ function GetInTownRoamArea()
 		elseif PlayerRef.GetDistance(CenterMarkerMorthal) < 5500.0
 			_Arissa_CurrentTownRoamArea.SetValueInt(7)	
 		else
-			_Arissa_CurrentTownRoamArea.SetValueInt(-1)	
+			_Arissa_CurrentTownRoamArea.SetValueInt(-1)
 		endif
 	endif
 endFunction
