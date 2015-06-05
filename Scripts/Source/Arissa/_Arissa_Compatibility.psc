@@ -10,6 +10,7 @@ _Arissa_iNPC_Behavior property iNPCSystem auto
 bool property isSKSELoaded auto hidden
 bool property isSKYUILoaded auto hidden
 bool property isImperiousLoaded auto hidden
+bool property isOpenCitiesLoaded auto hidden
 
 MagicEffect property ImperiousYffresBlessing auto hidden
 
@@ -60,6 +61,18 @@ function CompatibilityCheck()
 	else
 		isImperiousLoaded = IsPluginLoaded(0x002501B5, "Imperious - Races of Skyrim.esp")
 		if isImperiousLoaded
+			;Imperious was just loaded.
+		endif
+	endif
+
+	if isOpenCitiesLoaded
+		isOpenCitiesLoaded = IsPluginLoaded(0x02002DD5, "Open Cities Skyrim.esp")
+		if !isOpenCitiesLoaded
+			;Imperious was removed since the last save.
+		endif
+	else
+		isOpenCitiesLoaded = IsPluginLoaded(0x02002DD5, "Open Cities Skyrim.esp")
+		if isOpenCitiesLoaded
 			;Imperious was just loaded.
 		endif
 	endif
