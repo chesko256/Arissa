@@ -49,6 +49,9 @@ Location property DawnstarLocation auto
 Location property FalkreathLocation auto
 Location property MorthalLocation auto
 
+Potion property FoodApple auto
+Potion property FoodMead auto
+
 
 Event OnInit()
 	RegisterForSingleUpdate(3)
@@ -157,6 +160,23 @@ endEvent
 Event OnUpdateGameTime()
 	iNPCSystem.GaveLockpicksToday = false
 	iNPCSystem.GavePoisonsToday = false
+
+	;iNeed / Last Seed compatibility
+	if iNPCSystem.PlayerAssessmentRegard <= -5
+		int apple_count = iNPCSystem.iNPC.GetActorRef().GetItemCount(FoodApple)
+		int mead_count = iNPCSystem.iNPC.GetActorRef().GetItemCount(FoodMead)
+
+		int apples_to_give = 5 - apple_count
+		int mead_to_give = 3 - mead_count
+
+		if apples_to_give > 0
+			iNPCSystem.iNPC.GetActorRef().AddItem(FoodApple, apples_to_give)
+		endif
+		if mead_to_give > 0
+			iNPCSystem.iNPC.GetActorRef().AddItem(FoodMead, mead_to_give)
+		endif
+	endif
+
 	RegisterForSingleUpdateGameTime(24)
 endEvent
 
