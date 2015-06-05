@@ -709,7 +709,7 @@ function CheckRegard()
 	endif
 
 	;Cannibalism
-	if PlayerRef.HasMagicEffect(DA11AbFortifyHealth)
+	if PlayerRef.HasMagicEffect(DA11AbFortifyHealth) || (Compatibility.IsImperiousLoaded && PlayerRef.HasMagicEffect(Compatibility.ImperiousYffresBlessing))
 		if iNPCSystem.IsFollowing && iNPCSystem.iNPC.GetActorRef().HasLOS(PlayerRef)
 			iNPCSystem.ArissaKnows_PlayerIsCannibal = true
 			iNPCSystem.SlamToDisregarded()
