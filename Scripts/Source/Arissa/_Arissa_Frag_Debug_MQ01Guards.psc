@@ -53,17 +53,17 @@ Function Fragment_63()
 ;BEGIN CODE
 Game.EnablePlayerControls()
 ;Set her normal outfit
-Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantBoots)
-Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantGauntlets)
-Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantCuirass)
+;Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantBoots)
+;Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantGauntlets)
+;Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantCuirass)
 Alias_Arissa.GetActorRef().AddItem(IronArrow, 100)
 Alias_Arissa.GetActorRef().AddItem(HuntingBow)
 Alias_Arissa.GetActorRef().AddItem(SteelDagger)
 Alias_Arissa.GetActorRef().AddItem(SteelSword)
-utility.wait(0.1)
-Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantGauntlets, true)
-Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantBoots, true)
-Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantCuirass, true)
+;utility.wait(0.1)
+;Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantGauntlets, true)
+;Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantBoots, true)
+;Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantCuirass, true)
 ;END CODE
 EndFunction
 ;END FRAGMENT
