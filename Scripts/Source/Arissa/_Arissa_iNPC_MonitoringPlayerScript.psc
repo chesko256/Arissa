@@ -658,8 +658,9 @@ function TryToSandboxAroundPlayer()
 endFunction
 
 function TryToRideHorse()
+	ArissaDebug(1, "Arissa Sit State: " + iNPC.GetActorRef().GetSitState())
 	if iNPCSystem.CanRideOwnHorse
-		if iNPC.GetActorReference().IsOnMount() == false && PlayerRef.IsOnMount()
+		if (!iNPC.GetActorRef().IsOnMount() && iNPC.GetActorRef().GetSitState() == 0) && PlayerRef.IsOnMount()
 			;summon horse
 			ArissaDebug(1, "Trying to mount a horse.")
 			if MyHorse == none
@@ -670,13 +671,16 @@ function TryToRideHorse()
 					i += 1
 				endwhile
 			endif
+			iNPC.GetActorReference().MoveTo(MyHorse)
 			MyHorse.Activate(iNPC.GetActorReference())
+			iNPCSystem.IsRidingOwnHorse = true
 			utility.wait(4.0)
 		else
-			if PlayerRef.IsOnMount() == false
+			if PlayerRef.IsOnMount() == false && iNPC.GetActorRef().GetSitState() != 0
 				;get rid of horse
 				ArissaDebug(1, "Dismounting.")
 				iNPC.GetActorReference().Dismount()
+				iNPCSystem.IsRidingOwnHorse = false
 				utility.wait(4.0)
 				if MyHorse != none
 					while (MyHorse as Actor).IsBeingRidden()
