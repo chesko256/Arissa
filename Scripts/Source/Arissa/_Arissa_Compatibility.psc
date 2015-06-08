@@ -11,6 +11,7 @@ bool property isSKSELoaded auto hidden
 bool property isSKYUILoaded auto hidden
 bool property isImperiousLoaded auto hidden
 bool property isOpenCitiesLoaded auto hidden
+bool property isConvenientHorsesLoaded auto hidden
 
 MagicEffect property ImperiousYffresBlessing auto hidden
 
@@ -77,8 +78,27 @@ function CompatibilityCheck()
 		endif
 	endif
 
+	if isConvenientHorsesLoaded
+		isConvenientHorsesLoaded = IsPluginLoaded(0x01020329, "Convenient Horses.esp")
+		if !isConvenientHorsesLoaded
+			;Imperious was removed since the last save.
+		endif
+	else
+		isConvenientHorsesLoaded = IsPluginLoaded(0x01020329, "Convenient Horses.esp")
+		if isConvenientHorsesLoaded
+			;Imperious was just loaded.
+		endif
+	endif
+
 	if isImperiousLoaded
 		ImperiousYffresBlessing = Game.GetFormFromFile(0x002501B5, "Imperious - Races of Skyrim.esp") as MagicEffect
+	endif
+
+	;Convenient Horses Sanity Check
+	if isConvenientHorsesLoaded
+		iNPCSystem.SetUseOwnHorse(false)
+	else
+		iNPCSystem.SetUseOwnHorse()
 	endif
 
 	;Dialogue animations from Dawnguard do not work; left here for future expansion.

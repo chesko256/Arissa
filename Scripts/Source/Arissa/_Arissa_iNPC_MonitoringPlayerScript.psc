@@ -659,29 +659,25 @@ endFunction
 
 function TryToRideHorse()
 	if iNPCSystem.CanRideOwnHorse
-		if iNPC.GetActorReference().IsOnMount() == false
-			if PlayerRef.IsOnMount()
-				;summon horse
-				ArissaDebug(1, "Trying to mount a horse.")
-				iNPCSystem.IsRidingOwnHorse = true
-				;if iNPC.GetActorReference().GetCurrentPackage() != _ArissaFollowFar_RideHorse
-				;	iNPC.GetActorReference().EvaluatePackage()
-				;endif
-				if MyHorse == none
-					MyHorse = iNPC.GetActorReference().PlaceAtMe(iNPC_Horse)
-					while MyHorse.Is3DLoaded() == false
-						utility.wait(0.1)
-					endwhile
-				endif
-				MyHorse.Activate(iNPC.GetActorReference())
+		if iNPC.GetActorReference().IsOnMount() == false && PlayerRef.IsOnMount()
+			;summon horse
+			ArissaDebug(1, "Trying to mount a horse.")
+			if MyHorse == none
+				MyHorse = iNPC.GetActorReference().PlaceAtMe(iNPC_Horse)
+				int i = 50
+				while MyHorse.Is3DLoaded() == false && i > 0
+					utility.wait(0.1)
+					i += 1
+				endwhile
 			endif
+			MyHorse.Activate(iNPC.GetActorReference())
+			utility.wait(4.0)
 		else
 			if PlayerRef.IsOnMount() == false
 				;get rid of horse
 				ArissaDebug(1, "Dismounting.")
-				iNPCSystem.IsRidingOwnHorse = false
 				iNPC.GetActorReference().Dismount()
-				utility.wait(3)
+				utility.wait(4.0)
 				if MyHorse != none
 					while (MyHorse as Actor).IsBeingRidden()
 						utility.wait(0.1)

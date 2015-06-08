@@ -613,8 +613,8 @@ EndFunction
 bool function SetUseOwnHorse(bool abEnable = true)
 	if abEnable == false
 		ObjectReference HorseRef = MonitorScript.MyHorse
-		if HorseRef != None
-			if (HorseRef as Actor).IsBeingRidden() || IsRidingOwnHorse == true
+		if HorseRef
+			if (HorseRef as Actor).IsBeingRidden() || iNPC.GetActorRef().IsOnMount()
 				return false
 			else
 				CanRideOwnHorse = false
