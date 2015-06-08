@@ -69,12 +69,12 @@ function CompatibilityCheck()
 	if isOpenCitiesLoaded
 		isOpenCitiesLoaded = IsPluginLoaded(0x02002DD5, "Open Cities Skyrim.esp")
 		if !isOpenCitiesLoaded
-			;Imperious was removed since the last save.
+			;Open Cities was removed since the last save.
 		endif
 	else
 		isOpenCitiesLoaded = IsPluginLoaded(0x02002DD5, "Open Cities Skyrim.esp")
 		if isOpenCitiesLoaded
-			;Imperious was just loaded.
+			;Open Cities was just loaded.
 		endif
 	endif
 
