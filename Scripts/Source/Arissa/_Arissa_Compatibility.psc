@@ -81,12 +81,12 @@ function CompatibilityCheck()
 	if isConvenientHorsesLoaded
 		isConvenientHorsesLoaded = IsPluginLoaded(0x01020329, "Convenient Horses.esp")
 		if !isConvenientHorsesLoaded
-			;Imperious was removed since the last save.
+			;Convenient Horses was removed since the last save.
 		endif
 	else
 		isConvenientHorsesLoaded = IsPluginLoaded(0x01020329, "Convenient Horses.esp")
 		if isConvenientHorsesLoaded
-			;Imperious was just loaded.
+			;Convenient Horses was just loaded.
 		endif
 	endif
 
