@@ -174,7 +174,7 @@ endFunction
 function UpgradeTasks()
 	if !Update1_2
 		;Set long-term outfit
-		iNPCSystem.iNPC.GetActorRef().SetOutfit(_Arissa_Armor1_Outfit)
+		;iNPCSystem.iNPC.GetActorRef().SetOutfit(_Arissa_Armor1_Outfit)
 
 		;Fix issue with Arissa not making it out of MQ03 Cave
 		if iNPCSystem.iNPC.GetActorRef().GetCurrentLocation() == _Arissa_SkygroveDeepfallLocation && PlayerRef.GetCurrentLocation() != _Arissa_SkygroveDeepfallLocation
