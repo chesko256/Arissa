@@ -671,10 +671,14 @@ function TryToRideHorse()
 					i += 1
 				endwhile
 			endif
+			iNPCSystem.IsRidingOwnHorse = true
 			iNPC.GetActorReference().MoveTo(MyHorse)
 			MyHorse.Activate(iNPC.GetActorReference())
-			iNPCSystem.IsRidingOwnHorse = true
-			utility.wait(4.0)
+			int i = 80
+			while iNPC.GetActorRef().GetSitState() == 0
+				utility.wait(0.1)
+				i += 1
+			endWhile
 		else
 			if PlayerRef.IsOnMount() == false && iNPC.GetActorRef().GetSitState() != 0
 				;get rid of horse
