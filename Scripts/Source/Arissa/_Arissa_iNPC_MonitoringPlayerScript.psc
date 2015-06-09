@@ -1,6 +1,9 @@
 Scriptname _Arissa_iNPC_MonitoringPlayerScript extends Quest 
 {Monitors the player's actions and quest states. Runs only when Arissa is following.}
 
+import utility
+import math
+
 _Arissa_iNPC_Behavior Property iNPCSystem auto
 ReferenceAlias Property iNPC auto
 Actor property PlayerRef auto
@@ -143,7 +146,7 @@ function CheckCombat()
 		if ctarg
 			if arissa.GetActorValuePercentage("Health") > 0.2 && ctarg.GetActorValuePercentage("Health") <= 0.25 && \
 				PlayerRef.GetActorValuePercentage("Health") <= 0.80 && ctarg.GetRace().HasKeyword(ActorTypeNPC) && \
-				arissa.GetEquippedItemType(1) <= 2 && utility.RandomFloat() <= 0.30
+				arissa.GetEquippedItemType(1) <= 2 && RandomFloat() <= 0.30
 				;debug.trace("[Arissa] Performing blink attack!")
 				DoBlinkAttack(arissa, ctarg)
 			endif
@@ -156,17 +159,17 @@ function DoBlinkAttack(Actor akActor, Actor akTarget)
 	Invisibility.Cast(akActor, akActor)
 	int i = 0
 	while !akActor.HasMagicEffectWithKeyword(MagicInvisibility) && i < 50
-		utility.wait(0.1)
+		wait(0.1)
 		i += 1
 	endWhile
-	Utility.wait(3)
+	wait(3)
 	akActor.MoveTo(akTarget, -120 * Math.Sin(akTarget.GetAngleZ()), -120 * Math.Cos(akTarget.GetAngleZ()), 0, abMatchRotation = true)
 	if (akActor.GetEquippedItemType(1) == 1 || akActor.GetEquippedItemType(1) == 2)
 		akActor.PlayIdleWithTarget(pa_1HMKillMoveBackStab, akTarget)
 	elseif akActor.GetEquippedItemType(1) == 0
 		akActor.PlayIdleWithTarget(KillMoveSneakH2HSleeper, akTarget)
 	endif
-	utility.wait(2)
+	wait(2)
 	akActor.DispelSpell(Invisibility)
 	blink_attack_ready_counter = 30
 endFunction
@@ -302,7 +305,7 @@ function UpdateStats()
 	if k > iNPCSystem.PlayerStat_LocksPicked
 		iNPCSystem.PlayerStat_LocksPicked = k
 		iNPCSystem.IncreaseRegardTiny()
-		if utility.randomfloat() < 0.25
+		if randomfloat() < 0.25
 			_Arissa_ReactionIndex.SetValueInt(3)
 			_Arissa_Commentary_Reactions.Start()
 		endif
@@ -467,17 +470,17 @@ function TryToGiveTheftResults()
 		if iNPCSystem.ArissaTalkedAbout_TownTheft == true && iNPCSystem.PlayerWantsTheftMoney == true
 			_Arissa_TheftQuestOngoingScene.Start()
 			if Game.GetPlayer().GetLevel() >= 50
-     			Game.GetPlayer().AddItem(Gold001, utility.RandomInt(200, 400))
+     			Game.GetPlayer().AddItem(Gold001, RandomInt(200, 400))
 			elseif Game.GetPlayer().GetLevel() >= 40
-     			Game.GetPlayer().AddItem(Gold001, utility.RandomInt(150, 300))
+     			Game.GetPlayer().AddItem(Gold001, RandomInt(150, 300))
 			elseif Game.GetPlayer().GetLevel() >= 30
-     			Game.GetPlayer().AddItem(Gold001, utility.RandomInt(100, 250))
+     			Game.GetPlayer().AddItem(Gold001, RandomInt(100, 250))
 			elseif Game.GetPlayer().GetLevel() >= 20
-     			Game.GetPlayer().AddItem(Gold001, utility.RandomInt(50, 200))
+     			Game.GetPlayer().AddItem(Gold001, RandomInt(50, 200))
 			elseif Game.GetPlayer().GetLevel() >= 10
-     			Game.GetPlayer().AddItem(Gold001, utility.RandomInt(25, 100))
+     			Game.GetPlayer().AddItem(Gold001, RandomInt(25, 100))
 			else
-     			Game.GetPlayer().AddItem(Gold001, utility.RandomInt(13, 50))
+     			Game.GetPlayer().AddItem(Gold001, RandomInt(13, 50))
 			endif
 			iNPCSystem.ArissaHasStolen = false
 		endif
@@ -509,13 +512,13 @@ function TryToSaySomethingAboutSurroundings()
 		if (PuzzleDoor as HallofStoriesKeyholeScript).GetState() != "done"
 			_Arissa_ReactionIndex.SetValueInt(6)
 			_Arissa_Commentary_Reactions.Start()
-			utility.wait(3)
+			wait(3)
 			iNPCSystem.ArissaKnows_SeenPuzzleDoorBefore = true
 			iNPCSystem.Arissa_CommentedOn_PuzzleDoor = true
 		else
 			_Arissa_ReactionIndex.SetValueInt(4)
 			_Arissa_Commentary_Reactions.Start()
-			utility.wait(3)
+			wait(3)
 			iNPCSystem.Arissa_CommentedOn_PuzzleDoor = true
 		endif
 	endif
@@ -526,7 +529,7 @@ function TryToSaySomethingAboutSurroundings()
 		if PaleBlade.IsEnabled() && iNPCSystem.ArissaTalkedAbout_Weapon_PaleBlade == false && PlayerRef.GetCombatState() == 0
 			_Arissa_ReactionIndex.SetValueInt(5)
 			_Arissa_Commentary_Reactions.Start()
-			utility.wait(3)
+			wait(3)
 			iNPCSystem.ArissaTalkedAbout_Weapon_PaleBlade = true
 		endif
 	endif
@@ -658,42 +661,60 @@ function TryToSandboxAroundPlayer()
 endFunction
 
 function TryToRideHorse()
-	ArissaDebug(1, "Arissa Sit State: " + iNPC.GetActorRef().GetSitState())
+	; Credit to Alek (mitchalek@yahoo.com) of Convenient Horses for some enhancements.
+	Actor ArissaRef = iNPC.GetActorRef()
+	ArissaDebug(1, "Arissa Sit State: " + ArissaRef.GetSitState())
 	if iNPCSystem.CanRideOwnHorse
-		if (!iNPC.GetActorRef().IsOnMount() && iNPC.GetActorRef().GetSitState() == 0) && PlayerRef.IsOnMount()
+		; Do not mount if knocked, bleeding out, swimming, falling, talking, synced, etc.
+		if (!ArissaRef.IsOnMount() && ArissaRef.GetSitState() == 0) && PlayerRef.IsOnMount()
+			if !ArissaRef.GetAnimationVariableBool("bVoiceReady")
+				if !(ArissaRef.GetAnimationVariableBool("IsAttacking") || ArissaRef.GetAnimationVariableBool("IsCastingRight") || ArissaRef.GetAnimationVariableBool("IsCastingLeft"))
+					return
+				endif
+			endif
+			
 			;summon horse
 			ArissaDebug(1, "Trying to mount a horse.")
 			if MyHorse == none
-				MyHorse = iNPC.GetActorReference().PlaceAtMe(iNPC_Horse)
-				int i = 50
+				MyHorse = ArissaRef.PlaceAtMe(iNPC_Horse)
+				int i = 10
 				while MyHorse.Is3DLoaded() == false && i > 0
-					utility.wait(0.1)
-					i += 1
+					wait(0.5)
+					i -= 1
 				endwhile
 			endif
 			iNPCSystem.IsRidingOwnHorse = true
-			iNPC.GetActorReference().MoveTo(MyHorse)
-			MyHorse.Activate(iNPC.GetActorReference())
-			int i = 80
-			while iNPC.GetActorRef().GetSitState() == 0
-				utility.wait(0.1)
-				i += 1
-			endWhile
+
+			float ang_z
+			MyHorse.Activate(ArissaRef, true)
+			wait(0.5)
+			int i = 4
+			while !ArissaRef.IsOnMount() && ArissaRef.GetAnimationVariableBool("bVoiceReady") && i > 0
+				ArissaDebug(1, "Arissa trying to mount horse...")
+				ang_z = MyHorse.GetAngleZ() - 90
+				ArissaRef.SetAngle(0, 0, ang_z + 180)
+				ArissaRef.MoveTo(MyHorse, 60 * Sin(ang_z), 60 * Cos(ang_z), 0, false)
+				MyHorse.Activate(ArissaRef, true)
+				i -= 1
+				wait(0.5)
+			endwhile
 		else
-			if PlayerRef.IsOnMount() == false && iNPC.GetActorRef().GetSitState() != 0
+			if !PlayerRef.IsOnMount() && ArissaRef.IsOnMount()
 				;get rid of horse
 				ArissaDebug(1, "Dismounting.")
-				iNPC.GetActorReference().Dismount()
+				ArissaRef.Dismount()
 				iNPCSystem.IsRidingOwnHorse = false
-				utility.wait(4.0)
+				wait(4.0)
 				if MyHorse != none
 					while (MyHorse as Actor).IsBeingRidden()
-						utility.wait(0.1)
+						wait(0.1)
 					endwhile
 					MyHorse.Disable(true)
 					MyHorse.Delete()
 					MyHorse = none
 				endif
+			else
+				ArissaDebug(1, "Player and Arissa are currently mounted.")
 			endif
 		endif
 	endif
