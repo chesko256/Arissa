@@ -2,24 +2,10 @@
 ;NEXT FRAGMENT INDEX 64
 Scriptname _Arissa_Frag_Debug_MQ01Guards Extends Scene Hidden
 
-;BEGIN FRAGMENT Fragment_35
-Function Fragment_35()
+;BEGIN FRAGMENT Fragment_26
+Function Fragment_26()
 ;BEGIN CODE
-;WARNING: Unable to load fragment source from function Fragment_35 in script _Arissa_Frag_Debug_MQ01Guards
-;Source NOT loaded
-;END CODE
-EndFunction
-;END FRAGMENT
-
-;BEGIN FRAGMENT Fragment_47
-Function Fragment_47()
-;BEGIN CODE
-Alias_Arissa.GetActorRef().MoveTo(_Arissa_ArrestArissaMarker)
-Alias_Guard1.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard1Marker)
-Alias_Guard2.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard2MarkerHoldPos)
-Alias_Guard3.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard3MarkerHoldPos)
-Guard4.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard4Marker)
-Guard5.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard5Marker)
+;
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -40,30 +26,33 @@ Alias_Arissa.GetActorReference().SetRelationshipRank(Game.GetPlayer(), 4)
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_26
-Function Fragment_26()
+;BEGIN FRAGMENT Fragment_28
+Function Fragment_28()
 ;BEGIN CODE
-;
+;WARNING: Unable to load fragment source from function Fragment_28 in script _Arissa_Frag_Debug_MQ01Guards
+;Source NOT loaded
 ;END CODE
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_63
-Function Fragment_63()
+;BEGIN FRAGMENT Fragment_47
+Function Fragment_47()
 ;BEGIN CODE
-Game.EnablePlayerControls()
-;Set her normal outfit
-;Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantBoots)
-;Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantGauntlets)
-;Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantCuirass)
-Alias_Arissa.GetActorRef().AddItem(IronArrow, 100)
-Alias_Arissa.GetActorRef().AddItem(HuntingBow)
-Alias_Arissa.GetActorRef().AddItem(SteelDagger)
-Alias_Arissa.GetActorRef().AddItem(SteelSword)
-;utility.wait(0.1)
-;Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantGauntlets, true)
-;Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantBoots, true)
-;Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantCuirass, true)
+Alias_Arissa.GetActorRef().MoveTo(_Arissa_ArrestArissaMarker)
+Alias_Guard1.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard1Marker)
+Alias_Guard2.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard2MarkerHoldPos)
+Alias_Guard3.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard3MarkerHoldPos)
+Guard4.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard4Marker)
+Guard5.GetActorRef().MoveTo(_Arissa_MQ01_ArrestGuard5Marker)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_35
+Function Fragment_35()
+;BEGIN CODE
+;WARNING: Unable to load fragment source from function Fragment_35 in script _Arissa_Frag_Debug_MQ01Guards
+;Source NOT loaded
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -88,11 +77,22 @@ Game.EnablePlayerControls()
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_28
-Function Fragment_28()
+;BEGIN FRAGMENT Fragment_63
+Function Fragment_63()
 ;BEGIN CODE
-;WARNING: Unable to load fragment source from function Fragment_28 in script _Arissa_Frag_Debug_MQ01Guards
-;Source NOT loaded
+Game.EnablePlayerControls()
+;Set her normal outfit
+Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantBoots)
+Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantGauntlets)
+Alias_Arissa.GetActorRef().AddItem(_Arissa_ArmorThievesGuildVariantCuirass)
+Alias_Arissa.GetActorRef().AddItem(IronArrow, 100)
+Alias_Arissa.GetActorRef().AddItem(HuntingBow)
+Alias_Arissa.GetActorRef().AddItem(SteelDagger)
+Alias_Arissa.GetActorRef().AddItem(SteelSword)
+utility.wait(0.1)
+Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantGauntlets)
+Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantBoots)
+Alias_Arissa.GetActorRef().EquipItem(_Arissa_ArmorThievesGuildVariantCuirass)
 ;END CODE
 EndFunction
 ;END FRAGMENT

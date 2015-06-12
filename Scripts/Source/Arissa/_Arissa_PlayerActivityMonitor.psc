@@ -9,6 +9,7 @@ GlobalVariable property RecoverArissa auto
 Actor property PlayerRef auto
 Quest property MainQuest auto
 Quest property _Arissa_Commentary_EquipmentReactions auto
+Quest property _Arissa_MQ02 auto
 Armor property ArmorDraugrCuirass auto
 Keyword property ArmorCuirass auto
 Keyword property ArmorMaterialIron auto
@@ -52,6 +53,7 @@ Location property MorthalLocation auto
 Potion property FoodApple auto
 Potion property FoodMead auto
 
+int MQ02Counter = 4
 
 Event OnInit()
 	RegisterForSingleUpdate(3)
@@ -175,6 +177,15 @@ Event OnUpdateGameTime()
 		if mead_to_give > 0
 			iNPCSystem.iNPC.GetActorRef().AddItem(FoodMead, mead_to_give)
 		endif
+	endif
+
+	;Start MQ02 if not started yet
+	if MQ02Counter <= 0
+		if !_Arissa_MQ02.IsRunning() && !_Arissa_MQ02.IsCompleted()
+			_Arissa_MQ02.Start()
+		endif
+	else
+		MQ02Counter -= 1
 	endif
 
 	RegisterForSingleUpdateGameTime(24)

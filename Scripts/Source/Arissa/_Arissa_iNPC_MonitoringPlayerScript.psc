@@ -17,6 +17,7 @@ Package property _ArissaFollowFar_RideHorse auto
 keyword property LocTypeDungeon auto
 Message property _ArissaTownRoamMessage auto
 Message property _ArissaTownRoamEndMessage auto
+Quest property _Arissa_MQ01 auto
 Quest property _Arissa_MQ02 auto
 GlobalVariable property _Arissa_CurrentTownRoamArea auto
 GlobalVariable property _Arissa_ReactionIndex auto
@@ -24,6 +25,10 @@ Quest property _Arissa_Commentary_Reactions auto
 Outfit property _Arissa_Armor1_Outfit auto
 Outfit property _Arissa_Armor2_Outfit auto
 Outfit property _Arissa_Armor3_Outfit auto
+Outfit property _Arissa_BaseOutfit auto
+Armor property _Arissa_ArmorThievesGuildVariantGauntlets auto
+Armor property _Arissa_ArmorThievesGuildVariantBoots auto
+Armor property _Arissa_ArmorThievesGuildVariantCuirass auto
 Keyword property LocTypeHouse auto
 Keyword property LocTypePlayerHouse auto
 Keyword property LocTypeInn auto
@@ -50,6 +55,8 @@ Idle property pa_1HMKillMoveBackStab auto
 Idle property KillMoveSneakH2HSleeper auto
 Spell property Invisibility auto
 Keyword property MagicInvisibility auto
+ObjectReference property _Arissa_MQ02CaveDoor auto
+ObjectReference property _Arissa_MQ02CaveBarrier auto
 
 int blink_attack_ready_counter = 0
 
@@ -73,6 +80,7 @@ float OffsetY = 150.000
 
 bool Update1_2 = false
 bool Update1_3 = false
+bool Update2_1 = false
 
 Function Setup()
 	; history of player position over the last __historySize updates
@@ -175,13 +183,14 @@ function DoBlinkAttack(Actor akActor, Actor akTarget)
 endFunction
 
 function UpgradeTasks()
+	Actor ArissaRef = iNPCSystem.iNPC.GetActorRef()
 	if !Update1_2
 		;Set long-term outfit
 		;iNPCSystem.iNPC.GetActorRef().SetOutfit(_Arissa_Armor1_Outfit)
 
 		;Fix issue with Arissa not making it out of MQ03 Cave
-		if iNPCSystem.iNPC.GetActorRef().GetCurrentLocation() == _Arissa_SkygroveDeepfallLocation && PlayerRef.GetCurrentLocation() != _Arissa_SkygroveDeepfallLocation
-			iNPCSystem.iNPC.GetActorRef().MoveTo(Game.GetPlayer())
+		if ArissaRef.GetCurrentLocation() == _Arissa_SkygroveDeepfallLocation && PlayerRef.GetCurrentLocation() != _Arissa_SkygroveDeepfallLocation
+			ArissaRef.MoveTo(Game.GetPlayer())
 			_Arissa_MQ02.CompleteAllObjectives()
 			_Arissa_MQ02.CompleteQuest()
 			_Arissa_MQ02.SetStage(100)
@@ -198,6 +207,33 @@ function UpgradeTasks()
 		Alias_Compatibility.ForceRefIfEmpty(Game.GetPlayer())
 		Compatibility.CompatibilityCheck()
 		Update1_3 = true
+	endif
+
+	if !Update2_1
+		; Set the base outfit
+		ArissaRef.SetOutfit(_Arissa_BaseOutfit)
+
+		; Make sure Arissa can equip other gear
+		if _Arissa_MQ01.IsCompleted()
+			if ArissaRef.GetItemCount(_Arissa_ArmorThievesGuildVariantBoots) == 0
+				ArissaRef.AddItem(_Arissa_ArmorThievesGuildVariantBoots)
+			endif
+			if ArissaRef.GetItemCount(_Arissa_ArmorThievesGuildVariantGauntlets) == 0
+				ArissaRef.AddItem(_Arissa_ArmorThievesGuildVariantGauntlets)
+			endif
+			if ArissaRef.GetItemCount(_Arissa_ArmorThievesGuildVariantCuirass) == 0
+				ArissaRef.AddItem(_Arissa_ArmorThievesGuildVariantCuirass)
+			endif
+			ArissaRef.EquipItem(_Arissa_ArmorThievesGuildVariantGauntlets)
+			ArissaRef.EquipItem(_Arissa_ArmorThievesGuildVariantBoots)
+			ArissaRef.EquipItem(_Arissa_ArmorThievesGuildVariantCuirass)
+		endif
+
+		; Set the state of the MQ02 Cave
+		if _Arissa_MQ02.IsRunning() || _Arissa_MQ02.IsCompleted()
+			_Arissa_MQ02CaveDoor.Enable()
+			_Arissa_MQ02CaveBarrier.Disable()
+		endif
 	endif
 
 endFunction

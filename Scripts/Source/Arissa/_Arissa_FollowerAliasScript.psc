@@ -47,10 +47,6 @@ Event OnLocationChange(Location akOldLoc, Location akNewLoc)
 		AnnounceArea(akNewLoc)
 	endif
 
-	if akNewLoc == MilitaryCampHaafingarSonsLocation && !_Arissa_MQ02.IsRunning() && !_Arissa_MQ02.IsCompleted()
-		_Arissa_MQ02.Start()
-	endif
-
 	;GetName requires SKSE
 	;if akOldLoc && akNewLoc
 	;	ArissaDebug(4, "Arissa moved from " + akOldLoc.GetName() + " to " + akNewLoc.GetName())
