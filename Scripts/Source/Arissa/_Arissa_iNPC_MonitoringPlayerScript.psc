@@ -719,6 +719,10 @@ function TryToRideHorse()
 					wait(0.5)
 					i -= 1
 				endwhile
+			else
+				if ArissaRef.GetDistance(MyHorse) > 200.0
+					return
+				endif
 			endif
 			iNPCSystem.IsRidingOwnHorse = true
 
@@ -736,7 +740,8 @@ function TryToRideHorse()
 				wait(0.5)
 			endwhile
 		else
-			if ArissaRef.IsInCombat() || (!PlayerRef.IsOnMount() && ArissaRef.IsOnMount())
+			; Dismount if in combat, if too far away from the horse (i.e. don't try to mount after fast travel) or player unmounted
+			if ArissaRef.IsInCombat() || (MyHorse && ArissaRef.GetDistance(MyHorse) > 2000.0) || (!PlayerRef.IsOnMount() && ArissaRef.IsOnMount())
 				;get rid of horse
 				ArissaDebug(1, "Dismounting.")
 				ArissaRef.Dismount()
