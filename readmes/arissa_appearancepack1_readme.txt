@@ -8,8 +8,8 @@ Author: Chesko, Griefmyst, Kalilies, Nouk, Apachii, Maevan2
 Contact: chesko.tesmod@gmail.com
 ===================================================
 
-Version: 1.0.1
-Date: 5/15/2015
+Version: 2.1
+Date: 6/12/2015
 
 === Description ===
 
