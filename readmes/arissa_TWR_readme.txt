@@ -12,6 +12,36 @@
 =================================================
 
 ==================================
+Update 2.1
+==================================
+FEATURES
+* Arissa's ponytail hair is in the base install once again.
+
+COMPATIBILITY
+* iNeed - Arissa now finds 5 apples and 3 bottles of mead per day if her regard is too low for you to trade with her.
+* Imperious - The Green Pact ability now counts as cannibalism and Arissa will react accordingly.
+* Open Cities - If Open Cities is installed, the town roam dialogue prompt will appear only while in Dawnstar, Morthal, or Winterhold. This will prevent Arissa from walking off into the distance when in an Open Cities city.
+
+CHANGES
+* Enhanced the functionality of the MCM's location field; should no longer display "Unknown" as often.
+* Reduced the number of spiders that spawn during the spider encounter on Arissa's second main quest.
+* Slightly modified the entrance of the cave for Arissa's second main quest.
+* Added a boulder to the entrance of the cave for Arissa's second main quest if the quest has not started.
+* Arissa should no longer change into casual clothes when town roaming, in order to reduce complexity and prevent outfit bugs.
+
+BUG FIXES
+* Fixed the neck seam issue in the base package and Appearance Pack 1.
+* Fixed an issue where her second main quest would not start. It should now start after waiting about 3 in-game days.
+* Fixed an issue where the second main quest cave would not be visible.
+* Greatly improved her horse riding functionality. Arissa should no longer fall as far behind, should stay on her horse, and should get off her horse when in combat or when the player jumps off. Thanks to Alek of Convenient Horses for some of these enhancements.
+* Fixed an issue where Arissa may no longer ride her horse.
+* Fixed an issue where Convenient Horses may no longer work with Arissa.
+* Fixed an issue with the title of the mod being lower case in the MCM.
+* Fixed Arissa being able to walk off to a distant location when selecting her town roaming dialogue option when inside a house.
+* Fixed an issue where Arissa would no longer wear the armor that the player gave her.
+
+
+==================================
 Update 2.0
 ==================================
 * Please see the file page for update details.
