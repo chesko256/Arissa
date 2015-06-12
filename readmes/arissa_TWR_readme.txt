@@ -14,6 +14,16 @@
 Date: 6/12/2015
 
 ==================================
+Update 2.1.1
+==================================
+BUG FIXES
+* Removed 15 identical-to-master navmesh edits.
+* Changed legacy configuration spell name from "Arissa Config" to "Configure: Arissa"
+
+Appearance Pack 1
+* Fixed potential packaging issue which may have caused face discoloration.
+
+==================================
 Update 2.1
 ==================================
 FEATURES
