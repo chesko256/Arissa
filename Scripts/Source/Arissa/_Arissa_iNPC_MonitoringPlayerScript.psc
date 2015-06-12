@@ -234,6 +234,7 @@ function UpgradeTasks()
 			_Arissa_MQ02CaveDoor.Enable()
 			_Arissa_MQ02CaveBarrier.Disable()
 		endif
+		Update2_1 = true
 	endif
 
 endFunction
@@ -702,7 +703,7 @@ function TryToRideHorse()
 	ArissaDebug(1, "Arissa Sit State: " + ArissaRef.GetSitState())
 	if iNPCSystem.CanRideOwnHorse
 		; Do not mount if knocked, bleeding out, swimming, falling, talking, synced, etc.
-		if (!ArissaRef.IsOnMount() && ArissaRef.GetSitState() == 0) && PlayerRef.IsOnMount()
+		if (!ArissaRef.IsOnMount() && ArissaRef.GetSitState() == 0) && PlayerRef.IsOnMount() && !ArissaRef.IsInCombat()
 			if !ArissaRef.GetAnimationVariableBool("bVoiceReady")
 				if !(ArissaRef.GetAnimationVariableBool("IsAttacking") || ArissaRef.GetAnimationVariableBool("IsCastingRight") || ArissaRef.GetAnimationVariableBool("IsCastingLeft"))
 					return
@@ -735,7 +736,7 @@ function TryToRideHorse()
 				wait(0.5)
 			endwhile
 		else
-			if !PlayerRef.IsOnMount() && ArissaRef.IsOnMount()
+			if ArissaRef.IsInCombat() || (!PlayerRef.IsOnMount() && ArissaRef.IsOnMount())
 				;get rid of horse
 				ArissaDebug(1, "Dismounting.")
 				ArissaRef.Dismount()
