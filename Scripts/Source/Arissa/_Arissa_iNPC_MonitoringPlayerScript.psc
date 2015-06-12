@@ -57,8 +57,10 @@ Spell property Invisibility auto
 Keyword property MagicInvisibility auto
 ObjectReference property _Arissa_MQ02CaveDoor auto
 ObjectReference property _Arissa_MQ02CaveBarrier auto
+Light property Torch01 auto
 
 int blink_attack_ready_counter = 0
+int removed_torch_count = 0
 
 int Property UpdateInterval auto				;Default: 1
 float Property SettleRadius auto				;Default: 150.0
@@ -720,11 +722,17 @@ function TryToRideHorse()
 					i -= 1
 				endwhile
 			else
-				if ArissaRef.GetDistance(MyHorse) > 200.0
+				if ArissaRef.GetDistance(MyHorse) > 2000.0
+					MyHorse.Disable(true)
+					MyHorse.Delete()
+					MyHorse = none
 					return
 				endif
 			endif
+
 			iNPCSystem.IsRidingOwnHorse = true
+			removed_torch_count = ArissaRef.GetItemCount(Torch01)
+			ArissaRef.RemoveItem(Torch01, removed_torch_count)
 
 			float ang_z
 			MyHorse.Activate(ArissaRef, true)
@@ -755,6 +763,8 @@ function TryToRideHorse()
 					MyHorse.Delete()
 					MyHorse = none
 				endif
+				ArissaRef.Additem(Torch01, removed_torch_count)
+				removed_torch_count = 0
 			else
 				ArissaDebug(1, "Player and Arissa are currently mounted.")
 			endif
