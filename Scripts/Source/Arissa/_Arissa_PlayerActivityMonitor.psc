@@ -53,7 +53,7 @@ Location property MorthalLocation auto
 Potion property FoodApple auto
 Potion property FoodMead auto
 
-int MQ02Counter = 4
+int MQ02Counter = 2
 
 Event OnInit()
 	RegisterForSingleUpdate(3)
