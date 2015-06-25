@@ -6,7 +6,8 @@ Scriptname _Arissa_Frag_Trade6 Extends TopicInfo Hidden
 Function Fragment_0(ObjectReference akSpeakerRef)
 Actor akSpeaker = akSpeakerRef as Actor
 ;BEGIN CODE
-_Arissa_InventoryRef.Activate(Game.GetPlayer())
+;_Arissa_InventoryRef.Activate(Game.GetPlayer())
+_Arissa_InventoryActorRef.OpenInventory(true)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -14,3 +15,5 @@ EndFunction
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 
 ObjectReference Property _Arissa_InventoryRef  Auto  
+
+Actor Property _Arissa_InventoryActorRef  Auto  

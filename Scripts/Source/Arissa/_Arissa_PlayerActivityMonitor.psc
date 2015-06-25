@@ -2,13 +2,13 @@ Scriptname _Arissa_PlayerActivityMonitor extends ReferenceAlias
 {Monitors the player's actions and quest states. Runs persistently.}
 
 _Arissa_iNPC_Behavior Property iNPCSystem auto
-_Arissa_Compatibility property Compatibility auto
 GlobalVariable property _Arissa_CurrentTownRoamArea auto
 GlobalVariable property _Arissa_HelpShown_TownRoam auto
 GlobalVariable property RecoverArissa auto
 Actor property PlayerRef auto
 Quest property MainQuest auto
 Quest property _Arissa_Commentary_EquipmentReactions auto
+Quest property _Arissa_MQ01 auto
 Quest property _Arissa_MQ02 auto
 Armor property ArmorDraugrCuirass auto
 Keyword property ArmorCuirass auto
@@ -31,6 +31,11 @@ Keyword property ArmorMaterialOrcish auto
 message property _ArissaTownRoamEndMessage auto
 message property _ArissaHelpTownRoam auto
 
+ObjectReference property WindhelmLocationCenterMarkerREF auto
+ObjectReference property CenterMarkerRfiten auto
+ObjectReference property _Arissa_MarkarthCenterMarker auto
+ObjectReference property CenterMarkerWhiterun auto
+ObjectReference property SolitudeCenterMarker auto
 ObjectReference property CenterMarkerDawnstar auto
 ObjectReference property CenterMarkerFalkreath auto
 ObjectReference property CenterMarkerMorthal auto
@@ -164,19 +169,17 @@ Event OnUpdateGameTime()
 	iNPCSystem.GavePoisonsToday = false
 
 	;iNeed / Last Seed compatibility
-	if iNPCSystem.PlayerAssessmentRegard <= -5
-		int apple_count = iNPCSystem.iNPC.GetActorRef().GetItemCount(FoodApple)
-		int mead_count = iNPCSystem.iNPC.GetActorRef().GetItemCount(FoodMead)
+	int apple_count = iNPCSystem.iNPC.GetActorRef().GetItemCount(FoodApple)
+	int mead_count = iNPCSystem.iNPC.GetActorRef().GetItemCount(FoodMead)
 
-		int apples_to_give = 5 - apple_count
-		int mead_to_give = 3 - mead_count
+	int apples_to_give = 5 - apple_count
+	int mead_to_give = 4 - mead_count
 
-		if apples_to_give > 0
-			iNPCSystem.iNPC.GetActorRef().AddItem(FoodApple, apples_to_give)
-		endif
-		if mead_to_give > 0
-			iNPCSystem.iNPC.GetActorRef().AddItem(FoodMead, mead_to_give)
-		endif
+	if apples_to_give > 0
+		iNPCSystem.iNPC.GetActorRef().AddItem(FoodApple, apples_to_give)
+	endif
+	if mead_to_give > 0
+		iNPCSystem.iNPC.GetActorRef().AddItem(FoodMead, mead_to_give)
 	endif
 
 	;Start MQ02 if not started yet
@@ -185,7 +188,9 @@ Event OnUpdateGameTime()
 			_Arissa_MQ02.Start()
 		endif
 	else
-		MQ02Counter -= 1
+		if _Arissa_MQ01.IsCompleted()
+			MQ02Counter -= 1
+		endif
 	endif
 
 	RegisterForSingleUpdateGameTime(24)
@@ -218,45 +223,45 @@ function CheckRecovery()
 endFunction
 
 function GetInTownRoamArea()
-	if PlayerRef.IsInInterior()
-		if PlayerRef.IsInLocation(WindhelmLocation) && (!Compatibility.isOpenCitiesLoaded)
-			_Arissa_CurrentTownRoamArea.SetValueInt(0)
-		elseif PlayerRef.IsInLocation(RiftenLocation) && (!Compatibility.isOpenCitiesLoaded)
-			_Arissa_CurrentTownRoamArea.SetValueInt(1)
-		elseif PlayerRef.IsInLocation(MarkarthLocation) && (!Compatibility.isOpenCitiesLoaded)
-			_Arissa_CurrentTownRoamArea.SetValueInt(2)
-		elseif PlayerRef.IsInLocation(WhiterunLocation) && (!Compatibility.isOpenCitiesLoaded)
-			_Arissa_CurrentTownRoamArea.SetValueInt(3)
-		elseif PlayerRef.IsInLocation(SolitudeLocation) && (!Compatibility.isOpenCitiesLoaded)
-			_Arissa_CurrentTownRoamArea.SetValueInt(4)
-		elseif PlayerRef.IsInLocation(DawnstarLocation)
-			_Arissa_CurrentTownRoamArea.SetValueInt(5)
-		elseif PlayerRef.IsInLocation(FalkreathLocation)
-			_Arissa_CurrentTownRoamArea.SetValueInt(6)
-		elseif PlayerRef.IsInLocation(MorthalLocation)
-			_Arissa_CurrentTownRoamArea.SetValueInt(7)
-		else
-			_Arissa_CurrentTownRoamArea.SetValueInt(-1)
-		endif
-	else
-		if PlayerRef.GetWorldspace() == WindhelmWorld
-			_Arissa_CurrentTownRoamArea.SetValueInt(0)
-		elseif PlayerRef.GetWorldspace() == RiftenWorld
-			_Arissa_CurrentTownRoamArea.SetValueInt(1)
-		elseif PlayerRef.GetWorldspace() == MarkarthWorld
-			_Arissa_CurrentTownRoamArea.SetValueInt(2)
-		elseif PlayerRef.GetWorldspace() == WhiterunWorld
-			_Arissa_CurrentTownRoamArea.SetValueInt(3)
-		elseif PlayerRef.GetWorldspace() == SolitudeWorld
-			_Arissa_CurrentTownRoamArea.SetValueInt(4)
-		elseif PlayerRef.GetDistance(CenterMarkerDawnstar) < 8400.0
-			_Arissa_CurrentTownRoamArea.SetValueInt(5)
-		elseif PlayerRef.GetDistance(CenterMarkerFalkreath) < 4000.0
-			_Arissa_CurrentTownRoamArea.SetValueInt(6)
-		elseif PlayerRef.GetDistance(CenterMarkerMorthal) < 5500.0
-			_Arissa_CurrentTownRoamArea.SetValueInt(7)	
-		else
-			_Arissa_CurrentTownRoamArea.SetValueInt(-1)
-		endif
-	endif
+    if PlayerRef.IsInInterior()
+        if PlayerRef.IsInLocation(WindhelmLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(0)
+        elseif PlayerRef.IsInLocation(RiftenLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(1)
+        elseif PlayerRef.IsInLocation(MarkarthLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(2)
+        elseif PlayerRef.IsInLocation(WhiterunLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(3)
+        elseif PlayerRef.IsInLocation(SolitudeLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(4)
+        elseif PlayerRef.IsInLocation(DawnstarLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(5)
+        elseif PlayerRef.IsInLocation(FalkreathLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(6)
+        elseif PlayerRef.IsInLocation(MorthalLocation)
+            _Arissa_CurrentTownRoamArea.SetValueInt(7)
+        else
+            _Arissa_CurrentTownRoamArea.SetValueInt(-1)
+        endif
+    else
+        if PlayerRef.GetWorldspace() == WindhelmWorld || PlayerRef.GetDistance(WindhelmLocationCenterMarkerREF) < 8000.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(0)
+        elseif PlayerRef.GetWorldspace() == RiftenWorld || PlayerRef.GetDistance(CenterMarkerRfiten) < 6000.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(1)
+        elseif PlayerRef.GetWorldspace() == MarkarthWorld || PlayerRef.GetDistance(_Arissa_MarkarthCenterMarker) < 6000.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(2)
+        elseif PlayerRef.GetWorldspace() == WhiterunWorld || PlayerRef.GetDistance(CenterMarkerWhiterun) < 5600.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(3)
+        elseif PlayerRef.GetWorldspace() == SolitudeWorld || PlayerRef.GetDistance(SolitudeCenterMarker) < 11000.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(4)
+        elseif PlayerRef.GetDistance(CenterMarkerDawnstar) < 8400.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(5)
+        elseif PlayerRef.GetDistance(CenterMarkerFalkreath) < 4000.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(6)
+        elseif PlayerRef.GetDistance(CenterMarkerMorthal) < 5500.0
+            _Arissa_CurrentTownRoamArea.SetValueInt(7)
+        else
+            _Arissa_CurrentTownRoamArea.SetValueInt(-1)
+        endif
+    endif
 endFunction

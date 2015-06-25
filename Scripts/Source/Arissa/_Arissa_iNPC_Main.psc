@@ -67,6 +67,7 @@ Faction Property WIFollowerCommentFaction auto
 Quest property MonitoringQuest auto
 _Arissa_iNPC_MonitoringPlayerScript property MonitorScript auto
 GlobalVariable property _Arissa_DebugVar auto
+Weapon property _Arissa_IronDaggerForceEquipUpdate auto
 int property FollowDistance = 3 auto conditional hidden				;3 = Far, 2 = Medium, 1 = Close (defined in iNPC Packages)
 message property _Arissa_RegardRank_1 auto
 message property _Arissa_RegardRank_2 auto
@@ -504,6 +505,7 @@ Function EngageFollowBehavior(bool allowDismiss = true)
 	iNPC.GetActorReference().IgnoreFriendlyHits()
 	MonitoringQuest.Start()
 	Activity.ReInit()
+	EvaluateBestEquipment()
 	;/if Compatibility.EFF != none
 		Quest EFFQuest = Compatibility.EFF
 		(EFFQuest as EFFCore).XFL_AddFollower(iNPC_Actor)
@@ -647,6 +649,14 @@ endFunction
 
 function SetAllowChatter()
 	;overridden by Behavior
+endFunction
+
+function EvaluateBestEquipment()
+	; Force Arissa to evaluate her best gear.
+	; debug.trace("[Arissa Debug] Evaluating best equipment.")
+	iNPC.GetActorRef().AddItem(_Arissa_IronDaggerForceEquipUpdate)
+	utility.wait(0.1)
+	iNPC.GetActorRef().RemoveItem(_Arissa_IronDaggerForceEquipUpdate)
 endFunction
 
 ;====================================================================================================================

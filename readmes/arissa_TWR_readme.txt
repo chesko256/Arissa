@@ -11,7 +11,26 @@
 *
 =================================================
 
-Date: 6/12/2015
+Date: 6/14/2015
+
+==================================
+Update 2.1.3
+==================================
+COMPATIBILITY
+* Now fully compatible with Open Cities of Skyrim. Arissa will town roam in Windhelm, Riften, Markarth, Whiterun, and Solitude correctly when using Open Cities.
+
+CHANGES
+* Regard messages now read "Arissa's regard for you increased/decreased.", instead of "Arissa's regard for the player increased/decreased."
+
+BUG FIXES
+* Fixed a continuous Papyrus log error that could occur when Arissa was town roaming in certain cities.
+
+==================================
+Update 2.1.2
+==================================
+BUG FIXES
+* Fixed issue where new 2.1 upgrade task would run every time Arissa was recruited, causing her default armor to be regenerated.
+* Added check to ensure that her best gear is evaluated each time she is recruited.
 
 ==================================
 Update 2.1.1

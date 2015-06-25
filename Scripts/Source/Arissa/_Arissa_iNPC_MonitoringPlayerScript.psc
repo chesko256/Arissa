@@ -80,9 +80,9 @@ float Angle = 90.0000
 float OffsetZ = 0.000000
 float OffsetY = 150.000
 
-bool Update1_2 = false
-bool Update1_3 = false
-bool Update2_1 = false
+GlobalVariable property _Arissa_Update1_2 auto
+GlobalVariable property _Arissa_Update1_3 auto
+GlobalVariable property _Arissa_Update2_1 auto
 
 Function Setup()
 	; history of player position over the last __historySize updates
@@ -186,7 +186,8 @@ endFunction
 
 function UpgradeTasks()
 	Actor ArissaRef = iNPCSystem.iNPC.GetActorRef()
-	if !Update1_2
+	if _Arissa_Update1_2.GetValueInt() != 2
+		debug.trace("[Arissa Debug] Upgrade 1.2 Tasks")
 		;Set long-term outfit
 		;iNPCSystem.iNPC.GetActorRef().SetOutfit(_Arissa_Armor1_Outfit)
 
@@ -202,16 +203,18 @@ function UpgradeTasks()
 			MQ02DoorRef.Disable()
 		endif
 
-		Update1_2 = true
+		_Arissa_Update1_2.SetValueInt(2)
 	endif
 
-	if !Update1_3
+	if _Arissa_Update1_3.GetValueInt() != 2
+		debug.trace("[Arissa Debug] Upgrade 1.3 Tasks")
 		Alias_Compatibility.ForceRefIfEmpty(Game.GetPlayer())
 		Compatibility.CompatibilityCheck()
-		Update1_3 = true
+		_Arissa_Update1_3.SetValueInt(2)
 	endif
 
-	if !Update2_1
+	if _Arissa_Update2_1.GetValueInt() != 2
+		debug.trace("[Arissa Debug] Upgrade 2.1 Tasks")
 		; Set the base outfit
 		ArissaRef.SetOutfit(_Arissa_BaseOutfit)
 
@@ -236,7 +239,7 @@ function UpgradeTasks()
 			_Arissa_MQ02CaveDoor.Enable()
 			_Arissa_MQ02CaveBarrier.Disable()
 		endif
-		Update2_1 = true
+		_Arissa_Update2_1.SetValueInt(2)
 	endif
 
 endFunction
