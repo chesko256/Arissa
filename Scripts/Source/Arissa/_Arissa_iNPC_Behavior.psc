@@ -549,7 +549,7 @@ function PlayChatterDialogue()
 			endif
 			if CurrentAmbientCommentIndex >= 40000
 				iNPC_Actor.Say(_Arissa_AmbientDialogueShared)
-			else
+			elseif CurrentAmbientCommentIndex != 0
 				iNPC_Actor.Say(_Arissa_DialoguePlaceKnowledgeSharedInfo)
 			endif
 			last_selected_index = CurrentAmbientCommentIndex
