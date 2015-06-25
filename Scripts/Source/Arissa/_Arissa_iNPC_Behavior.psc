@@ -5,6 +5,7 @@ Message property _ArissaDismissMessageWait auto
 Message property _ArissaBlockedMessage auto
 Message property _ArissaDismissMessageWedding auto
 Quest property _Arissa_MQ01 auto
+Quest property _Arissa_MQ02 auto
 Quest property _Arissa_TownRoam_Dawnstar auto
 Quest property _Arissa_TownRoam_Falkreath auto
 Quest property _Arissa_TownRoam_Markarth auto
@@ -793,6 +794,9 @@ function GetHoldDialogueSituationIndex(int[] aiIndexStack, int aiCurrentHold)
 		return
 	endif
 	if aiCurrentHold == 1 											;Eastmarch
+		if _Arissa_MQ02.IsCompleted()
+			AddSituationIndex(aiIndexStack, 3, 1, 1)
+		endif
 		AddSituationIndex(aiIndexStack, 3, 1, 0)
 	elseif aiCurrentHold == 2 										;Falkreath Hold
 		AddSituationIndex(aiIndexStack, 3, 2, 0)
