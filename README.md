@@ -232,13 +232,9 @@ Contact Chesko at chesko.tesmod@gmail.com
 Permission
 ----------
 
-YOU DO NOT NEED PERMISSION TO TRANSLATE THIS MOD. YOU SHOULD CREATE A TRANSLATION PLUG-IN THAT USES COMPANIONARISSA.ESM AS A MASTER INSTEAD OF TRANSLATING 
+YOU DO NOT NEED PERMISSION TO TRANSLATE THIS MOD. YOU SHOULD CREATE A TRANSLATION PLUG-IN THAT USES COMPANIONARISSA.ESM AS A MASTER INSTEAD OF TRANSLATING THE ESM ITSELF!
 
-THE ESM ITSELF!
-
-You may not re-upload Arissa, in whole or in part, to any site, without express permission from the author, with the exception of archival / availability 
-
-purposes in the event that Skyrim Nexus no longer exists.
+You may not re-upload Arissa, in whole or in part, to any site, without express permission from the author, with the exception of archival / availability purposes in the event that Skyrim Nexus no longer exists.
 
 You may create a plug-in file that uses CompanionArissa.esm as a master file for any reason without permission. This includes translations.
 
