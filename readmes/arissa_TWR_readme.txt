@@ -11,7 +11,30 @@
 *
 =================================================
 
-Date: 6/14/2015
+Date: 6/25/2015
+
+==================================
+Update 2.2
+==================================
+FEATURES
+* Now uses custom body and head meshes and textures in the main install. She uses the CBBE Slim Nevernude body and textures, and eyes from The Eyes of Beauty. She continues to use her custom hair style from Kalilies and ApachiiSkyHair.
+* The Arissa Customizer from ClearanceClarence is now available. Please use this, in conjunction with The Hairstyler, in order to achieve the exact look you want for Arissa.
+
+CHANGES
+* Restored a unique piece of dialogue in Rorikstead that was lost between 1.3 and 2.0.
+* Arissa's carry weight when trading with her is now capped at 300.
+* In accordance with using a custom body and support of the new Arissa Customizer, the Appearance Pack system is deprecated and will no longer be supported or developed. Please discontinue using the Appearance Pack in favor of the Customizer and The Hairstyler.
+
+
+COMPATIBILITY
+* Now compatible with Become A Bard. Jam out!
+* Now compatible with Campfire. Camp out!
+
+BUG FIXES
+* Fixed an issue with certain lines of dialogue playing that should have never been able to play.
+* Fixed an issue with certain areas resulting in no dialogue when prompting Arissa.
+* Fixed several misc dialogue issues.
+* Fixed an issue where Arissa's second main quest would start even if she had not been recruited yet.
 
 ==================================
 Update 2.1.3
@@ -150,15 +173,15 @@ Update 1.1
 Overview
 ==================================
 
-Arissa is a Skyrim companion character with over 450 lines of dialogue, professionally recorded and beautifully voiced by the talented Nikkita. She is designed as a game-long companion that can accompany you from start to finish. She is inspired by Emma and Amgepo's Vilja, Bethesda's Serana from Dawnguard, and the kinds of characters found in Bioware games.
+Arissa is a Skyrim companion character with over 600 lines of dialogue, professionally recorded and beautifully voiced by the talented Nikkita. She is designed as a game-long companion that can accompany you from start to finish. She is inspired by Bethesda's Serana from Dawnguard, and the kinds of characters found in Bioware games.
 
 Arissa is an Imperial with an independent, rebellious spirit and a gift for making expensive things disappear.
 
-Arissa is a rogue-type character with a dual-wielding combat style. She will readily use blades, bows, and any armor given to her. She levels as the player levels, favoring thief-oriented skills such as light armor, lockpicking and one-handed weapons.
+Arissa is a rogue-type character with a dual-wielding combat style. She will readily use blades, bows, and any armor given to her. She levels as the player levels, favoring thief-oriented skills such as light armor, lockpicking and one-handed weapons. Her level is uncapped.
 
 Enjoy getting to know Arissa along your travels as you take part in her short-but-sweet two-part main quest line, complete with a new dungeon to explore. She earns every bit of her title of "wandering rogue", having criss-crossed Skyrim the better part of the last decade. She will readily chime in with witty, interesting, and insightful comments about over 40 areas across Skyrim as you travel together. If you were searching for a bold and knowledgable companion to accompany you on your long travels, look no further. She is fully embedded in Skyrim's world and fully lore-friendly.
 
-While Arissa cannot come close to the breadth of features offered by mods such as Vilja in Skyrim, we can promise an obsessive devotion to detail and quality while offering an experience that feels like a natural extension of the normal game. The voice acting and recording quality should sound as good as any NPC you'd encounter in the main game. The recordings are free of pops and wide fluctuations in quality or volume; it needs to be heard to be appreciated. The mod should also be free of typos and other grammatical errors. Every battle cry, "Uh huh", "Sure", "No thanks", and "Lead on" was carefully voice-acted and recorded by Nikkita; all dialogue spoken by Arissa is 100% original.
+We promise an obsessive devotion to detail and quality while offering an experience that feels like a natural extension of the normal game. The voice acting and recording quality should sound as good as any NPC you'd encounter in the main game. The recordings are very high quality; it needs to be heard to be appreciated. The mod should also be free of typos and other grammatical errors. Every battle cry, "Uh huh", "Sure", "No thanks", and "Lead on" was carefully voice-acted and recorded by Nikkita; all dialogue spoken by Arissa is 100% original.
 
 Special attention was paid to adding a high level of variety to common phrases in order to keep things from sounding repetitive. Attention was also paid to trying to find a "sweet spot" in her talkativeness, erring on the side of staying quiet and allowing the player to enjoy the game. We never wanted her to be annoying or repetative, and I think you'll be pleased with what we've been able to accomplish. For us, she is a joy to adventure and spend time with, and we hope you feel the same.
 
@@ -173,10 +196,16 @@ How To Begin
 Visit the Dead Man's Drink in Falkreath. Arissa will be waiting for you there.
 
 ==================================
-Talking
+Talking and Commentary
 ==================================
 
 Arissa can talk about the general surroundings ("What do you know about this place?"), as well as her background. She will be elusive at first, but will begin to open up as you move through her main quest.
+
+Arissa has been all over Skyrim, and will offer comments for a wide variety of locations in the base Skyrim game (DLC areas are not yet supported). When you come close to one of these areas, Arissa will chime in. She will only speak these lines unprompted once in a fixed amount of time in order to avoid repetition.
+
+You can select "Keep it down for a while." in order to surpress her ambient dialogue for up to 12 hours, or until you ask her to speak up again.
+
+She will also comment on successfully picking locks, choice of armor, nearby dungeons, and more.
 
 ==================================
 Regard System
@@ -190,7 +219,7 @@ Arissa responds positively to acts of heroism and cunning, such as defeating dif
 
 |---- COMPANION
 |
-|	  Effect: Call of Oakshore unlocked. Summon Arissa from anywhere in Skyrim.
+|     Effect: Call of Oakshore unlocked. Summon Arissa from anywhere in Skyrim.
 |
 |---- FRIEND
 |
@@ -217,9 +246,9 @@ Arissa responds positively to acts of heroism and cunning, such as defeating dif
       Effect: Leaves your service. You can wait and recruit her again.
 
 
-Special note: Arissa abhors cannibalism. If you feed on someone while wearing the Ring of Namira while Arissa is in your service, she will leave permanently. You will not be able to re-recruit her after this, so be careful!
+Special note: Arissa hates cannibalism. If you feed on someone while wearing the Ring of Namira while Arissa is in your service, she will leave permanently. You will not be able to re-recruit her after this, so be careful!
 
-Currently, Arissa is ambivalent towards vampirism and lycanthropy.
+Currently, Arissa is accepting towards vampirism and lycanthropy.
 
 ==================================
 Town Roaming and Theft
@@ -229,15 +258,9 @@ When visiting a major city in Skyrim, you can tell Arissa "You go ahead. I'll ca
 
 If you allow Arissa to roam past midnight, she may get up to no good... who knows what she might find?
 
-I hope this feature allows you to have some time apart from each other while in cities without disturbing gameplay, leading to a more organic feeling experience.
+If you leave the city, Arissa will run to rejoin you; you don't have to track her down yourself.
 
-==================================
-Commentary
-==================================
-
-Arissa has been all over Skyrim, and will offer comments for a wide variety of locations in the base Skyrim game (DLC areas are not yet supported). When you come close to one of these areas, Arissa will chime in. She will only speak these lines unprompted once; however, you can ask her at any time "What do you know about this place?", and she will gladly repeat it. You can also let her know that you'd prefer to just ask about locations, and this "broadcasting" behavior will be disabled.
-
-She will also comment on successfully picking locks, choice of armor, nearby dungeons, and more.
+I hope this feature allows you to have some time apart from each other while in cities without disturbing gameplay, leading to a more organic feeling experience. Town Roaming is compatible with Open Cities of Skyrim.
 
 ==================================
 Movement and Traveling
@@ -245,27 +268,17 @@ Movement and Traveling
 
 Arissa will attempt to intelligently get out of the player's way when Arissa and the player are too close, hopefully un-jamming her from doorways and halls.
 
-When riding a horse, Arissa will automatically call her own and ride right behind you. Her horse is dismissed as soon as you dismount. Arissa is also compatible with Convenient Horses! If you would like mounted combat options for Arissa, please use Convenient Horses.
-
-If Arissa starts to lag too far behind when walking, running, or riding, she will jump to a position closer to the player when the player isn't looking. If you lose track of Arissa, just keep going, she'll spring close to you soon. This was a compromise to compensate for the normal pathing behavior that all NPCs exhibit in Skyrim.
+When riding a horse, Arissa will automatically call her own and ride right behind you. Her horse is dismissed as soon as you dismount. Arissa is also compatible with Convenient Horses (with the available compatibility patch)! If you would like mounted combat options for Arissa, please use Convenient Horses.
 
 ==================================
 Attire
 ==================================
 
-Arissa wears her normal "casual" attire only at the start of your journey together, and then quickly switches to a set of thief-based armor. This armor is sub-par and should be upgraded at the earliest opportunity. Arissa was designed with the modded game in mind, so please upgrade her gear to whatever you find suitable. Since her gear has lower armor value than any other armor found in the game, she should automatically wear whatever you give her.
+Arissa wears her normal "casual" attire at the start of your journey together, and then quickly switches to a set of thief-based armor. This armor is sub-par and should be upgraded at the earliest opportunity. Arissa was designed with the modded game in mind, so please upgrade her gear to whatever you find suitable. Since her gear has lower armor value than any other armor found in the game, she should automatically wear whatever you give her.
 
-You can ask Arissa to switch to her more casual attire, however:
+Arissa changes to her more casual attire when left to her own devices when roaming in towns or when dismissed. She will re-equip her best equipment when you rerecruit her.
 
-* This outfit offers 0 armor. Not suitable for combat!
-* Because of the way this outfit's mesh is constructed, you may experience graphical errors, including neck seam issues and skin textures that look terrible. It is not compatible with body replacers, which will cause issues with its appearance.
-* Again, because of the way this outfit's mesh is constructed, giving Arissa things to wear while in the casual clothing state may cause strange errors such as her feet and hands popping out of her gloves and boots.
-
-These are technical issues that I cannot fix because I did not create the armor (which, for what it's worth, looks great all things considered).
-
-With that in mind, it is recommended that you leave her in her "armor" state most of the time and use armors and outfits suited to your level, chosen body replacer, and collection of mods. Her "casual" attire was left in the game primarily because that's how most people have come to know her through the images that I've shared of her over the past year, and I didn't feel like she would be "her" without seeing her in that outfit at least once. I highly recommend you leave her switched to her "armored" state and only switch to her casual state just because that's the particular set of gear you want to see her in and intend to switch back to armored later.
-
-Switching between "armored" and "casual" is not a sophisticated outfit management system, so please use sparingly. An advanced outfit management system will be investigated for the future, possibly compatibility with an existing best-in-class outfit management mod.
+When Arissa's regard for you is high enough, you can begin managing her worn equipment. Note that this is distinct from trading with her; things given when saying "I'd like to trade some things with you." will not be worn. Select "Let's manage your equipment." instead.
 
 ==================================
 Requirements
@@ -278,10 +291,14 @@ Compatibility
 ==================================
 
 Compatible with other custom follower mods.
-Compatible with Convenient Horses.
+Compatible with Convenient Horses. Please download the compatibility patch.
 Compatible with Wearable Lanterns.
+Compatible with Campfire.
+Compatible with Become A Bard.
+Compatible with Open Cities of Skyrim.
+Compatible with SkyUI and features an optional Mod Configuration Menu. Without SkyUI, a configuration spell is given instead.
 
-No compatibility was added for multi-follower mods; however, your gameplay should not be negatively impacted. Features added by EFF, UFO or AFT will probably not work on Arissa.
+No compatibility was added for multi-follower mods; however, your gameplay should not be negatively impacted. Do not elect to "manage" Arissa using UFO or AFT or bugs may occur. EFF should be OK.
 
 Arissa has already been cleaned with TES5Edit and the edits that remain are intentional. Specifically, these edits are intentional:
 * Edits to defaultWICommentTRIG
@@ -293,18 +310,14 @@ Arissa has already been cleaned with TES5Edit and the edits that remain are inte
 Troubleshooting
 ==================================
 
-"I can't talk to Arissa during the first part of her quest outside of Falkreath. It says 'This person is busy.' and people are still around her."
-Wait a few more seconds. This scene can sometimes be slow to proceed.
-
-"I told Arissa to relax into casual wear, but strange graphical errors appeared / it looks like she has a skin disease."
-See "Attire", above.
-
 "I lost Arissa! I can't find her!"
-Don't panic! If Arissa disappears, you can:
- * Keep walking. If you lost her while walking across Tamriel, she should spring behind you soon while you're not looking.
- * If you told her to Wait and forgot where, she will return to the Dead Man's Drink in Falkreath after 2 days and will give up.
+If Arissa disappears, you can:
+ * Fast travel to another location and see if she re-appears
+ * Wait one in-game hour
+ * If you told her to Wait and forgot where, she will return to the Dead Man's Drink in Falkreath after 2 days.
  * If you dismissed her, she will be waiting in the Dead Man's Drink in Falkreath.
  * If you told her to roam freely while in a city, leave the city. She will run to you. You may need to wait an hour for her to catch up to you.
+ * If none of these solve the problem, open the console and type "set RecoverArissa to 1" and she will be returned to you in a few seconds.
 
 "Arissa said "Excuse me" when I bumped into her, and then cowered, as if frightened."
 This is a known issue that is part of her "avoidance" package to try to get her out of your way when you bump into her.
@@ -316,6 +329,9 @@ Chances are high that your game (specifically your scripting system) is running 
 FAQ
 ==================================
 
+"Does Arissa use a custom body, face, hair, etc?"
+Yes. Her body mesh and textures in the main install are the CBBE Slim Nevernude body. Her eyes are from The Eyes of Beauty. Her hair is a custom combination from Kalilie and ApachiiSkyHair. Please use the Arissa Customizer and The Hairstyler to choose exactly how you would like Arissa to look.
+
 "Can you marry Arissa?"
 Not at this time. Making her a fun and pleasing character to adventure with was more important during development.
 
@@ -326,7 +342,7 @@ No, sorry.
 I don't know. Why don't you try it, and let me know? There are too many things for me to test by myself. Please report incompatibilities.
 
 "Can Arissa die?"
-Yes. She is "Protected", which means that enemies cannot kill her, but you can (for whatever reason, it's your game). You won't be able to kill her during a certain portion of her main quest.
+Only during a specific portion of her recruitment quest, if you select a certain aggressive option. Otherwise, she cannot die.
 
 "Why won't Arissa do what I tell her to do?!"
 Because her Regard is too low for what you're asking her to do. See "Regard", above.
@@ -339,13 +355,10 @@ Nothing will break, but their additional follower features (probably) won't work
 Spoilers
 ==================================
 "How do I start the second part of Arissa's main quest?"
-She will approach you automatically after about 3 days of gameplay. You can also use the Wait key to wait about 7 days, after which she should offer you the next leg of her quest.
+She will approach you automatically after about 3 days of gameplay. You can also use the Wait key to wait about 3 days to force this.
 
 "How do I get past the barred gate?"
-You need to pull on something near the gate. There are two of them; one opens the way.
-
-"That's it? That's all there is to her quest?"
-Yes, and I am sorry if it is disappointingly shortlived. I started an indie game studio around the half-way point of Arissa's development, and some things ended up getting cut a bit short. Please make sure to talk to Arissa following her second quest and have her talk about her past in order to get an idea of what she's been through. I hope that exposition will help wrap things up.
+Pull the right torch near the gate.
 
 "What is the full list of things that increase Regard? What is the full list of things that decrease it?"
 
@@ -384,17 +397,31 @@ Thanks
 
 * It's been a great privilege to work with someone as talented as Nikkita. Thank you for breathing life into Arissa; without your hard work, she would have never been possible.
 * Thanks to Gareth for the excellent music track that opens her first quest.
-* Thanks to Lorelai's 3D modeling and texturing support.
-* Thanks to TheRoadStroker for use of his excellent-looking Rogue Sorceress outfit.
-* Thanks to Apachii for use of Arissa's hairstyle.
+* (1.3) Thanks to Lorelai's 3D modeling and texturing support.
+* (1.3) Thanks to TheRoadStroker for use of his excellent-looking Rogue Sorceress outfit.
+* Thanks to Apachii, Kalilies and Nouk for Arissa's hairstyle
 * Thanks to Mitchalek, for Convenient Horses compatibility.
+* Thanks to ClearanceClarence, for the excellent Arissa Customizer.
+* Thanks to Caliente, for the CBBE body, which Arissa uses as of Arissa 2.2.
+* Thanks to LogRaam, for Arissa's eyes from The Eyes of Beauty.
 
 * And last but not least, thanks to YOU for your patience and for playing Arissa. I hope you have great adventures together and that we get to hear about them.
 
 ==================================
-What's Next?
+Contact
 ==================================
 
-Let us know what features you'd like to see in Arissa; we're listening. We will continue to fix bugs as identified and to add some features slowly over time.
+Contact Chesko at chesko.tesmod@gmail.com
+
+==================================
+Permission
+==================================
+
+YOU DO NOT NEED PERMISSION TO TRANSLATE THIS MOD. YOU SHOULD CREATE A TRANSLATION PLUG-IN THAT USES COMPANIONARISSA.ESM AS A MASTER INSTEAD OF TRANSLATING THE ESM ITSELF!
+
+You may not re-upload Arissa, in whole or in part, to any site, without express permission from the author, with the exception of archival / availability purposes in the event that Skyrim Nexus no longer exists.
+
+You may create a plug-in file that uses CompanionArissa.esm as a master file for any reason without permission. This includes translations.
+
 
 Adventure awaits!

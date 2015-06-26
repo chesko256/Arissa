@@ -234,8 +234,8 @@ Event OnOptionSelect(int option)
 		bool b = ShowMessage("$ArissaMessageRecoverConfirm")
 		if b
 			RecoverArissa.SetValueInt(1)
+			ShowMessage("$ArissaMessageRecoverComplete", false)
 		endif
-		ShowMessage("$ArissaMessageRecoverComplete", false)
 	endif
 EndEvent
 

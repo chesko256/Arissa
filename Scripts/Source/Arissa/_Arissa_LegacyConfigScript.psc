@@ -8,6 +8,7 @@ GlobalVariable property _Arissa_Setting_ChatterFrequency auto
 GlobalVariable property _Arissa_Setting_AllowAnnounceNewArea auto
 GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
 GlobalVariable property _Arissa_Setting_RegardSystem auto
+GlobalVariable property RecoverArissa auto
 
 Message property _Arissa_LegacyConfig_Root auto
 Message property _Arissa_LegacyConfig_Dialogue auto
@@ -24,6 +25,9 @@ Message property _Arissa_legacyconfig_regardinfo auto
 Message property _Arissa_legacyconfig_regardinfo2 auto
 Message property _Arissa_LegacyConfig_RegardOnConfirm auto
 Message property _Arissa_LegacyConfig_RegardOffConfirm auto
+Message property _Arissa_LegacyConfig_Recover auto
+Message property _Arissa_LegacyConfig_RecoverConfirm auto
+
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if akCaster == Game.GetPlayer()
@@ -38,7 +42,9 @@ function menu_root()
 		menu_dialogue()
 	elseif i == 1
 		menu_regard()
-	elseif i == 2
+    elseif i == 2
+        menu_troubleshooting()
+	elseif i == 3
 		; Exit
 	endif
 endFunction
@@ -74,7 +80,16 @@ function menu_regard()
 	elseif i == 2
 		menu_root()
 	endif
+endFunction
 
+function menu_troubleshooting()
+    int i = _Arissa_LegacyConfig_Recover.Show()
+    if i == 0
+        RecoverArissa.SetValueInt(1)
+        _Arissa_LegacyConfig_RecoverConfirm.Show()
+    else
+        menu_root()
+    endif
 endFunction
 
 ;Format: On/Off, Back
