@@ -9,6 +9,7 @@ GlobalVariable property _Arissa_Setting_AllowAnnounceNewArea auto
 GlobalVariable property _Arissa_Setting_NewAreaFrequency auto
 GlobalVariable property _Arissa_Regard auto
 GlobalVariable property _Arissa_Setting_RegardSystem auto
+GlobalVariable property RecoverArissa auto
 
 Actor property iNPC_Actor auto
 Actor property PlayerRef auto
@@ -21,6 +22,7 @@ int Behavior_SettingAllowAnnounceNewArea_OID
 int Behavior_SettingAnnounceAreaFrequency_OID
 int Behavior_AboutRegard_OID
 int Behavior_SettingRegardSystem_OID
+int Behavior_RecoverArissa_OID
 
 Event OnConfigInit()
 	Pages = new string[2]
@@ -55,6 +57,14 @@ function PageReset_Behavior()
 	else
 		Behavior_SettingAnnounceAreaFrequency_OID = AddSliderOption("$ArissaAnnounceAreaFrequency", (_Arissa_Setting_NewAreaFrequency.GetValue() * 100), "{0}%", OPTION_FLAG_DISABLED)
 	endif
+	
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+	AddEmptyOption()
+
+	AddHeaderOption("$ArissaDialogueTroubleshootingHeader")
+	Behavior_RecoverArissa_OID = AddTextOption("$ArissaRecover", "$ArissaRecoverClick")
 
 	SetCursorPosition(1) ; Move cursor to top right position
 
@@ -149,6 +159,8 @@ event OnOptionHighlight(int option)
 		SetInfoText("$ArissaOptionHighlightSettingAnnounceAreaFrequency")
 	elseif option == Behavior_SettingRegardSystem_OID
 		SetInfoText("$ArissaOptionHighlightSettingRegardSystem")
+	elseif option == Behavior_RecoverArissa_OID
+		SetInfoText("$ArissaOptionHighlightRecovery")
 	endif
 endEvent
 
@@ -218,6 +230,12 @@ Event OnOptionSelect(int option)
 	elseif option == Behavior_AboutRegard_OID
 		ShowMessage("$ArissaMessageAboutRegard", false)
 		ShowMessage("$ArissaMessageAboutRegard2", false)
+	elseif option == Behavior_RecoverArissa_OID
+		bool b = ShowMessage("$ArissaMessageRecoverConfirm")
+		if b
+			RecoverArissa.SetValueInt(1)
+		endif
+		ShowMessage("$ArissaMessageRecoverComplete", false)
 	endif
 EndEvent
 
