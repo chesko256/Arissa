@@ -11,6 +11,7 @@ GetOwningQuest().CompleteAllObjectives()
 GetOwningQuest().SetStage(200)
 akSpeaker.EvaluatePackage()
 (_Arissa_DialogueMain as _Arissa_iNPC_Behavior).IncreaseRegardModerate()
+GetOwningQuest().Stop()
 ;END CODE
 EndFunction
 ;END FRAGMENT

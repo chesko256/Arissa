@@ -11,8 +11,10 @@ bool property isSKSELoaded auto hidden
 bool property isSKYUILoaded auto hidden
 bool property isImperiousLoaded auto hidden
 bool property isConvenientHorsesLoaded auto hidden
+bool property isBecomeABardLoaded auto hidden
 
 MagicEffect property ImperiousYffresBlessing auto hidden
+GlobalVariable property _LP_BardIsPlaying auto hidden
 
 Event OnInit()
 	CompatibilityCheck()
@@ -77,15 +79,34 @@ function CompatibilityCheck()
 		endif
 	endif
 
+	if isBecomeABardLoaded
+		isBecomeABardLoaded = IsPluginLoaded(0x02051223, "LPBards.esp")
+		if !isBecomeABardLoaded
+			;Become A Bard was removed since the last save.
+		endif
+	else
+		isBecomeABardLoaded = IsPluginLoaded(0x02051223, "LPBards.esp")
+		if isBecomeABardLoaded
+			;Become A Bard was just loaded.
+		endif
+	endif
+
 	if isImperiousLoaded
 		ImperiousYffresBlessing = Game.GetFormFromFile(0x002501B5, "Imperious - Races of Skyrim.esp") as MagicEffect
 	endif
 
-	;Convenient Horses Sanity Check
+	; Convenient Horses Sanity Check
 	if isConvenientHorsesLoaded
 		iNPCSystem.SetUseOwnHorse(false)
 	else
 		iNPCSystem.SetUseOwnHorse()
+	endif
+
+	; Store the Become A Bard bard playing global
+	if isBecomeABardLoaded
+		_LP_BardIsPlaying = Game.GetFormFromFile(0x02051223, "LPBards.esp") as GlobalVariable
+	else
+		_LP_BardIsPlaying = None
 	endif
 
 	;Dialogue animations from Dawnguard do not work; left here for future expansion.

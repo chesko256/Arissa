@@ -6,8 +6,10 @@ Event OnDeath(Actor akKiller)
 		if GetOwningQuest().IsObjectiveDisplayed(60)
 			GetOwningQuest().SetObjectiveCompleted(60)
 			GetOwningQuest().SetStage(201)
+			GetOwningQuest().Stop()
 		else
 			GetOwningQuest().SetStage(250)
+			GetOwningQuest().Stop()
 		endif
 	endif
 endEvent

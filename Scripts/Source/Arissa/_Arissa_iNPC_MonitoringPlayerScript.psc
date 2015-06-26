@@ -83,6 +83,7 @@ float OffsetY = 150.000
 GlobalVariable property _Arissa_Update1_2 auto
 GlobalVariable property _Arissa_Update1_3 auto
 GlobalVariable property _Arissa_Update2_1 auto
+GlobalVariable property _Arissa_Update2_2 auto
 
 Function Setup()
 	; history of player position over the last __historySize updates
@@ -186,6 +187,7 @@ endFunction
 
 function UpgradeTasks()
 	Actor ArissaRef = iNPCSystem.iNPC.GetActorRef()
+
 	if _Arissa_Update1_2.GetValueInt() != 2
 		debug.trace("[Arissa Debug] Upgrade 1.2 Tasks")
 		;Set long-term outfit
@@ -240,6 +242,14 @@ function UpgradeTasks()
 			_Arissa_MQ02CaveBarrier.Disable()
 		endif
 		_Arissa_Update2_1.SetValueInt(2)
+	endif
+
+	if _Arissa_Update2_2.GetValueInt() != 2
+		if _Arissa_MQ01.IsCompleted()
+			debug.trace("[Arissa Debug] Upgrade 2.2 Task: Stopping MQ01 after completion")
+			_Arissa_MQ01.Stop()
+		endif
+		_Arissa_Update2_2.SetValueInt(2)
 	endif
 
 endFunction
@@ -636,6 +646,12 @@ function ResetTempDialogueFlags()
 endFunction
 
 function TryToSandboxAroundPlayer()
+	; Arissa 2.2 - Check if player is playing music
+	if (Compatibility.isBecomeABardLoaded) && (Compatibility._LP_BardIsPlaying.GetValueInt() == 1)
+		ArissaDebug(1, "iNPC: Player is playing instrument in Become A Bard, don't sandbox.")
+		return
+	endif
+
 	; cycle all positions down one notch in the history arrays
 	int historyIndex = 0
 	while (historyIndex < __historySize - 1)
