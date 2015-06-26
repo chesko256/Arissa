@@ -4,47 +4,23 @@
 Overview
 ==================================
 
-Arissa is a Skyrim companion character with over 600 lines of dialogue, professionally recorded and beautifully voiced by the talented Nikkita. She is 
-
-designed as a game-long companion that can accompany you from start to finish. She is inspired by Bethesda's Serana from Dawnguard, and the kinds of 
-
-characters found in Bioware games.
+Arissa is a Skyrim companion character with over 600 lines of dialogue, professionally recorded and beautifully voiced by the talented Nikkita. She is designed as a game-long companion that can accompany you from start to finish. She is inspired by Bethesda's Serana from Dawnguard, and the kinds of characters found in Bioware games.
 
 Arissa is an Imperial with an independent, rebellious spirit and a gift for making expensive things disappear.
 
-Arissa is a rogue-type character with a dual-wielding combat style. She will readily use blades, bows, and any armor given to her. She levels as the 
-
-player levels, favoring thief-oriented skills such as light armor, lockpicking and one-handed weapons. Her level is uncapped.
+Arissa is a rogue-type character with a dual-wielding combat style. She will readily use blades, bows, and any armor given to her. She levels as the player levels, favoring thief-oriented skills such as light armor, lockpicking and one-handed weapons. Her level is uncapped.
 
 Enjoy getting to know Arissa along your travels as you take part in her short-but-sweet two-part main quest line, complete with a new dungeon to explore. 
 
-She earns every bit of her title of "wandering rogue", having criss-crossed Skyrim the better part of the last decade. She will readily chime in with 
+She earns every bit of her title of "wandering rogue", having criss-crossed Skyrim the better part of the last decade. She will readily chime in with witty, interesting, and insightful comments about over 40 areas across Skyrim as you travel together. If you were searching for a bold and knowledgable companion to accompany you on your long travels, look no further. She is fully embedded in Skyrim's world and fully lore-friendly.
 
-witty, interesting, and insightful comments about over 40 areas across Skyrim as you travel together. If you were searching for a bold and knowledgable 
+We promise an obsessive devotion to detail and quality while offering an experience that feels like a natural extension of the normal game. The voice acting and recording quality should sound as good as any NPC you'd encounter in the main game. The recordings are very high quality; it needs to be heard to be appreciated. The mod should also be free of typos and other grammatical errors. Every battle cry, "Uh huh", "Sure", "No thanks", and "Lead on" was carefully voice-acted and recorded by Nikkita; all dialogue spoken by Arissa is 100% original.
 
-companion to accompany you on your long travels, look no further. She is fully embedded in Skyrim's world and fully lore-friendly.
-
-We promise an obsessive devotion to detail and quality while offering an experience that feels like a natural extension of the normal game. The voice 
-
-acting and recording quality should sound as good as any NPC you'd encounter in the main game. The recordings are very high quality; it needs to be heard 
-
-to be appreciated. The mod should also be free of typos and other grammatical errors. Every battle cry, "Uh huh", "Sure", "No thanks", and "Lead on" was 
-
-carefully voice-acted and recorded by Nikkita; all dialogue spoken by Arissa is 100% original.
-
-Special attention was paid to adding a high level of variety to common phrases in order to keep things from sounding repetitive. Attention was also paid 
-
-to trying to find a "sweet spot" in her talkativeness, erring on the side of staying quiet and allowing the player to enjoy the game. We never wanted her 
-
-to be annoying or repetative, and I think you'll be pleased with what we've been able to accomplish. For us, she is a joy to adventure and spend time 
-
-with, and we hope you feel the same.
+Special attention was paid to adding a high level of variety to common phrases in order to keep things from sounding repetitive. Attention was also paid to trying to find a "sweet spot" in her talkativeness, erring on the side of staying quiet and allowing the player to enjoy the game. We never wanted her to be annoying or repetative, and I think you'll be pleased with what we've been able to accomplish. For us, she is a joy to adventure and spend time with, and we hope you feel the same.
 
 Arissa does not use the standard follower system in Skyrim, so she can be recruited in addition to any other follower you might have.
 
-Special Note: Users that are arachnophobic may have a difficult time completing a portion of Arissa's main questline. Please install a spider replacer mod 
-
-if this will impact you.
+Special Note: Users that are arachnophobic may have a difficult time completing a portion of Arissa's main questline. Please install a spider replacer mod if this will impact you.
 
 How To Begin
 ============
