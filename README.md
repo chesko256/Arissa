@@ -19,7 +19,7 @@ Special attention was paid to adding a high level of variety to common phrases i
 
 Arissa does not use the standard follower system in Skyrim, so she can be recruited in addition to any other follower you might have.
 
-Special Note: Users that are arachnophobic may have a difficult time completing a portion of Arissa's main questline. Please install a spider replacer mod if this will impact you.
+**Special Note:** Users that are arachnophobic may have a difficult time completing a portion of Arissa's main questline. Please install a spider replacer mod if this will impact you.
 
 How To Begin
 ------------
@@ -107,17 +107,15 @@ The latest version of Skyrim.
 Compatibility
 -------------
 
-Compatible with other custom follower mods.
-Compatible with Convenient Horses. Please download the compatibility patch.
-Compatible with Wearable Lanterns.
-Compatible with Campfire.
-Compatible with Become A Bard.
-Compatible with Open Cities of Skyrim.
-Compatible with SkyUI and features an optional Mod Configuration Menu. Without SkyUI, a configuration spell is given instead.
+Compatible with other custom follower mods.    
+Compatible with Convenient Horses. Please download the compatibility patch.    
+Compatible with Wearable Lanterns.    
+Compatible with Campfire.    
+Compatible with Become A Bard.    
+Compatible with Open Cities of Skyrim.    
+Compatible with SkyUI and features an optional Mod Configuration Menu. Without SkyUI, a configuration spell is given instead.    
 
-No compatibility was added for multi-follower mods; however, your gameplay should not be negatively impacted. Do not elect to "manage" Arissa using UFO or 
-
-AFT or bugs may occur. EFF should be OK.
+No compatibility was added for multi-follower mods; however, your gameplay should not be negatively impacted. Do not elect to "manage" Arissa using UFO or AFT or bugs may occur. EFF should be OK.
 
 Arissa has already been cleaned with TES5Edit and the edits that remain are intentional. Specifically, these edits are intentional:
 
