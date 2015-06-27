@@ -209,7 +209,7 @@ Event OnOptionSelect(int option)
 			if b
 				_Arissa_Setting_RegardSystem.SetValue(1)
 				SetToggleOptionValue(Behavior_SettingRegardSystem_OID, false)
-				_Arissa_Regard.SetValue(10.0)
+				(_Arissa_DialogueMain as _Arissa_iNPC_Main).SlamToRegarded()
 				if !PlayerRef.HasSpell(_Arissa_SummonSpell)
 					PlayerRef.AddSpell(_Arissa_SummonSpell)
 				endif
@@ -220,7 +220,8 @@ Event OnOptionSelect(int option)
 			if b
 				_Arissa_Setting_RegardSystem.SetValue(2)
 				SetToggleOptionValue(Behavior_SettingRegardSystem_OID, true)
-				_Arissa_Regard.SetValue(-6.0)
+				float delta = -6.0 - _Arissa_Regard.GetValue()
+				(_Arissa_DialogueMain as _Arissa_iNPC_Main).ModAssessment(delta)
 				if PlayerRef.HasSpell(_Arissa_SummonSpell)
 					PlayerRef.RemoveSpell(_Arissa_SummonSpell)
 				endif

@@ -2,6 +2,7 @@ scriptname _Arissa_LegacyConfigScript extends ActiveMagicEffect
 
 Actor property PlayerRef auto
 Spell property _Arissa_SummonSpell auto
+Quest property _Arissa_DialogueMain auto
 GlobalVariable property _Arissa_Regard auto
 GlobalVariable property _Arissa_Setting_AllowChatter auto
 GlobalVariable property _Arissa_Setting_ChatterFrequency auto
@@ -124,7 +125,7 @@ function MenuHandler_ToggleConfirm(Message akMessageOn, Message akMessageOff, Gl
         	if j == 0
             	akSetting.SetValueInt(1)
             	MenuHandler_ToggleConfirm(akMessageOn, akMessageOff, akSetting, akConfirmIfOn, akConfirmIfOff)
-            	_Arissa_Regard.SetValue(10.0)
+            	(_Arissa_DialogueMain as _Arissa_iNPC_Main).SlamToRegarded()
 				if !PlayerRef.HasSpell(_Arissa_SummonSpell)
 					PlayerRef.AddSpell(_Arissa_SummonSpell)
 				endif
@@ -141,7 +142,8 @@ function MenuHandler_ToggleConfirm(Message akMessageOn, Message akMessageOff, Gl
         	if j == 0
             	akSetting.SetValueInt(2)
             	MenuHandler_ToggleConfirm(akMessageOn, akMessageOff, akSetting, akConfirmIfOn, akConfirmIfOff)
-            	_Arissa_Regard.SetValue(-6.0)
+            	float delta = -6.0 - _Arissa_Regard.GetValue()
+                (_Arissa_DialogueMain as _Arissa_iNPC_Main).ModAssessment(delta)
 				if PlayerRef.HasSpell(_Arissa_SummonSpell)
 					PlayerRef.RemoveSpell(_Arissa_SummonSpell)
 				endif

@@ -11,7 +11,14 @@
 *
 =================================================
 
-Date: 6/25/2015
+Date: 6/27/2015
+
+==================================
+Update 2.2.1
+==================================
+BUG FIXES
+* Fixed an issue where, if Arissa's Regard system is disabled through the MCM or the Config spell, her ability to do follower commands would not be enabled.
+
 
 ==================================
 Update 2.2
@@ -24,6 +31,7 @@ CHANGES
 * Restored a unique piece of dialogue in Rorikstead that was lost between 1.3 and 2.0.
 * Arissa's carry weight when trading with her is now capped at 300.
 * In accordance with using a custom body and support of the new Arissa Customizer, the Appearance Pack system is deprecated and will no longer be supported or developed. Please discontinue using the Appearance Pack in favor of the Customizer and The Hairstyler.
+* Arissa speaks her after-combat dialogue lines ("That takes care of that", etc) half as often.
 
 
 COMPATIBILITY
@@ -254,7 +262,7 @@ Currently, Arissa is accepting towards vampirism and lycanthropy.
 Town Roaming and Theft
 ==================================
 
-When visiting a major city in Skyrim, you can tell Arissa "You go ahead. I'll catch up with you later." Arissa will the leave your side to freely roam the city while you remain in it. She will rejoin you if asked or if you leave the city gates. Arissa will prefer to hang around and shop in alchemy and general good stores. She will retire to the local inn after dark.
+When visiting a major city in Skyrim, you can tell Arissa "You go ahead. I'll catch up with you later." Arissa will the leave your side to freely roam the city while you remain in it. She will rejoin you if asked or if you leave the city gates. Arissa will prefer to hang around and shop in alchemy and general good stores. She will retire to the local inn after dark. Arissa will not want to roam around Winterhold, it's far too cold for her tastes.
 
 If you allow Arissa to roam past midnight, she may get up to no good... who knows what she might find?
 
@@ -296,11 +304,12 @@ Compatible with Wearable Lanterns.
 Compatible with Campfire.
 Compatible with Become A Bard.
 Compatible with Open Cities of Skyrim.
+Compatible with Imperious.
 Compatible with SkyUI and features an optional Mod Configuration Menu. Without SkyUI, a configuration spell is given instead.
 
 No compatibility was added for multi-follower mods; however, your gameplay should not be negatively impacted. Do not elect to "manage" Arissa using UFO or AFT or bugs may occur. EFF should be OK.
 
-Arissa has already been cleaned with TES5Edit and the edits that remain are intentional. Specifically, these edits are intentional:
+Arissa 2.2 has already been cleaned with TES5Edit for identical-to-master (ITM) edits and errors, and the edits that remain are intentional. Specifically, these edits are intentional:
 * Edits to defaultWICommentTRIG
 * Edits to WICommentTriggerScript
 * Edits to MilitaryCampHaafingarSonsLocation
@@ -324,6 +333,9 @@ This is a known issue that is part of her "avoidance" package to try to get her 
 
 "Arissa started sandboxing / started waiting somewhere, and now she's not following me even if I move away."
 Chances are high that your game (specifically your scripting system) is running poorly and my scripts are not being allowed to run. Try a new game or try disabling all other mods and see if it still happens. Arissa uses a system identical to the one used by Serana in Dawnguard to allow her to sandbox around an area when you are standing still.
+
+"Sometimes Arissa appears that she is continuously running even though she is standing still."
+This is a bug in the vanilla game. Unsheathing and sheathing your weapon usually fixes the problem.
 
 ==================================
 FAQ
