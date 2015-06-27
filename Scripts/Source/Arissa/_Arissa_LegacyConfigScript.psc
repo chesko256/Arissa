@@ -125,7 +125,8 @@ function MenuHandler_ToggleConfirm(Message akMessageOn, Message akMessageOff, Gl
         	if j == 0
             	akSetting.SetValueInt(1)
             	MenuHandler_ToggleConfirm(akMessageOn, akMessageOff, akSetting, akConfirmIfOn, akConfirmIfOff)
-            	(_Arissa_DialogueMain as _Arissa_iNPC_Main).SlamToRegarded()
+            	_Arissa_Regard.SetValue(10.0)
+                (_Arissa_DialogueMain as _Arissa_iNPC_Main).CanDoFavors = true
 				if !PlayerRef.HasSpell(_Arissa_SummonSpell)
 					PlayerRef.AddSpell(_Arissa_SummonSpell)
 				endif
